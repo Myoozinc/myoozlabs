@@ -496,6 +496,64 @@
     let rotY = 0, rotX = 0;       // current (smoothed) rotation
     let rotYTarget = 0, rotXTarget = 0;
 
+    // Multi-tier universal device profiler: automatically detects and tailors layout,
+    // particle physics, halo framing and entrance animation for Mobile, Tablet, and Desktop.
+    function getDeviceProfile(){
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const ua = navigator.userAgent;
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      const isPhone = /iPhone|Android.*Mobile|Mobile.*Firefox|iPod|BlackBerry|IEMobile/i.test(ua) || (isTouch && w < 768 && h > w);
+      const isTablet = /iPad|Android(?!.*Mobile)|Tablet/i.test(ua) || (isTouch && w >= 768 && w <= 1024);
+
+      if(isPhone){
+        // Mobile Phones (iPhone, Android) — vertical portrait framing with ample margins
+        return {
+          type: 'mobile',
+          dpr: Math.min(window.devicePixelRatio || 1, 2),
+          targetW: Math.min(w * 0.74, 295),
+          verticalCenter: 0.43,
+          starCount: 160,
+          maxStarRx: w * 0.43,
+          starPadXMul: 0.65,
+          starRyScale: 1.32,
+          entrySpeed: 2.6,
+          entryDuration: 1.1,
+          driftMul: 0.85
+        };
+      } else if(isTablet){
+        // Tablets & foldables (iPad, Galaxy Tab) — balanced medium framing
+        return {
+          type: 'tablet',
+          dpr: Math.min(window.devicePixelRatio || 1, 2),
+          targetW: Math.min(w * 0.76, 640),
+          verticalCenter: 0.46,
+          starCount: 190,
+          maxStarRx: w * 0.46,
+          starPadXMul: 0.85,
+          starRyScale: 1.15,
+          entrySpeed: 2.3,
+          entryDuration: 1.2,
+          driftMul: 0.95
+        };
+      } else {
+        // Desktop & Laptops (Mac, Windows, widescreen displays) — full cinematic format
+        return {
+          type: 'desktop',
+          dpr: Math.min(window.devicePixelRatio || 1, 2),
+          targetW: Math.min(w * 0.8, 980),
+          verticalCenter: 0.5,
+          starCount: 220,
+          maxStarRx: w * 0.48,
+          starPadXMul: 1.0,
+          starRyScale: 1.0,
+          entrySpeed: 2.1,
+          entryDuration: 1.3,
+          driftMul: 1.0
+        };
+      }
+    }
+
     // ---- tunable physics parameters, live-editable from the panel (top right) ----
     const PARAMS = {
       flowScale:    { v: 4,    min: 0.1, max: 10,   step: 0.1,  label: 'Escala del flujo' },
@@ -528,7 +586,8 @@
       }
       lastW = newW; lastH = newH;
       W = newW; H = newH;
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      const prof = getDeviceProfile();
+      DPR = prof.dpr;
       canvas.width = Math.round(W * DPR);
       canvas.height = Math.round(H * DPR);
       canvas.style.width = W + 'px';
@@ -560,9 +619,8 @@
     function sampleLogoPoints(){
       if(!logoReady) return { fill:[], outline:[] };
       const iw = logoImg.naturalWidth, ih = logoImg.naturalHeight;
-      const isMob = window.innerWidth <= 860;
-      // On mobile screens, fit logo comfortably with ample margins so halo stars never clip
-      const targetW = isMob ? Math.min(W * 0.74, 295) : Math.min(W * 0.8, 980);
+      const prof = getDeviceProfile();
+      const targetW = prof.targetW;
       const scale = targetW / iw;
       const drawW = iw * scale, drawH = ih * scale;
       const off = document.createElement('canvas');
@@ -572,8 +630,8 @@
       const data = octx.getImageData(0,0,iw,ih).data;
 
       const offsetX = (W - drawW) / 2;
-      const offsetY = isMob ? (H * 0.44 - drawH / 2) : ((H - drawH) / 2);
-      // step 2 produces the original 10,756 razor-sharp points
+      const offsetY = (H * prof.verticalCenter - drawH / 2);
+      // step 2 produces the original 10,756 razor-sharp points across all devices
       const step = Math.max(1, Math.round(iw / 420));
 
       function isInk(x,y){
@@ -601,7 +659,7 @@
       if(!logoReady){ return; }
       particles = [];
       animStartTime = performance.now();
-      const isMob = window.innerWidth <= 860;
+      const prof = getDeviceProfile();
       const { fill, outline, bounds } = sampleLogoPoints();
       const cx = bounds ? bounds.x0 + bounds.w/2 : W/2;
       const cy = bounds ? bounds.y0 + bounds.h/2 : H/2;
@@ -637,13 +695,12 @@
         });
       }
 
-      // bright twinkling stars bordering the logo like a halo — perfectly contained on mobile
+      // bright twinkling stars bordering the logo like a halo — perfectly contained on all screens
       if(bounds){
-        const N_STARS = isMob ? 160 : 220;
+        const N_STARS = prof.starCount;
         const pad = Math.max(bounds.w, bounds.h) * 0.2;
-        const maxRx = W * 0.43;
-        const rx = isMob ? Math.min(maxRx, bounds.w/2 + pad * 0.65) : (bounds.w/2 + pad);
-        const ry = isMob ? (bounds.h/2 + pad * 1.3) : (bounds.h/2 + pad);
+        const rx = Math.min(prof.maxStarRx, bounds.w/2 + pad * prof.starPadXMul);
+        const ry = bounds.h/2 + pad * prof.starRyScale;
         for(let i=0;i<N_STARS;i++){
           const a = (i / N_STARS) * Math.PI * 2 + Math.random()*0.12;
           const jitter = 0.82 + Math.random()*0.36;
@@ -697,9 +754,12 @@
 
       ctx.clearRect(0,0,W,H);
 
+      const prof = getDeviceProfile();
       const age = (now - animStartTime) / 1000;
-      // Entry boost during the first 1.3s ensures responsive, swift assembly into the logo
-      const entryBoost = age < 1.3 ? Math.max(1, 2.5 - age * 1.15) : 1;
+      // Adaptive entrance boost: ensures swift, fluid convergence across 60Hz and 120Hz ProMotion displays
+      const entryBoost = age < prof.entryDuration 
+        ? Math.max(1, prof.entrySpeed - age * (prof.entrySpeed / prof.entryDuration)) 
+        : 1;
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
@@ -731,7 +791,7 @@
           baseY = cy + y2*persp;
         }
 
-        const driftAmt = (p.kind==='logo' ? 1.2 : p.kind==='edge' ? 1.5 : p.kind==='star' ? 2.6 : 8) * pv('idleDrift');
+        const driftAmt = (p.kind==='logo' ? 1.2 : p.kind==='edge' ? 1.5 : p.kind==='star' ? 2.6 : 8) * pv('idleDrift') * prof.driftMul;
         const fl = flow(p.tx, p.ty, t);
         baseX += fl.x * driftAmt;
         baseY += fl.y * driftAmt;
@@ -739,8 +799,8 @@
         // continuous, slow liquid churn inside the letterforms themselves — always on, not tied to the cursor
         if(isLogo){
           const lc = letterChaos(p.tx, p.ty, t);
-          baseX += lc.x * pv('letterChaosAmp');
-          baseY += lc.y * pv('letterChaosAmp');
+          baseX += lc.x * pv('letterChaosAmp') * prof.driftMul;
+          baseY += lc.y * pv('letterChaosAmp') * prof.driftMul;
         }
 
         // scrolling away disperses everything back across the screen
