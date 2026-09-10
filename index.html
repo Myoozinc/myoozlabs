@@ -191,6 +191,46 @@
     background-size:cover; background-position:center; box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
   }
 
+  /* ---------- humanitarian / social impact ---------- */
+  .humanitarian{ border-top:1px solid var(--line); }
+  .h-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+  .h-card{
+    display:flex; flex-direction:column; justify-content:space-between;
+    background:var(--ink-2); border:1px solid var(--line); border-radius:18px;
+    padding:36px 30px; text-decoration:none; color:inherit; position:relative;
+    overflow:hidden; transition:all .4s cubic-bezier(.16,1,.3,1);
+  }
+  .h-card::before{
+    content:""; position:absolute; inset:0; border-radius:18px;
+    background:radial-gradient(circle at 80% 20%, rgba(168,85,247,0.18), transparent 70%);
+    opacity:0; transition:opacity .4s ease; pointer-events:none;
+  }
+  .h-card:hover{
+    border-color:var(--violet-glow);
+    transform:translateY(-6px);
+    box-shadow:0 24px 50px -14px rgba(168,85,247,0.22);
+  }
+  .h-card:hover::before{ opacity:1; }
+  .h-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px; }
+  .h-badge{
+    display:inline-flex; align-items:center; gap:8px; font-size:11.5px; font-weight:600;
+    color:var(--lavender); border:1px solid rgba(192,132,252,0.3); background:rgba(168,85,247,0.1);
+    border-radius:100px; padding:5px 14px; font-family:'Manrope',sans-serif;
+  }
+  .h-badge .h-dot{ width:6px; height:6px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px #ef4444; }
+  .h-card h3{ font-size:clamp(19px,2vw,24px); color:#fff; margin-bottom:14px; font-weight:500; transition:color .3s ease; line-height:1.2; }
+  .h-card:hover h3{ color:var(--violet-glow); }
+  .h-desc{ font-size:14px; color:var(--muted); line-height:1.65; margin-bottom:24px; flex-grow:1; }
+  .h-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
+  .h-tags span{ font-size:11.5px; color:var(--lavender); border:1px solid var(--line); border-radius:100px; padding:4px 11px; background:rgba(255,255,255,0.02); }
+  .h-action{
+    display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600;
+    color:var(--lavender); font-family:'Unbounded',sans-serif; transition:all .3s ease;
+  }
+  .h-action svg{ width:15px; height:15px; transition:transform .3s ease; }
+  .h-card:hover .h-action{ color:var(--violet-glow); }
+  .h-card:hover .h-action svg{ transform:translate(3px, -3px); stroke:var(--violet-glow); }
+
   /* ---------- process strip ---------- */
   .process{ border-top:1px solid var(--line); }
   .process-row{ display:flex; overflow-x:auto; gap:1px; background:var(--line); border:1px solid var(--line); scrollbar-width:none; }
@@ -247,6 +287,7 @@
     .process-row{ overflow-x:auto; }
     .contact-grid{ grid-template-columns:1fr; }
     .proj-preview{ display:none; }
+    .h-grid{ grid-template-columns:1fr; }
   }
   /* ---------- physics control panel ---------- */
   #paramToggle{
@@ -311,6 +352,7 @@
   <nav class="links">
     <a href="#mission">Misión</a>
     <a href="#projects">Proyectos</a>
+    <a href="#humanitarian">Impacto Social</a>
     <a href="#process">Proceso</a>
     <a href="#contact">Contacto</a>
   </nav>
@@ -390,30 +432,104 @@
     </div>
 
     <div class="proj-list reveal">
-      <div class="proj" data-color="linear-gradient(135deg,#7c3aed,#1e1033)">
+      <a class="proj" href="https://studio-x-pro.vercel.app/" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#7c3aed,#1e1033)">
         <span class="p-num">01</span>
         <span class="p-name">Digimu — Estudio Virtual</span>
         <div class="p-tags"><span>Mundo virtual 3D</span><span>Creación musical</span><span>Grabación</span></div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      </div>
-      <div class="proj" data-color="linear-gradient(135deg,#a855f7,#2a1145)">
+      </a>
+      <a class="proj" href="https://reu-live.vercel.app/" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#a855f7,#2a1145)">
         <span class="p-num">02</span>
         <span class="p-name">ReuLive — Copiloto IA</span>
         <div class="p-tags"><span>Videoconferencias</span><span>Transcripción</span><span>Notas con IA</span></div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      </div>
-      <div class="proj" data-color="linear-gradient(135deg,#4c1d95,#0a0710)">
+      </a>
+      <a class="proj" href="https://interfaz-hazel.vercel.app/" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#4c1d95,#0a0710)">
         <span class="p-num">03</span>
         <span class="p-name">NONA — Software Factory</span>
         <div class="p-tags"><span>IA generativa</span><span>Crea tus apps</span><span>Multi-agente</span></div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      </div>
-      <div class="proj" data-color="linear-gradient(135deg,#c084fc,#3b0764)">
+      </a>
+      <a class="proj" href="https://promoter-verse.vercel.app/discover" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#c084fc,#3b0764)">
         <span class="p-num">04</span>
         <span class="p-name">Independent</span>
         <div class="p-tags"><span>Red social</span><span>Conexión artística</span><span>Colaboración</span></div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="humanitarian" id="humanitarian">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="idx">03 — Impacto Social</span>
+        <h2>Ayuda humanitaria en crisis</h2>
       </div>
+      <p>Plataformas cívicas desarrolladas y gestionadas en tiempo real para canalizar auxilio, geolocalizar centros de acopio y conectar comunidades durante emergencias sísmicas en Venezuela y Colombia.</p>
+    </div>
+
+    <div class="h-grid reveal">
+      <a class="h-card" href="https://centro-de-acopio-ven.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="h-top">
+            <span class="h-badge"><span class="h-dot"></span> 🇻🇪 Venezuela · Emergencia Sísmica</span>
+          </div>
+          <h3>Centros de Acopio VE</h3>
+          <p class="h-desc">Plataforma ciudadana para la respuesta ante sismos en Venezuela. Desarrollada para registrar y mapear mediante GPS centros de acopio vecinales, albergues e insumos urgentes (agua, medicamentos, alimentos y herramientas), permitiendo auxilio directo y transparente.</p>
+          <div class="h-tags">
+            <span>Geolocalización GPS</span>
+            <span>Mapeo en vivo</span>
+            <span>Insumos críticos</span>
+            <span>Red vecinal</span>
+          </div>
+        </div>
+        <div class="h-action">
+          <span>Ver plataforma demo</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+        </div>
+      </a>
+
+      <a class="h-card" href="https://porvenezuela.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="h-top">
+            <span class="h-badge"><span class="h-dot"></span> 🇻🇪 Venezuela · Red Solidaria</span>
+          </div>
+          <h3>Por Venezuela</h3>
+          <p class="h-desc">Plataforma unificada de canalización humanitaria que integró arte, música y donaciones directas hacia sectores vulnerables. Diseñada bajo máxima transparencia comunitaria, con más de 27 evidencias públicas en video de entregas de insumos en terreno.</p>
+          <div class="h-tags">
+            <span>Donaciones directas</span>
+            <span>Arte &amp; Música</span>
+            <span>Trazabilidad 100%</span>
+            <span>Evidencias en video</span>
+          </div>
+        </div>
+        <div class="h-action">
+          <span>Ver plataforma demo</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+        </div>
+      </a>
+
+      <a class="h-card" href="https://acopio-col.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div>
+          <div class="h-top">
+            <span class="h-badge"><span class="h-dot"></span> 🇨🇴 Colombia · Sismo 7.4 Mw</span>
+          </div>
+          <h3>Acopio COL</h3>
+          <p class="h-desc">Portal integral de auxilio sísmico desplegado ante el terremoto 7.4 en Colombia. Proveyó mapa interactivo con rutas de auxilio, puntos de salud y albergues, pedidos de emergencia SOS, voluntariado y sistema de búsqueda de personas no localizadas.</p>
+          <div class="h-tags">
+            <span>Mapa de emergencia</span>
+            <span>Auxilio SOS</span>
+            <span>Personas buscadas</span>
+            <span>Rutas de auxilio</span>
+          </div>
+        </div>
+        <div class="h-action">
+          <span>Ver plataforma demo</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -422,7 +538,7 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <span class="idx">03 — Proceso</span>
+        <span class="idx">04 — Proceso</span>
         <h2>Cómo trabajamos</h2>
       </div>
       <p>Cuatro etapas, un mismo hilo conductor: claridad en cada decisión.</p>
