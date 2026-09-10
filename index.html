@@ -633,41 +633,39 @@
       const isTablet = !isPhone && (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua) || (isTouch && Math.min(w, h) <= 1024));
 
       if(isPhone){
-        // Mobile Phones (iPhone 13 Pro, Android) — calibrated for locked 120 FPS & razor-sharp definition
+        // Mobile Phones (iOS / Android) — ultra-fluid ~700 particles, zero lag, silky smooth 60/120 FPS
         return {
           type: 'mobile',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
-          targetW: Math.min(w * 0.75, 290),
+          targetW: Math.min(w * 0.78, 300),
           verticalCenter: 0.44,
-          starCount: 110,
-          stepDiv: 240,        // Generates ~2,800 razor-sharp particles (smooth 120 FPS on mobile GPU)
-          pointSizeMul: 1.32,  // Calibrated size for 100% solid, glowing fill on high-density Retina
+          starCount: 60,
+          stepDiv: 110,        // ~700 particles — ultra-responsive & fluid on mobile CPUs
+          pointSizeMul: 1.85,  // Large, glowing Retina dots fill the logo silhouette solidly
+          useLetterChaos: false, // Saves thousands of trig calls per frame on phone
           maxStarRx: w * 0.44,
           starPadXMul: 0.65,
           starRyScale: 1.30,
-          entryDuration: 1.4,
-          entryK: 0.125,
-          driftMul: 0.85
+          driftMul: 0.75
         };
       } else if(isTablet){
-        // Tablets & foldables (iPad, Galaxy Tab) — balanced medium framing
+        // Tablets & foldables (iPad, Galaxy Tab)
         return {
           type: 'tablet',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
           targetW: Math.min(w * 0.76, 640),
           verticalCenter: 0.46,
-          starCount: 160,
-          stepDiv: 330,        // ~5,200 particles
-          pointSizeMul: 1.15,
+          starCount: 110,
+          stepDiv: 200,        // ~1,800 particles
+          pointSizeMul: 1.35,
+          useLetterChaos: false,
           maxStarRx: w * 0.46,
           starPadXMul: 0.85,
           starRyScale: 1.15,
-          entryDuration: 1.45,
-          entryK: 0.13,
-          driftMul: 0.95
+          driftMul: 0.9
         };
       } else {
-        // Desktop & Laptops (Mac, Windows, widescreen displays) — full cinematic 10,756-particle resolution
+        // Desktop & Laptops (Mac, Windows) — full cinematic resolution
         return {
           type: 'desktop',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
@@ -676,11 +674,10 @@
           starCount: 220,
           stepDiv: 420,        // 10,756 particles for 4K/5K desktop displays
           pointSizeMul: 1.0,
+          useLetterChaos: true,
           maxStarRx: w * 0.48,
           starPadXMul: 1.0,
           starRyScale: 1.0,
-          entryDuration: 1.5,
-          entryK: 0.135,
           driftMul: 1.0
         };
       }
@@ -928,7 +925,7 @@
       for(let i=0;i<fill.length;i++){
         const p = fill[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = Math.max(W, H) * (0.28 + Math.random() * 0.22);
+        const spawnDist = Math.max(W, H) * (0.24 + Math.random() * 0.16);
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -943,7 +940,7 @@
       for(let i=0;i<outline.length;i++){
         const p = outline[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = Math.max(W, H) * (0.28 + Math.random() * 0.22);
+        const spawnDist = Math.max(W, H) * (0.24 + Math.random() * 0.16);
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -968,7 +965,7 @@
           const px = cx + Math.cos(a) * rx * jitter;
           const py = cy + Math.sin(a) * ry * jitter;
           const ang = Math.random() * Math.PI * 2;
-          const spawnDist = Math.max(W, H) * (0.32 + Math.random() * 0.25);
+          const spawnDist = Math.max(W, H) * (0.26 + Math.random() * 0.18);
           const initX = reduced ? px : cx + Math.cos(ang) * spawnDist;
           const initY = reduced ? py : cy + Math.sin(ang) * spawnDist;
           particles.push({
@@ -1017,16 +1014,12 @@
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      const dtRatio = dt / 0.016667;
+      const dtRatio = Math.max(0.5, Math.min(2.0, dt / 0.016667));
       t += dt * 0.95;
 
       const prof = getDeviceProfile();
       const age = (now - animStartTime) / 1000;
-      // Smooth continuous entrance progress (0 -> 1) over entryDuration
-      const entryT = Math.min(1.0, age / prof.entryDuration);
-      // Smoothstep easing: continuous acceleration and deceleration, zero sudden speed snaps or freezes
-      const blend = entryT * entryT * (3 - 2 * entryT);
-      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.35));
+      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.4));
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
@@ -1047,8 +1040,21 @@
         ctx.clearRect(0,0,W,H);
       }
 
-      // Smooth continuous speed limit transition: ramps gracefully from entryK to 0.42 (zero jarring speed jumps)
-      const curMaxK = (prof.entryK + (0.42 - prof.entryK) * blend) * dtRatio;
+      // Pre-fetch physics variables outside loop for high performance
+      const easeLogo = pv('easeLogo');
+      const easeBg = pv('easeBg');
+      const visc = pv('damping');
+      const smoothRate = Math.min(0.38, (1 - visc) * dtRatio);
+      const idleDrift = pv('idleDrift') * prof.driftMul;
+      const hoverRadius = pv('hoverRadius');
+      const hoverRadiusBg = pv('hoverRadiusBg');
+      const hoverAmp = pv('hoverAmp');
+      const hoverAmpBg = pv('hoverAmpBg');
+      const letterChaosAmp = pv('letterChaosAmp') * prof.driftMul;
+      const hasRot = (rotY !== 0 || rotX !== 0);
+      const hasMouse = mouse.active && !mouse.down;
+      const useLetterChaos = prof.useLetterChaos;
+      const ptMul = prof.pointSizeMul;
 
       for(let i=0;i<particles.length;i++){
         const p = particles[i];
@@ -1056,7 +1062,7 @@
 
         let baseX = p.tx, baseY = p.ty, persp = 1;
 
-        if(isLogo && (rotY !== 0 || rotX !== 0)){
+        if(isLogo && hasRot){
           const rx = p.tx - cx, ry = p.ty - cy, rz = p.z;
           const x1 = rx*cosY - rz*sinY;
           const z1 = rx*sinY + rz*cosY;
@@ -1067,47 +1073,42 @@
           baseY = cy + y2*persp;
         }
 
-        const driftAmt = (p.kind==='logo' ? 1.2 : p.kind==='edge' ? 1.5 : p.kind==='star' ? 2.6 : 8) * pv('idleDrift') * prof.driftMul;
+        const driftAmt = (p.kind==='logo' ? 1.2 : p.kind==='edge' ? 1.5 : p.kind==='star' ? 2.6 : 8) * idleDrift;
         const fl = flow(p.tx, p.ty, t);
         baseX += fl.x * driftAmt;
         baseY += fl.y * driftAmt;
 
-        // continuous, slow liquid churn inside the letterforms themselves — always on, not tied to the cursor
-        if(isLogo){
+        // continuous, slow liquid churn inside the letterforms themselves
+        if(isLogo && useLetterChaos){
           const lc = letterChaos(p.tx, p.ty, t);
-          baseX += lc.x * pv('letterChaosAmp') * prof.driftMul;
-          baseY += lc.y * pv('letterChaosAmp') * prof.driftMul;
+          baseX += lc.x * letterChaosAmp;
+          baseY += lc.y * letterChaosAmp;
         }
 
         // scrolling away disperses everything back across the screen
         let targetX = baseX + (p.dx - baseX) * easedScroll;
         let targetY = baseY + (p.dy - baseY) * easedScroll;
 
-        if(mouse.active && !mouse.down){
+        if(hasMouse){
           const dx = p.x - mouse.x, dy = p.y - mouse.y;
-          const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-          const radius = isLogo ? pv('hoverRadius') : pv('hoverRadiusBg');
-          if(dist < radius){
+          const radius = isLogo ? hoverRadius : hoverRadiusBg;
+          const distSq = dx*dx + dy*dy;
+          if(distSq < radius*radius){
+            const dist = Math.sqrt(distSq) || 1;
             const falloff = (1 - dist/radius);
-            const amp = (isLogo ? pv('hoverAmp') : pv('hoverAmpBg')) * falloff;
+            const amp = (isLogo ? hoverAmp : hoverAmpBg) * falloff;
             targetX += fl.x * amp * 3;
             targetY += fl.y * amp * 3;
           }
         }
 
         // liquid follow: continuous fluid convergence into target
-        const ease = isLogo ? pv('easeLogo') : pv('easeBg');
-        const visc = pv('damping');
+        const followRate = Math.min(0.38, (isLogo ? easeLogo : easeBg) * dtRatio);
+        p.sx += (targetX - p.sx) * smoothRate;
+        p.sy += (targetY - p.sy) * smoothRate;
 
-        const distS = Math.hypot(targetX - p.sx, targetY - p.sy);
-        const smoothK = Math.min(curMaxK, ((1 - visc) + Math.min(0.08, distS * 0.0006)) * dtRatio);
-        p.sx += (targetX - p.sx) * smoothK;
-        p.sy += (targetY - p.sy) * smoothK;
-
-        const distP = Math.hypot(p.sx - p.x, p.sy - p.y);
-        const followK = Math.min(curMaxK, (ease + Math.min(0.06, distP * 0.0006)) * dtRatio);
-        p.x += (p.sx - p.x) * followK;
-        p.y += (p.sy - p.y) * followK;
+        p.x += (p.sx - p.x) * followRate;
+        p.y += (p.sy - p.y) * followRate;
 
         const rDraw = p.r * (isLogo ? persp : 1);
 
@@ -1125,23 +1126,23 @@
           let pointSize, r, g, b, alpha, core;
           if(p.kind === 'star'){
             const tw = (0.6 + 0.4 * Math.sin(t*2.2 + p.twinkle)) * fadeMul;
-            pointSize = rDraw * 14 * DPR * prof.pointSizeMul;
+            pointSize = rDraw * 14 * DPR * ptMul;
             r = 0.88; g = 0.80; b = 1.0;
             alpha = tw;
             core = 1.0;
           } else if(p.kind === 'edge'){
-            pointSize = rDraw * 11 * DPR * prof.pointSizeMul;
+            pointSize = rDraw * 11 * DPR * ptMul;
             r = 1.0; g = 1.0; b = 1.0;
             alpha = 0.95 * fadeMul;
             core = 1.0;
           } else if(p.kind === 'logo'){
-            pointSize = rDraw * 9.5 * DPR * prof.pointSizeMul;
+            pointSize = rDraw * 9.5 * DPR * ptMul;
             r = 0.753; g = 0.518; b = 0.988; // vibrant violet
             alpha = 0.82 * fadeMul;
             core = 1.0;
           } else {
             // ambient
-            pointSize = rDraw * 8 * DPR * prof.pointSizeMul;
+            pointSize = rDraw * 8 * DPR * ptMul;
             r = 0.85; g = 0.78; b = 0.96;
             alpha = 0.35 * fadeMul;
             core = 0.0;
@@ -1161,18 +1162,18 @@
           if(fadeMul < 0.02) continue;
           if(p.kind === 'star'){
             const tw = (0.6 + 0.4 * Math.sin(t*2.2 + p.twinkle)) * fadeMul;
-            const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rDraw*7*prof.pointSizeMul);
+            const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rDraw*7*ptMul);
             grad.addColorStop(0, `rgba(255,255,255,${tw})`);
             grad.addColorStop(0.3, `rgba(255,255,255,${0.6*tw})`);
             grad.addColorStop(0.6, `rgba(216,180,254,${0.3*tw})`);
             grad.addColorStop(1, 'rgba(216,180,254,0)');
             ctx.fillStyle = grad;
-            ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*7*prof.pointSizeMul, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*7*ptMul, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = `rgba(255,255,255,${tw})`;
-            ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*0.7*prof.pointSizeMul, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*0.7*ptMul, 0, Math.PI*2); ctx.fill();
             continue;
           }
-          const glow = (isLogo ? (p.kind === 'edge' ? 1.3 : 0.85) : 0.4) * prof.pointSizeMul;
+          const glow = (isLogo ? (p.kind === 'edge' ? 1.3 : 0.85) : 0.4) * ptMul;
           const alpha = (isLogo ? (p.kind === 'edge' ? 0.95 : 0.7) : 0.3) * fadeMul;
           const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rDraw*5*glow);
           grad.addColorStop(0, `rgba(${p.kind==='edge' ? '255,255,255' : '192,132,252'},${alpha})`);
@@ -1181,7 +1182,7 @@
           ctx.fillStyle = grad;
           ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*5*glow, 0, Math.PI*2); ctx.fill();
           ctx.fillStyle = isLogo ? `rgba(255,255,255,${0.98*fadeMul})` : `rgba(233,226,247,${0.45*fadeMul})`;
-          ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*prof.pointSizeMul, 0, Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(p.x, p.y, rDraw*ptMul, 0, Math.PI*2); ctx.fill();
         }
       }
 
