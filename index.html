@@ -211,13 +211,18 @@
     box-shadow:0 24px 50px -14px rgba(168,85,247,0.22);
   }
   .h-card:hover::before{ opacity:1; }
-  .h-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px; }
+  .h-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; gap:10px; flex-wrap:wrap; }
   .h-badge{
     display:inline-flex; align-items:center; gap:8px; font-size:11.5px; font-weight:600;
     color:var(--lavender); border:1px solid rgba(192,132,252,0.3); background:rgba(168,85,247,0.1);
     border-radius:100px; padding:5px 14px; font-family:'Manrope',sans-serif;
   }
   .h-badge .h-dot{ width:6px; height:6px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px #ef4444; }
+  .h-status{
+    font-size:11px; color:var(--muted); border:1px solid var(--line);
+    border-radius:100px; padding:4px 10px; background:rgba(255,255,255,0.03);
+    font-family:'Manrope',sans-serif; letter-spacing:0.02em;
+  }
   .h-card h3{ font-size:clamp(19px,2vw,24px); color:#fff; margin-bottom:14px; font-weight:500; transition:color .3s ease; line-height:1.2; }
   .h-card:hover h3{ color:var(--violet-glow); }
   .h-desc{ font-size:14px; color:var(--muted); line-height:1.65; margin-bottom:24px; flex-grow:1; }
@@ -467,7 +472,7 @@
         <span class="idx">03 — Impacto Social</span>
         <h2>Ayuda humanitaria en crisis</h2>
       </div>
-      <p>Plataformas cívicas desarrolladas y gestionadas en tiempo real para canalizar auxilio, geolocalizar centros de acopio y conectar comunidades durante emergencias sísmicas en Venezuela y Colombia.</p>
+      <p>Sistemas cívicos reales desarrollados y gestionados en producción durante las emergencias sísmicas en Venezuela y Colombia. Plataformas operativas desplegadas para conectar comunidades y canalizar auxilio directo, preservadas en línea para consulta pública.</p>
     </div>
 
     <div class="h-grid reveal">
@@ -475,18 +480,19 @@
         <div>
           <div class="h-top">
             <span class="h-badge"><span class="h-dot"></span> 🇻🇪 Venezuela · Emergencia Sísmica</span>
+            <span class="h-status">Desplegada en producción</span>
           </div>
           <h3>Centros de Acopio VE</h3>
-          <p class="h-desc">Plataforma ciudadana para la respuesta ante sismos en Venezuela. Desarrollada para registrar y mapear mediante GPS centros de acopio vecinales, albergues e insumos urgentes (agua, medicamentos, alimentos y herramientas), permitiendo auxilio directo y transparente.</p>
+          <p class="h-desc">Plataforma ciudadana real desplegada ante la emergencia sísmica en Venezuela. Gestionó el registro y mapeo GPS en tiempo real de centros de acopio vecinales, refugios y requerimientos críticos (agua, medicinas, alimentos y herramientas), coordinando ayuda directa entre voluntarios y comunidades.</p>
           <div class="h-tags">
+            <span>Producción real</span>
             <span>Geolocalización GPS</span>
             <span>Mapeo en vivo</span>
-            <span>Insumos críticos</span>
             <span>Red vecinal</span>
           </div>
         </div>
         <div class="h-action">
-          <span>Ver plataforma demo</span>
+          <span>Visitar plataforma</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
         </div>
       </a>
@@ -495,18 +501,19 @@
         <div>
           <div class="h-top">
             <span class="h-badge"><span class="h-dot"></span> 🇻🇪 Venezuela · Red Solidaria</span>
+            <span class="h-status">Desplegada en producción</span>
           </div>
           <h3>Por Venezuela</h3>
-          <p class="h-desc">Plataforma unificada de canalización humanitaria que integró arte, música y donaciones directas hacia sectores vulnerables. Diseñada bajo máxima transparencia comunitaria, con más de 27 evidencias públicas en video de entregas de insumos en terreno.</p>
+          <p class="h-desc">Plataforma humanitaria oficial que articuló donaciones directas, arte y música hacia sectores vulnerables afectados. Desarrollada bajo un estándar de transparencia total del 100%, con más de 27 evidencias públicas en video de entregas en terreno y trazabilidad de fondos.</p>
           <div class="h-tags">
+            <span>Producción real</span>
             <span>Donaciones directas</span>
-            <span>Arte &amp; Música</span>
             <span>Trazabilidad 100%</span>
-            <span>Evidencias en video</span>
+            <span>27+ Evidencias en video</span>
           </div>
         </div>
         <div class="h-action">
-          <span>Ver plataforma demo</span>
+          <span>Visitar plataforma</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
         </div>
       </a>
@@ -515,18 +522,19 @@
         <div>
           <div class="h-top">
             <span class="h-badge"><span class="h-dot"></span> 🇨🇴 Colombia · Sismo 7.4 Mw</span>
+            <span class="h-status">Desplegada en producción</span>
           </div>
           <h3>Acopio COL</h3>
-          <p class="h-desc">Portal integral de auxilio sísmico desplegado ante el terremoto 7.4 en Colombia. Proveyó mapa interactivo con rutas de auxilio, puntos de salud y albergues, pedidos de emergencia SOS, voluntariado y sistema de búsqueda de personas no localizadas.</p>
+          <p class="h-desc">Portal integral de respuesta y auxilio desplegado y operado ante el terremoto 7.4 en Colombia. Integró mapa interactivo con cálculo de rutas de auxilio, puntos de salud y albergues, pedidos de emergencia SOS, voluntariado y sistema de búsqueda de personas desaparecidas.</p>
           <div class="h-tags">
+            <span>Producción real</span>
             <span>Mapa de emergencia</span>
             <span>Auxilio SOS</span>
-            <span>Personas buscadas</span>
-            <span>Rutas de auxilio</span>
+            <span>Búsqueda de personas</span>
           </div>
         </div>
         <div class="h-action">
-          <span>Ver plataforma demo</span>
+          <span>Visitar plataforma</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
         </div>
       </a>
@@ -633,8 +641,8 @@
           maxStarRx: w * 0.43,
           starPadXMul: 0.65,
           starRyScale: 1.32,
-          entrySpeed: 2.6,
-          entryDuration: 1.1,
+          entryDuration: 1.35,
+          entryK: 0.12,
           driftMul: 0.85
         };
       } else if(isTablet){
@@ -648,8 +656,8 @@
           maxStarRx: w * 0.46,
           starPadXMul: 0.85,
           starRyScale: 1.15,
-          entrySpeed: 2.3,
-          entryDuration: 1.2,
+          entryDuration: 1.4,
+          entryK: 0.13,
           driftMul: 0.95
         };
       } else {
@@ -663,8 +671,8 @@
           maxStarRx: w * 0.48,
           starPadXMul: 1.0,
           starRyScale: 1.0,
-          entrySpeed: 2.1,
-          entryDuration: 1.3,
+          entryDuration: 1.45,
+          entryK: 0.135,
           driftMul: 1.0
         };
       }
@@ -911,7 +919,7 @@
       for(let i=0;i<fill.length;i++){
         const p = fill[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = Math.max(W, H) * (0.35 + Math.random() * 0.35);
+        const spawnDist = Math.max(W, H) * (0.28 + Math.random() * 0.22);
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -926,7 +934,7 @@
       for(let i=0;i<outline.length;i++){
         const p = outline[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = Math.max(W, H) * (0.35 + Math.random() * 0.35);
+        const spawnDist = Math.max(W, H) * (0.28 + Math.random() * 0.22);
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -951,7 +959,7 @@
           const px = cx + Math.cos(a) * rx * jitter;
           const py = cy + Math.sin(a) * ry * jitter;
           const ang = Math.random() * Math.PI * 2;
-          const spawnDist = Math.max(W, H) * (0.4 + Math.random() * 0.35);
+          const spawnDist = Math.max(W, H) * (0.32 + Math.random() * 0.25);
           const initX = reduced ? px : cx + Math.cos(ang) * spawnDist;
           const initY = reduced ? py : cy + Math.sin(ang) * spawnDist;
           particles.push({
@@ -1005,10 +1013,9 @@
 
       const prof = getDeviceProfile();
       const age = (now - animStartTime) / 1000;
-      // Adaptive entrance boost: ensures swift, fluid convergence across 60Hz and 120Hz ProMotion displays
-      const entryBoost = age < prof.entryDuration 
-        ? Math.max(1, prof.entrySpeed - age * (prof.entrySpeed / prof.entryDuration)) 
-        : 1;
+      const isEntering = age < prof.entryDuration;
+      // Gentle initial opacity fade-in over ~350ms so particles emerge gracefully instead of a harsh pop on frame 0
+      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.35));
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
@@ -1079,19 +1086,24 @@
         const visc = pv('damping');
 
         const distS = Math.hypot(targetX - p.sx, targetY - p.sy);
-        const smoothK = Math.min(0.65, ((1 - visc) + distS * 0.004) * entryBoost * dtRatio);
+        // Fast, fluid and organic entrance: converges smoothly in ~1.2s without aggressive instantaneous snapping
+        const smoothK = isEntering
+          ? Math.min(prof.entryK, (0.055 + Math.min(0.065, distS * 0.0003))) * dtRatio
+          : Math.min(0.45, ((1 - visc) + Math.min(0.12, distS * 0.001)) * dtRatio);
         p.sx += (targetX - p.sx) * smoothK;
         p.sy += (targetY - p.sy) * smoothK;
 
         const distP = Math.hypot(p.sx - p.x, p.sy - p.y);
-        const followK = Math.min(0.65, (ease + distP * 0.004) * entryBoost * dtRatio);
+        const followK = isEntering
+          ? Math.min(prof.entryK, (0.05 + Math.min(0.06, distP * 0.0003))) * dtRatio
+          : Math.min(0.45, (ease + Math.min(0.10, distP * 0.001)) * dtRatio);
         p.x += (p.sx - p.x) * followK;
         p.y += (p.sy - p.y) * followK;
 
         const rDraw = p.r * (isLogo ? persp : 1);
 
         // once scrolled past the animation only a sparse subset stays visible, and only faintly
-        const fadeMul = 1 - easedScroll * (p.keep ? 0.45 : 0.94);
+        const fadeMul = (1 - easedScroll * (p.keep ? 0.45 : 0.94)) * entryFade;
 
         if(useGL){
           // ---------- WebGL GPU Particle Packing ----------
