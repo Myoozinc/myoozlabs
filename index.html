@@ -496,40 +496,85 @@
     let rotY = 0, rotX = 0;       // current (smoothed) rotation
     let rotYTarget = 0, rotXTarget = 0;
 
+    function isMobileCheck(){
+      return (window.innerWidth <= 860) || /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // High-performance offscreen sprites: pre-rendering gradient particle textures avoids thousands
+    // of expensive canvas createRadialGradient() calls per frame, delivering smooth 60fps on mobile.
+    const SPRITES = {};
+    function makeSprite(colorCenter, colorMid, colorOuter, hasCore){
+      const s = 64;
+      const c = document.createElement("canvas");
+      c.width = s; c.height = s;
+      const cx = c.getContext("2d");
+      const r = s / 2;
+      const g = cx.createRadialGradient(r, r, 0, r, r, r);
+      g.addColorStop(0, colorCenter);
+      g.addColorStop(0.35, colorMid);
+      g.addColorStop(1, colorOuter);
+      cx.fillStyle = g;
+      cx.beginPath();
+      cx.arc(r, r, r, 0, Math.PI * 2);
+      cx.fill();
+      if(hasCore){
+        cx.fillStyle = "#ffffff";
+        cx.beginPath();
+        cx.arc(r, r, r * 0.22, 0, Math.PI * 2);
+        cx.fill();
+      }
+      return c;
+    }
+    SPRITES.star = makeSprite("rgba(255,255,255,1)", "rgba(216,180,254,0.5)", "rgba(216,180,254,0)", true);
+    SPRITES.edge = makeSprite("rgba(255,255,255,1)", "rgba(168,85,247,0.55)", "rgba(124,58,237,0)", true);
+    SPRITES.logo = makeSprite("rgba(216,180,254,1)", "rgba(168,85,247,0.42)", "rgba(124,58,237,0)", true);
+    SPRITES.ambient = makeSprite("rgba(233,226,247,0.9)", "rgba(168,85,247,0.28)", "rgba(124,58,237,0)", false);
+
     // ---- tunable physics parameters, live-editable from the panel (top right) ----
     const PARAMS = {
-      flowScale:    { v: 4,    min: 0.1, max: 10,   step: 0.1,  label: 'Escala del flujo' },
-      flowSpeed:    { v: 0.6,  min: 0.02,max: 3,    step: 0.02, label: 'Velocidad del flujo' },
-      idleDrift:    { v: 1.45, min: 0,   max: 4,    step: 0.05, label: 'Deriva en reposo' },
-      hoverRadius:  { v: 160,  min: 60,  max: 500,  step: 5,    label: 'Radio del cursor (logo)' },
-      hoverRadiusBg:{ v: 175,  min: 40,  max: 400,  step: 5,    label: 'Radio del cursor (fondo)' },
-      hoverAmp:     { v: 34,   min: 0,   max: 160,  step: 2,    label: 'Desprendimiento (logo)' },
-      hoverAmpBg:   { v: 46,   min: 0,   max: 120,  step: 2,    label: 'Desprendimiento (fondo)' },
-      easeLogo:     { v: 0.082,min: 0.003,max: 0.12,step: 0.001,label: 'Rigidez de retorno (logo)' },
-      easeBg:       { v: 0.048,min: 0.003,max: 0.08,step: 0.001,label: 'Rigidez de retorno (fondo)' },
-      damping:      { v: 0.825,min: 0.7, max: 0.98, step: 0.005,label: 'Amortiguación (viscosidad)' },
-      rotSensitivity:{v: 0.007,min: 0.001,max: 0.02,step: 0.001,label: 'Sensibilidad al arrastrar' },
-      rotSmoothing: { v: 0.06, min: 0.01, max: 0.3,  step: 0.01, label: 'Suavizado de rotación 3D' },
-      letterChaosAmp:  { v: 7.5,  min: 0,    max: 30,   step: 0.5,  label: 'Caos interno de letras' },
-      letterChaosScale:{ v: 14,   min: 1,    max: 40,   step: 0.5,  label: 'Detalle del caos interno' },
-      letterChaosSpeed:{ v: 0.85, min: 0.05, max: 2,    step: 0.05, label: 'Velocidad del caos interno' },
+      flowScale:    { v: 4,    min: 0.1, max: 10,   step: 0.1,  label: "Escala del flujo" },
+      flowSpeed:    { v: 0.6,  min: 0.02,max: 3,    step: 0.02, label: "Velocidad del flujo" },
+      idleDrift:    { v: 1.45, min: 0,   max: 4,    step: 0.05, label: "Deriva en reposo" },
+      hoverRadius:  { v: 160,  min: 60,  max: 500,  step: 5,    label: "Radio del cursor (logo)" },
+      hoverRadiusBg:{ v: 175,  min: 40,  max: 400,  step: 5,    label: "Radio del cursor (fondo)" },
+      hoverAmp:     { v: 34,   min: 0,   max: 160,  step: 2,    label: "Desprendimiento (logo)" },
+      hoverAmpBg:   { v: 46,   min: 0,   max: 120,  step: 2,    label: "Desprendimiento (fondo)" },
+      easeLogo:     { v: 0.082,min: 0.003,max: 0.12,step: 0.001,label: "Rigidez de retorno (logo)" },
+      easeBg:       { v: 0.048,min: 0.003,max: 0.08,step: 0.001,label: "Rigidez de retorno (fondo)" },
+      damping:      { v: 0.825,min: 0.7, max: 0.98, step: 0.005,label: "Amortiguación (viscosidad)" },
+      rotSensitivity:{v: 0.007,min: 0.001,max: 0.02,step: 0.001,label: "Sensibilidad al arrastrar" },
+      rotSmoothing: { v: 0.06, min: 0.01, max: 0.3,  step: 0.01, label: "Suavizado de rotación 3D" },
+      letterChaosAmp:  { v: 7.5,  min: 0,    max: 30,   step: 0.5,  label: "Caos interno de letras" },
+      letterChaosScale:{ v: 14,   min: 1,    max: 40,   step: 0.5,  label: "Detalle del caos interno" },
+      letterChaosSpeed:{ v: 0.85, min: 0.05, max: 2,    step: 0.05, label: "Velocidad del caos interno" },
     };
     const DEFAULTS = JSON.parse(JSON.stringify(PARAMS));
     function pv(key){ return PARAMS[key].v; }
 
+    let lastW = 0, lastH = 0;
     function resize(){
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
-      W = window.innerWidth; H = window.innerHeight;
-      canvas.width = W * DPR; canvas.height = H * DPR;
-      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      const newW = window.innerWidth;
+      const newH = window.innerHeight;
+      const isMob = isMobileCheck();
+      // On mobile devices, ignore small height fluctuations caused by address bar hide/reveal
+      if(lastW !== 0 && Math.abs(newW - lastW) < 6 && Math.abs(newH - lastH) < 130 && isMob){
+        return;
+      }
+      lastW = newW; lastH = newH;
+      W = newW; H = newH;
+      DPR = Math.min(window.devicePixelRatio || 1, isMob ? 1.5 : 2);
+      canvas.width = Math.round(W * DPR);
+      canvas.height = Math.round(H * DPR);
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
       ctx.setTransform(DPR,0,0,DPR,0,0);
       buildParticles();
     }
 
     // smooth, continuous pseudo-curl noise field — organic swirling flow instead of per-point randomness
     function flow(x, y, time){
-      const s = pv('flowScale') / 1000;
-      const spd = pv('flowSpeed');
+      const s = pv("flowScale") / 1000;
+      const spd = pv("flowSpeed");
       const a = Math.sin(x*s + time*0.35*spd) + Math.cos(y*s*1.3 - time*0.28*spd);
       const b = Math.cos(x*s*1.6 - time*0.22*spd) + Math.sin(y*s + time*0.4*spd);
       return { x:a, y:b };
@@ -538,8 +583,8 @@
     // a second, finer-grained flow field driving continuous liquid churn *inside* each letter —
     // independent of the cursor, always running, slow and fluid
     function letterChaos(x, y, time){
-      const s = pv('letterChaosScale') / 1000;
-      const spd = pv('letterChaosSpeed');
+      const s = pv("letterChaosScale") / 1000;
+      const spd = pv("letterChaosSpeed");
       const a = Math.sin(x*s*2.1 - time*0.5*spd) + Math.cos(y*s*1.7 + time*0.4*spd);
       const b = Math.cos(x*s*1.4 + time*0.45*spd) + Math.sin(y*s*2.3 - time*0.38*spd);
       return { x:a, y:b };
@@ -549,18 +594,21 @@
     function sampleLogoPoints(){
       if(!logoReady) return { fill:[], outline:[] };
       const iw = logoImg.naturalWidth, ih = logoImg.naturalHeight;
-      const targetW = Math.min(W * 0.8, 980);
+      const isMob = isMobileCheck();
+      const targetW = Math.min(W * (isMob ? 0.88 : 0.8), 980);
       const scale = targetW / iw;
       const drawW = iw * scale, drawH = ih * scale;
-      const off = document.createElement('canvas');
+      const off = document.createElement("canvas");
       off.width = iw; off.height = ih;
-      const octx = off.getContext('2d');
+      const octx = off.getContext("2d");
       octx.drawImage(logoImg, 0, 0, iw, ih);
       const data = octx.getImageData(0,0,iw,ih).data;
 
       const offsetX = (W - drawW) / 2;
       const offsetY = (H - drawH) / 2;
-      const step = Math.max(1, Math.round(iw / 420));
+      // On mobile (360-430px wide), step 5 produces ~1,700 crisp points with great fill density.
+      // On desktop (large screens), step 2 produces ~10,700 ultra-dense points.
+      const step = isMob ? Math.max(3, Math.round(iw / 150)) : Math.max(2, Math.round(iw / 350));
 
       function isInk(x,y){
         if(x<0||y<0||x>=iw||y>=ih) return false;
@@ -582,37 +630,51 @@
       return { fill, outline, bounds: { x0:offsetX, y0:offsetY, w:drawW, h:drawH } };
     }
 
+    let animStartTime = performance.now();
     function buildParticles(){
       if(!logoReady){ return; }
       particles = [];
+      animStartTime = performance.now();
+      const isMob = isMobileCheck();
       const { fill, outline, bounds } = sampleLogoPoints();
       const cx = bounds ? bounds.x0 + bounds.w/2 : W/2;
       const cy = bounds ? bounds.y0 + bounds.h/2 : H/2;
+      const rMul = isMob ? 1.35 : 1.0;
 
       for(let i=0;i<fill.length;i++){
         const p = fill[i];
+        const ang = Math.random() * Math.PI * 2;
+        const spawnDist = Math.max(W, H) * (0.35 + Math.random() * 0.45);
+        const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
+        const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
           tx:p.x, ty:p.y, z: (Math.random()-0.5) * 46,
-          x: Math.random()*W, y: Math.random()*H,
+          x: initX, y: initY,
+          sx: initX, sy: initY,
           dx: Math.random()*W, dy: Math.random()*H,
-          vx:0, vy:0, r: Math.random()*0.7 + 0.35,
-          phase: Math.random()*Math.PI*2, kind:'logo'
+          vx:0, vy:0, r: (Math.random()*0.7 + 0.35) * rMul,
+          phase: Math.random()*Math.PI*2, kind:"logo"
         });
       }
       for(let i=0;i<outline.length;i++){
         const p = outline[i];
+        const ang = Math.random() * Math.PI * 2;
+        const spawnDist = Math.max(W, H) * (0.35 + Math.random() * 0.45);
+        const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
+        const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
           tx:p.x, ty:p.y, z: (Math.random()-0.5) * 24,
-          x: Math.random()*W, y: Math.random()*H,
+          x: initX, y: initY,
+          sx: initX, sy: initY,
           dx: Math.random()*W, dy: Math.random()*H,
-          vx:0, vy:0, r: Math.random()*0.6 + 0.5,
-          phase: Math.random()*Math.PI*2, kind:'edge'
+          vx:0, vy:0, r: (Math.random()*0.6 + 0.5) * rMul,
+          phase: Math.random()*Math.PI*2, kind:"edge"
         });
       }
 
-      // bright twinkling stars bordering the logo like a halo — bold and high-contrast
+      // bright twinkling stars bordering the logo like a halo
       if(bounds){
-        const N_STARS = 220;
+        const N_STARS = isMob ? 80 : 220;
         const pad = Math.max(bounds.w, bounds.h) * 0.2;
         const rx = bounds.w/2 + pad, ry = bounds.h/2 + pad;
         for(let i=0;i<N_STARS;i++){
@@ -620,49 +682,64 @@
           const jitter = 0.82 + Math.random()*0.36;
           const px = cx + Math.cos(a) * rx * jitter;
           const py = cy + Math.sin(a) * ry * jitter;
+          const ang = Math.random() * Math.PI * 2;
+          const spawnDist = Math.max(W, H) * (0.4 + Math.random() * 0.4);
+          const initX = reduced ? px : cx + Math.cos(ang) * spawnDist;
+          const initY = reduced ? py : cy + Math.sin(ang) * spawnDist;
           particles.push({
             tx:px, ty:py, z: (Math.random()-0.5) * 90,
-            x: Math.random()*W, y: Math.random()*H,
+            x: initX, y: initY,
+            sx: initX, sy: initY,
             dx: Math.random()*W, dy: Math.random()*H,
             vx:0, vy:0, r: Math.random()*1.3 + 0.9,
-            phase: Math.random()*Math.PI*2, kind:'star', twinkle: Math.random()*Math.PI*2
+            phase: Math.random()*Math.PI*2, kind:"star", twinkle: Math.random()*Math.PI*2
           });
         }
       }
 
-      const N_AMBIENT = Math.round(Math.min(260, (W*H)/4800));
+      const N_AMBIENT = Math.round(Math.min(isMob ? 60 : 260, (W*H)/(isMob ? 8000 : 4800)));
       for(let i=0;i<N_AMBIENT;i++){
         const x = Math.random()*W, y = Math.random()*H;
         particles.push({
           tx:x, ty:y, z:0,
-          x: Math.random()*W, y: Math.random()*H,
+          x: x, y: y,
+          sx: x, sy: y,
           dx: Math.random()*W, dy: Math.random()*H,
           vx:0, vy:0, r: Math.random()*0.6 + 0.18,
-          phase: Math.random()*Math.PI*2, kind:'ambient'
+          phase: Math.random()*Math.PI*2, kind:"ambient"
         });
       }
 
-      // once scrolled past the animation, only a sparse handful stay lightly visible —
-      // most fade away so page text underneath stays legible
       for(let i=0;i<particles.length;i++){
-        particles[i].keep = Math.random() < (particles[i].kind === 'ambient' ? 0.16 : 0.08);
+        particles[i].keep = Math.random() < (particles[i].kind === "ambient" ? 0.16 : 0.08);
       }
 
       buildParticles.cx = cx;
       buildParticles.cy = cy;
     }
 
+    let lastTime = performance.now();
     function draw(){
-      t += 0.016;
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+      const dtRatio = dt / 0.016667;
+      t += dt * 0.95;
+
       ctx.clearRect(0,0,W,H);
+
+      const isMob = isMobileCheck();
+      const age = (now - animStartTime) / 1000;
+      // Entry boost during the first 1.5s ensures responsive, swift assembly on both desktop and mobile
+      const entryBoost = age < 1.5 ? Math.max(1, 2.3 - age * 0.85) : 1;
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
       const easedScroll = scrollT * scrollT * (3 - 2*scrollT);
 
-      // smooth the orbit rotation toward its drag target — slow, fluid, never snaps
-      rotY += (rotYTarget - rotY) * pv('rotSmoothing');
-      rotX += (rotXTarget - rotX) * pv('rotSmoothing');
+      // smooth the orbit rotation toward its drag target
+      rotY += (rotYTarget - rotY) * Math.min(0.25, pv("rotSmoothing") * dtRatio);
+      rotX += (rotXTarget - rotX) * Math.min(0.25, pv("rotSmoothing") * dtRatio);
 
       const cx = buildParticles.cx || W/2, cy = buildParticles.cy || H/2;
       const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
@@ -671,7 +748,7 @@
 
       for(let i=0;i<particles.length;i++){
         const p = particles[i];
-        const isLogo = p.kind === 'logo' || p.kind === 'edge' || p.kind === 'star';
+        const isLogo = p.kind === "logo" || p.kind === "edge" || p.kind === "star";
 
         let baseX = p.tx, baseY = p.ty, persp = 1;
 
@@ -686,105 +763,78 @@
           baseY = cy + y2*persp;
         }
 
-        const driftAmt = (p.kind==='logo' ? 1.2 : p.kind==='edge' ? 1.5 : p.kind==='star' ? 2.6 : 8) * pv('idleDrift');
+        const driftAmt = (p.kind==="logo" ? 1.2 : p.kind==="edge" ? 1.5 : p.kind==="star" ? 2.6 : 8) * pv("idleDrift");
         const fl = flow(p.tx, p.ty, t);
         baseX += fl.x * driftAmt;
         baseY += fl.y * driftAmt;
 
-        // continuous, slow liquid churn inside the letterforms themselves — always on, not tied to the cursor
         if(isLogo){
           const lc = letterChaos(p.tx, p.ty, t);
-          baseX += lc.x * pv('letterChaosAmp');
-          baseY += lc.y * pv('letterChaosAmp');
+          baseX += lc.x * pv("letterChaosAmp");
+          baseY += lc.y * pv("letterChaosAmp");
         }
 
-        // scrolling away disperses everything back across the screen
         let targetX = baseX + (p.dx - baseX) * easedScroll;
         let targetY = baseY + (p.dy - baseY) * easedScroll;
 
         if(mouse.active && !mouse.down){
           const dx = p.x - mouse.x, dy = p.y - mouse.y;
           const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-          const radius = isLogo ? pv('hoverRadius') : pv('hoverRadiusBg');
+          const radius = isLogo ? pv("hoverRadius") : pv("hoverRadiusBg");
           if(dist < radius){
             const falloff = (1 - dist/radius);
-            // liquid displacement — driven by the same smooth flow field, just amplified near the cursor,
-            // so matter swirls and streams instead of scattering as separate chunks
-            const amp = (isLogo ? pv('hoverAmp') : pv('hoverAmpBg')) * falloff;
+            const amp = (isLogo ? pv("hoverAmp") : pv("hoverAmpBg")) * falloff;
             targetX += fl.x * amp * 3;
             targetY += fl.y * amp * 3;
           }
         }
 
-        // liquid follow: a two-stage lag (smoothed target -> position) glides toward its destination
-        // with no spring/rebound — but the catch-up speeds up with distance, so the big move
-        // (assembling into the logo, or scattering away on scroll) resolves quickly, while the
-        // fine wandering once close to target stays slow and fluid
-        const ease = isLogo ? pv('easeLogo') : pv('easeBg');
-        const visc = pv('damping'); // higher = thicker, laggier fluid for fine motion
-        if(p.sx === undefined){ p.sx = p.x; p.sy = p.y; }
+        const ease = (isLogo ? pv("easeLogo") : pv("easeBg")) * (isMob ? 1.25 : 1);
+        const visc = pv("damping");
 
         const distS = Math.hypot(targetX - p.sx, targetY - p.sy);
-        const smoothK = Math.min(0.4, (1 - visc) + distS * 0.004);
+        const rawSmoothK = Math.min(0.55, ((1 - visc) + distS * 0.005) * entryBoost);
+        const smoothK = Math.min(0.85, 1 - Math.pow(Math.max(0, 1 - rawSmoothK), dtRatio));
         p.sx += (targetX - p.sx) * smoothK;
         p.sy += (targetY - p.sy) * smoothK;
 
         const distP = Math.hypot(p.sx - p.x, p.sy - p.y);
-        const followK = Math.min(0.4, ease + distP * 0.004);
+        const rawFollowK = Math.min(0.55, (ease + distP * 0.005) * entryBoost);
+        const followK = Math.min(0.85, 1 - Math.pow(Math.max(0, 1 - rawFollowK), dtRatio));
         p.x += (p.sx - p.x) * followK;
         p.y += (p.sy - p.y) * followK;
 
         const rDraw = p.r * (isLogo ? persp : 1);
 
-        // once scrolled past the animation only a sparse subset stays visible, and only faintly —
-        // keeps the rest of the page's text readable instead of a dense cloud of dots
         const fadeMul = 1 - easedScroll * (p.keep ? 0.45 : 0.94);
         if(fadeMul < 0.02) continue;
 
-        if(p.kind === 'star'){
+        if(p.kind === "star"){
           const tw = (0.6 + 0.4 * Math.sin(t*2.2 + p.twinkle)) * fadeMul;
-          const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rDraw*7);
-          grad.addColorStop(0, `rgba(255,255,255,${tw})`);
-          grad.addColorStop(0.3, `rgba(255,255,255,${0.6*tw})`);
-          grad.addColorStop(0.6, `rgba(216,180,254,${0.3*tw})`);
-          grad.addColorStop(1, 'rgba(216,180,254,0)');
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, rDraw*7, 0, Math.PI*2);
-          ctx.fill();
-          ctx.fillStyle = `rgba(255,255,255,${tw})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, rDraw*0.7, 0, Math.PI*2);
-          ctx.fill();
+          ctx.globalAlpha = Math.max(0, Math.min(1, tw));
+          const diam = rDraw * 14;
+          ctx.drawImage(SPRITES.star, p.x - diam/2, p.y - diam/2, diam, diam);
           continue;
         }
 
-        const glow = isLogo ? (p.kind === 'edge' ? 1.3 : 0.85) : 0.4;
-        const alpha = (isLogo ? (p.kind === 'edge' ? 0.95 : 0.7) : 0.3) * fadeMul;
-        const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,rDraw*5*glow);
-        grad.addColorStop(0, `rgba(${p.kind==='edge' ? '255,255,255' : '192,132,252'},${alpha})`);
-        grad.addColorStop(0.4, `rgba(124,58,237,${alpha*0.45})`);
-        grad.addColorStop(1, 'rgba(124,58,237,0)');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, rDraw*5*glow, 0, Math.PI*2);
-        ctx.fill();
-
-        ctx.fillStyle = isLogo ? `rgba(255,255,255,${0.98*fadeMul})` : `rgba(233,226,247,${0.45*fadeMul})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, rDraw, 0, Math.PI*2);
-        ctx.fill();
+        const glow = isLogo ? (p.kind === "edge" ? 1.3 : 0.85) : 0.4;
+        const alpha = (isLogo ? (p.kind === "edge" ? 0.95 : 0.7) : 0.3) * fadeMul;
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        const diam = rDraw * 10 * glow;
+        const sprite = SPRITES[p.kind] || SPRITES.logo;
+        ctx.drawImage(sprite, p.x - diam/2, p.y - diam/2, diam, diam);
       }
 
+      ctx.globalAlpha = 1;
       requestAnimationFrame(draw);
     }
 
-    window.addEventListener('mousemove', (e)=>{
+    window.addEventListener("mousemove", (e)=>{
       if(mouse.down){
         const dx = e.clientX - mouse.lastX;
         const dy = e.clientY - mouse.lastY;
-        rotYTarget += dx * pv('rotSensitivity');
-        rotXTarget = Math.max(-0.7, Math.min(0.7, rotXTarget + dy * pv('rotSensitivity')));
+        rotYTarget += dx * pv("rotSensitivity");
+        rotXTarget = Math.max(-0.7, Math.min(0.7, rotXTarget + dy * pv("rotSensitivity")));
       }
       mouse.x = e.clientX;
       mouse.y = e.clientY;
@@ -792,32 +842,35 @@
       mouse.lastY = e.clientY;
       mouse.active = true;
     });
-    hero.addEventListener('mousedown', (e)=>{
+    hero.addEventListener("mousedown", (e)=>{
       mouse.down = true;
       mouse.lastX = e.clientX;
       mouse.lastY = e.clientY;
-      hero.style.cursor = 'grabbing';
+      hero.style.cursor = "grabbing";
     });
-    window.addEventListener('mouseup', ()=>{
+    window.addEventListener("mouseup", ()=>{
       mouse.down = false;
-      hero.style.cursor = '';
+      hero.style.cursor = "";
     });
-    document.addEventListener('mouseleave', ()=>{ mouse.active = false; mouse.x=-9999; mouse.y=-9999; });
-    hero.addEventListener('touchstart', (e)=>{
+    document.addEventListener("mouseleave", ()=>{ mouse.active = false; mouse.x=-9999; mouse.y=-9999; });
+    hero.addEventListener("touchstart", (e)=>{
       const touch = e.touches[0];
       if(!touch) return;
       mouse.down = true;
       mouse.lastX = touch.clientX;
       mouse.lastY = touch.clientY;
+      mouse.x = touch.clientX;
+      mouse.y = touch.clientY;
+      mouse.active = true;
     }, {passive:true});
-    window.addEventListener('touchmove', (e)=>{
+    window.addEventListener("touchmove", (e)=>{
       const touch = e.touches[0];
       if(!touch) return;
       if(mouse.down){
         const dx = touch.clientX - mouse.lastX;
         const dy = touch.clientY - mouse.lastY;
-        rotYTarget += dx * pv('rotSensitivity');
-        rotXTarget = Math.max(-0.7, Math.min(0.7, rotXTarget + dy * pv('rotSensitivity')));
+        rotYTarget += dx * pv("rotSensitivity");
+        rotXTarget = Math.max(-0.7, Math.min(0.7, rotXTarget + dy * pv("rotSensitivity")));
       }
       mouse.x = touch.clientX;
       mouse.y = touch.clientY;
@@ -825,9 +878,20 @@
       mouse.lastY = touch.clientY;
       mouse.active = true;
     }, {passive:true});
-    hero.addEventListener('touchend', ()=>{ mouse.down = false; });
+    hero.addEventListener("touchend", ()=>{
+      mouse.down = false;
+      mouse.active = false;
+      mouse.x = -9999;
+      mouse.y = -9999;
+    });
+    window.addEventListener("touchcancel", ()=>{
+      mouse.down = false;
+      mouse.active = false;
+      mouse.x = -9999;
+      mouse.y = -9999;
+    });
 
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
     resize();
     draw();
 
