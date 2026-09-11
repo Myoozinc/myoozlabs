@@ -633,18 +633,18 @@
       const isTablet = !isPhone && (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua) || (isTouch && Math.min(w, h) <= 1024));
 
       if(isPhone){
-        // Mobile Phones (iOS / Android) — razor-sharp crystalline stardust (60/120 FPS locked)
+        // Mobile Phones (iOS / Android) — High-contrast, vibrant, sharp stardust definition (60/120 FPS locked)
         return {
           type: 'mobile',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
-          targetW: Math.min(w * 0.82, 310),
+          targetW: Math.min(w * 0.84, 330),
           verticalCenter: 0.44,
-          starCount: 75,
-          stepDiv: 175,        // step = 4 -> 696 crisp stardust particles: locked 60/120 FPS
-          pointSizeMul: 0.65,  // Tiny, sharp, sparkling diamond dots (identical scale to desktop Image 2)
+          starCount: 110,
+          stepDiv: 240,        // step = 3 -> 1,423 sharp stardust particles (dense & crisp definition, zero gaps)
+          pointSizeMul: 0.85,  // Crisp stardust scale (rich contrast & sharp definition, NO blurry blobs)
           useLetterChaos: false,
-          maxStarRx: w * 0.45,
-          starPadXMul: 0.70,
+          maxStarRx: w * 0.46,
+          starPadXMul: 0.72,
           starRyScale: 1.25,
           driftMul: 0.75,
           easeMul: 1.65,       // High spring rate for instant fluid formation
@@ -766,13 +766,14 @@
           vec2 coord = gl_PointCoord - vec2(0.5);
           float dist = length(coord);
 
-          // Smooth radial falloff dropping to 0.0 at radius 0.5 (no discard stalls on mobile TBDR GPUs)
-          float glow = smoothstep(0.5, 0.06, dist);
+          // Crisp radial falloff: high opacity in body, smooth antialiased outer rim (no TBDR discard stalls)
+          float glow = smoothstep(0.5, 0.12, dist);
           // Brilliant diamond white core
-          float core = smoothstep(0.18, 0.0, dist) * vCore;
+          float core = smoothstep(0.20, 0.0, dist) * vCore;
 
-          vec3 rgb = mix(vColor.rgb, vec3(1.0, 1.0, 1.0), core * 0.95);
-          float alpha = (glow * 0.72 + core * 0.28) * vColor.a;
+          vec3 rgb = mix(vColor.rgb, vec3(1.0, 1.0, 1.0), core * 0.94);
+          // High-contrast, sharp alpha curve: solid stardust core and glowing body without washing out
+          float alpha = clamp(glow * 0.88 + core * 0.38, 0.0, 1.0) * vColor.a;
 
           gl_FragColor = vec4(rgb * alpha, alpha);
         }
@@ -1187,24 +1188,24 @@
           if(p.kind === 'star'){
             const tw = (0.6 + 0.4 * Math.sin(t*2.2 + p.twinkle)) * fadeMul;
             pointSize = rDraw * 10 * DPR * ptMul;
-            r = 0.88; g = 0.80; b = 1.0;
+            r = 0.94; g = 0.90; b = 1.0;
             alpha = tw;
             core = 1.0;
           } else if(p.kind === 'edge'){
             pointSize = rDraw * 8.5 * DPR * ptMul;
-            r = 1.0; g = 1.0; b = 1.0;
-            alpha = 0.95 * fadeMul;
+            r = 1.0; g = 0.98; b = 1.0;
+            alpha = 1.0 * fadeMul;
             core = 1.0;
           } else if(p.kind === 'logo'){
             pointSize = rDraw * 7.5 * DPR * ptMul;
-            r = 0.753; g = 0.518; b = 0.988; // vibrant violet
-            alpha = 0.82 * fadeMul;
-            core = 1.0;
+            r = 0.78; g = 0.44; b = 1.0; // rich vibrant electric violet (high contrast)
+            alpha = 0.94 * fadeMul;
+            core = 0.90;
           } else {
             // ambient
             pointSize = rDraw * 6.5 * DPR * ptMul;
-            r = 0.85; g = 0.78; b = 0.96;
-            alpha = 0.35 * fadeMul;
+            r = 0.88; g = 0.82; b = 0.98;
+            alpha = 0.45 * fadeMul;
             core = 0.0;
           }
 
