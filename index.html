@@ -51,10 +51,13 @@
   header{
     position:fixed; top:0; left:0; right:0; z-index:100;
     display:flex; align-items:center; justify-content:space-between;
-    padding:28px clamp(24px,5vw,64px);
-    mix-blend-mode:difference;
+    padding:18px clamp(24px,5vw,64px);
+    background:rgba(10, 7, 16, 0.82);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(233,226,247,0.08);
     opacity:0; pointer-events:none;
-    transition:opacity .5s ease;
+    transition:opacity .4s ease, padding .3s ease;
   }
   header.visible{ opacity:1; pointer-events:auto; }
   .logo-mark{ display:flex; align-items:center; gap:10px; font-family:'Unbounded',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.01em; color:#fff; }
@@ -147,7 +150,7 @@
   @keyframes scrollLine{ 0%{left:-100%;} 50%{left:0;} 100%{left:100%;} }
 
   /* ---------- section shell ---------- */
-  section{ position:relative; padding:140px clamp(24px,5vw,64px); }
+  section{ position:relative; padding:140px clamp(24px,5vw,64px); scroll-margin-top:80px; }
   .wrap{ max-width:1180px; margin:0 auto; }
   .section-head{ display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-bottom:80px; align-items:end; }
   .section-head h2{ font-size:clamp(30px,4.2vw,52px); color:#fff; line-height:1.05; }
@@ -249,19 +252,86 @@
   .contact-grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:60px; }
   .contact h2{ font-size:clamp(36px,6vw,72px); color:#fff; line-height:1.02; margin-bottom:28px; }
   .contact .lead{ font-size:17px; color:var(--muted); max-width:440px; line-height:1.6; margin-bottom:40px; }
-  .contact-form{ display:flex; flex-direction:column; gap:20px; }
-  .field{ position:relative; border-bottom:1px solid var(--line); padding-bottom:12px; }
-  .field label{ font-size:12px; color:var(--muted); display:block; margin-bottom:8px; }
+  .contact-form{ display:flex; flex-direction:column; gap:22px; }
+  .field{ position:relative; border-bottom:1px solid var(--line); padding-bottom:12px; transition:border-color .3s ease; }
+  .field label{ font-size:12px; color:var(--muted); display:block; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.06em; font-weight:600; }
   .field input, .field textarea{
-    width:100%; background:transparent; border:none; outline:none; color:#fff; font-family:'Manrope'; font-size:16px;
+    width:100%; background:transparent; border:none; outline:none; color:#fff; font-family:'Manrope',sans-serif; font-size:16px;
   }
-  .field textarea{ resize:none; height:56px; }
+  .field input::placeholder, .field textarea::placeholder{
+    color:rgba(139,131,163,0.5); font-size:14.5px;
+  }
+  .field textarea{ resize:vertical; min-height:76px; max-height:220px; line-height:1.5; }
   .field::after{
-    content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:var(--violet-glow);
+    content:""; position:absolute; left:0; right:0; bottom:-1px; height:1.5px; background:var(--violet-glow);
     transform:scaleX(0); transform-origin:left; transition:transform .4s cubic-bezier(.16,1,.3,1);
   }
   .field:focus-within::after{ transform:scaleX(1); }
-  .contact-form .btn{ margin-top:8px; align-self:flex-start; }
+  .contact-form .btn{
+    margin-top:8px; align-self:flex-start; display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+    border:none; font-family:'Manrope',sans-serif;
+  }
+  .contact-form .btn:disabled{
+    opacity:0.65; cursor:not-allowed; transform:none !important;
+  }
+  .contact-form .btn .spinner{
+    width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff;
+    border-radius:50%; animation:spin .7s linear infinite; display:none;
+  }
+  .contact-form .btn.loading .spinner{ display:inline-block; }
+  .contact-form .btn.loading .btn-icon{ display:none; }
+
+  @keyframes spin{
+    to{ transform:rotate(360deg); }
+  }
+
+  /* Form Feedback States */
+  .form-feedback{
+    border-radius:16px; padding:28px 24px; margin-top:8px;
+    animation:fadeInFeedback .5s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  @keyframes fadeInFeedback{
+    from{ opacity:0; transform:translateY(12px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .form-feedback.success{
+    border:1px solid rgba(192,132,252,0.35); background:rgba(168,85,247,0.08);
+  }
+  .form-feedback.success .f-icon{
+    width:38px; height:38px; border-radius:50%; background:rgba(192,132,252,0.2);
+    border:1px solid var(--violet-glow); color:var(--lavender);
+    display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:16px;
+  }
+  .form-feedback.success h4{
+    font-size:20px; font-weight:600; color:#fff; margin-bottom:8px; font-family:'Unbounded',sans-serif;
+  }
+  .form-feedback.success p{
+    font-size:14.5px; color:var(--lavender); line-height:1.6; margin-bottom:20px;
+  }
+  .form-feedback.success span.confirmed-email{
+    color:#fff; font-weight:600; border-bottom:1px dashed var(--violet-glow);
+  }
+  .form-feedback.error{
+    border:1px solid rgba(239,68,68,0.35); background:rgba(239,68,68,0.08);
+    font-size:14px; color:#fca5a5; line-height:1.55; margin-top:14px; border-radius:14px; padding:16px 20px;
+  }
+  .form-feedback.error p{ margin-bottom:10px; }
+  .btn-outline{
+    background:transparent; border:1px solid rgba(192,132,252,0.4); color:var(--lavender);
+    padding:8px 18px; border-radius:100px; font-size:13px; font-family:'Manrope',sans-serif;
+    cursor:pointer; transition:all .3s ease;
+  }
+  .btn-outline:hover{
+    border-color:var(--violet-glow); background:rgba(168,85,247,0.15); color:#fff;
+  }
+  .btn-mail-fallback{
+    display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.2); color:#fff; padding:7px 16px; border-radius:100px;
+    font-size:13px; text-decoration:none; transition:all .3s ease;
+  }
+  .btn-mail-fallback:hover{
+    background:rgba(255,255,255,0.16); border-color:#fff;
+  }
 
   .info-col{ display:flex; flex-direction:column; gap:36px; }
   .info-block span.label{ font-size:12px; color:var(--muted); display:block; margin-bottom:10px; }
@@ -567,12 +637,44 @@
     <div class="reveal">
       <h2>Hablemos de tu próximo producto.</h2>
       <p class="lead">Cuéntanos qué estás construyendo. Respondemos personalmente a cada proyecto.</p>
-      <form class="contact-form" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Mensaje enviado';">
-        <div class="field"><label>Nombre</label><input type="text" required></div>
-        <div class="field"><label>Correo</label><input type="email" required></div>
-        <div class="field"><label>Cuéntanos sobre tu proyecto</label><textarea required></textarea></div>
-        <button type="submit" class="btn">Enviar mensaje</button>
+      <form class="contact-form" id="contactForm" autocomplete="on">
+        <!-- Anti-spam honeypot -->
+        <input type="text" name="_honey" style="display:none !important;" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+
+        <div class="field">
+          <label for="contactName">Nombre o Empresa</label>
+          <input type="text" id="contactName" name="name" placeholder="Ej. Alex R. / Mi Proyecto" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="contactEmail">Correo electrónico</label>
+          <input type="email" id="contactEmail" name="email" placeholder="alex@ejemplo.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="contactMessage">Cuéntanos sobre tu proyecto</label>
+          <textarea id="contactMessage" name="message" placeholder="¿Qué estás construyendo, qué objetivos buscas y en qué tiempo estimado?" required></textarea>
+        </div>
+        <button type="submit" class="btn" id="contactSubmitBtn">
+          <span class="spinner"></span>
+          <span class="btn-text">Enviar mensaje</span>
+          <span class="btn-icon">→</span>
+        </button>
+
+        <div class="form-feedback error" id="formError" style="display:none;">
+          <p>No se pudo conectar con el servicio en este instante. Puedes enviarnos los detalles directamente con un clic:</p>
+          <a id="mailFallbackLink" class="btn-mail-fallback" href="mailto:hola@myoozlabs.com">
+            ✉ Abrir en tu cliente de correo
+          </a>
+        </div>
       </form>
+
+      <div class="form-feedback success" id="formSuccess" style="display:none;">
+        <div class="f-icon">✓</div>
+        <h4>¡Mensaje recibido con éxito!</h4>
+        <p>Gracias por escribirnos. Hemos recibido los detalles de tu proyecto y te responderemos personalmente a <span class="confirmed-email" id="confirmedEmail"></span> a la brevedad.</p>
+        <button type="button" class="btn-outline" id="btnResetForm">Enviar otro mensaje</button>
+      </div>
     </div>
     <div class="info-col reveal">
       <div class="info-block">
@@ -1517,6 +1619,99 @@
       preview.style.transform = 'scale(0.9)';
     });
   });
+
+  // ---------- Contact Form Submission (FormSubmit AJAX + Fallback) ----------
+  (function(){
+    const form = document.getElementById('contactForm');
+    if(!form) return;
+
+    const submitBtn = document.getElementById('contactSubmitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const nameInput = document.getElementById('contactName');
+    const emailInput = document.getElementById('contactEmail');
+    const msgInput = document.getElementById('contactMessage');
+    const honeyInput = form.querySelector('input[name="_honey"]');
+    const errorBox = document.getElementById('formError');
+    const successBox = document.getElementById('formSuccess');
+    const confirmedEmail = document.getElementById('confirmedEmail');
+    const mailFallbackLink = document.getElementById('mailFallbackLink');
+    const resetBtn = document.getElementById('btnResetForm');
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      // Silent drop for spam bots
+      if(honeyInput && honeyInput.value) return;
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const message = msgInput.value.trim();
+
+      if(!name || !email || !message){
+        return;
+      }
+
+      // Pre-fill fallback mailto link immediately
+      const subjEncoded = encodeURIComponent(`Nuevo proyecto: ${name} — Myooz Labs`);
+      const bodyEncoded = encodeURIComponent(`Hola Myooz Labs,\n\nNombre: ${name}\nCorreo: ${email}\n\nDetalles del proyecto:\n${message}\n\n---\nEnviado desde myoozlabs.com`);
+      if(mailFallbackLink){
+        mailFallbackLink.href = `mailto:hola@myoozlabs.com?subject=${subjEncoded}&body=${bodyEncoded}`;
+      }
+
+      // UI Sending state
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+      btnText.textContent = 'Enviando mensaje...';
+      if(errorBox) errorBox.style.display = 'none';
+
+      try {
+        const res = await fetch('https://formsubmit.co/ajax/hola@myoozlabs.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            message: message,
+            _subject: `Nuevo proyecto: ${name} — myoozlabs.com`,
+            _template: 'table',
+            _captcha: 'false'
+          })
+        });
+
+        let data = {};
+        try { data = await res.json(); } catch(jsonErr){}
+
+        if(res.ok || data.success === 'true' || data.success === true || (data.message && data.message.includes('Activation'))){
+          form.style.display = 'none';
+          if(confirmedEmail) confirmedEmail.textContent = email;
+          if(successBox) successBox.style.display = 'block';
+        } else {
+          throw new Error(data.message || 'Error en el servidor');
+        }
+      } catch(err){
+        console.warn('Form submission notice:', err);
+        if(errorBox) errorBox.style.display = 'block';
+        btnText.textContent = 'Reintentar envío';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      }
+    });
+
+    if(resetBtn){
+      resetBtn.addEventListener('click', function(){
+        form.reset();
+        form.style.display = 'flex';
+        if(successBox) successBox.style.display = 'none';
+        if(errorBox) errorBox.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+        btnText.textContent = 'Enviar mensaje';
+      });
+    }
+  })();
 </script>
 </body>
 </html>
