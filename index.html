@@ -602,7 +602,7 @@
   // ---------- interactive logo particle field (continuous flow-field + 3D drag orbit) ----------
   (function(){
     const canvas = document.getElementById('logoCanvas');
-    const ctx = canvas.getContext('2d');
+    let ctx = null;
     const hero = document.querySelector('.hero');
     const header = document.querySelector('header');
     let W, H, DPR;
@@ -647,8 +647,8 @@
           starPadXMul: 0.70,
           starRyScale: 1.25,
           driftMul: 0.75,
-          easeMul: 1.35,
-          viscMul: 1.25
+          easeMul: 1.65,       // High spring rate for instant fluid formation
+          viscMul: 1.45
         };
       } else if(isTablet){
         // Tablets & foldables (iPad, Galaxy Tab)
@@ -731,6 +731,7 @@
 
       if(!gl){
         console.warn('WebGL not available, using 2D fallback');
+        ctx = canvas.getContext('2d');
         return false;
       }
 
@@ -967,7 +968,7 @@
       for(let i=0;i<fill.length;i++){
         const p = fill[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = baseSpan * (isMobile ? (0.12 + Math.random() * 0.08) : (0.24 + Math.random() * 0.16));
+        const spawnDist = baseSpan * (isMobile ? (0.09 + Math.random() * 0.05) : (0.24 + Math.random() * 0.16));
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -982,7 +983,7 @@
       for(let i=0;i<outline.length;i++){
         const p = outline[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = baseSpan * (isMobile ? (0.12 + Math.random() * 0.08) : (0.24 + Math.random() * 0.16));
+        const spawnDist = baseSpan * (isMobile ? (0.09 + Math.random() * 0.05) : (0.24 + Math.random() * 0.16));
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -1007,7 +1008,7 @@
           const px = cx + Math.cos(a) * rx * jitter;
           const py = cy + Math.sin(a) * ry * jitter;
           const ang = Math.random() * Math.PI * 2;
-          const spawnDist = baseSpan * (isMobile ? (0.15 + Math.random() * 0.10) : (0.26 + Math.random() * 0.18));
+          const spawnDist = baseSpan * (isMobile ? (0.12 + Math.random() * 0.06) : (0.26 + Math.random() * 0.18));
           const initX = reduced ? px : cx + Math.cos(ang) * spawnDist;
           const initY = reduced ? py : cy + Math.sin(ang) * spawnDist;
           particles.push({
@@ -1066,10 +1067,10 @@
       const prof = getDeviceProfile();
       const isMobile = prof.type === 'mobile';
       const age = (now - animStartTime) / 1000;
-      // Fast, smooth, responsive entrance: settles in ~0.9s without lagging
-      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.2));
-      const entryT = Math.min(1.0, age / 1.05);
-      const entryBoost = 1.0 + (isMobile ? 0.9 : 0.45) * Math.pow(1.0 - entryT, 2);
+      // Fast, smooth, responsive entrance: settles in ~0.75s without lagging
+      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.15));
+      const entryT = Math.min(1.0, age / 0.85);
+      const entryBoost = 1.0 + (isMobile ? 1.6 : 0.45) * Math.pow(1.0 - entryT, 2);
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
@@ -1098,9 +1099,9 @@
       const visc = pv('damping');
       const easeMul = (prof.easeMul || 1.0) * entryBoost;
       const viscMul = (prof.viscMul || 1.0) * entryBoost;
-      const smoothRate = Math.min(0.60, (1 - visc) * viscMul * dtRatio);
-      const followRateLogo = Math.min(0.60, easeLogo * easeMul * dtRatio);
-      const followRateBg = Math.min(0.60, easeBg * easeMul * dtRatio);
+      const smoothRate = Math.min(0.68, (1 - visc) * viscMul * dtRatio);
+      const followRateLogo = Math.min(0.68, easeLogo * easeMul * dtRatio);
+      const followRateBg = Math.min(0.68, easeBg * easeMul * dtRatio);
       const idleDrift = pv('idleDrift') * prof.driftMul;
       const hoverRadius = pv('hoverRadius');
       const hoverRadiusBg = pv('hoverRadiusBg');
