@@ -633,22 +633,22 @@
       const isTablet = !isPhone && (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua) || (isTouch && Math.min(w, h) <= 1024));
 
       if(isPhone){
-        // Mobile Phones (iOS / Android) — ultra-fluid ~350 total particles, 120 FPS locked, instant fluid snap
+        // Mobile Phones (iOS / Android) — High-res crystalline stardust (matches desktop perfection)
         return {
           type: 'mobile',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
-          targetW: Math.min(w * 0.78, 300),
+          targetW: Math.min(w * 0.84, 330),
           verticalCenter: 0.44,
-          starCount: 45,
-          stepDiv: 95,         // ~266 logo particles: ultra-lightweight, 0 CPU bottlenecks on any phone
-          pointSizeMul: 2.15,  // Solid, glowing Retina fill with diamond-crisp edges
+          starCount: 160,
+          stepDiv: 380,        // step = 2 -> full 2,826 stardust particles! Exactly like desktop!
+          pointSizeMul: 0.95,  // Razor-sharp crystalline dots (NOT blurry blobs)
           useLetterChaos: false,
-          maxStarRx: w * 0.44,
-          starPadXMul: 0.65,
-          starRyScale: 1.30,
-          driftMul: 0.65,
-          easeMul: 1.6,        // 160% faster responsive fluid snap (eliminates "lento" sluggishness)
-          viscMul: 1.4         // 140% viscosity responsiveness
+          maxStarRx: w * 0.45,
+          starPadXMul: 0.70,
+          starRyScale: 1.25,
+          driftMul: 0.85,
+          easeMul: 1.25,
+          viscMul: 1.20
         };
       } else if(isTablet){
         // Tablets & foldables (iPad, Galaxy Tab)
@@ -657,16 +657,16 @@
           dpr: Math.min(window.devicePixelRatio || 1, 2),
           targetW: Math.min(w * 0.76, 640),
           verticalCenter: 0.46,
-          starCount: 80,
-          stepDiv: 180,
-          pointSizeMul: 1.45,
+          starCount: 180,
+          stepDiv: 380,
+          pointSizeMul: 1.0,
           useLetterChaos: false,
           maxStarRx: w * 0.46,
           starPadXMul: 0.85,
           starRyScale: 1.15,
-          driftMul: 0.85,
-          easeMul: 1.25,
-          viscMul: 1.2
+          driftMul: 0.9,
+          easeMul: 1.15,
+          viscMul: 1.15
         };
       } else {
         // Desktop & Laptops (Mac, Windows) — full cinematic resolution
@@ -967,7 +967,7 @@
       for(let i=0;i<fill.length;i++){
         const p = fill[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = baseSpan * (isMobile ? (0.14 + Math.random() * 0.10) : (0.24 + Math.random() * 0.16));
+        const spawnDist = baseSpan * (isMobile ? (0.16 + Math.random() * 0.12) : (0.24 + Math.random() * 0.16));
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -982,7 +982,7 @@
       for(let i=0;i<outline.length;i++){
         const p = outline[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = baseSpan * (isMobile ? (0.14 + Math.random() * 0.10) : (0.24 + Math.random() * 0.16));
+        const spawnDist = baseSpan * (isMobile ? (0.16 + Math.random() * 0.12) : (0.24 + Math.random() * 0.16));
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -1007,7 +1007,7 @@
           const px = cx + Math.cos(a) * rx * jitter;
           const py = cy + Math.sin(a) * ry * jitter;
           const ang = Math.random() * Math.PI * 2;
-          const spawnDist = baseSpan * (isMobile ? (0.16 + Math.random() * 0.12) : (0.26 + Math.random() * 0.18));
+          const spawnDist = baseSpan * (isMobile ? (0.18 + Math.random() * 0.14) : (0.26 + Math.random() * 0.18));
           const initX = reduced ? px : cx + Math.cos(ang) * spawnDist;
           const initY = reduced ? py : cy + Math.sin(ang) * spawnDist;
           particles.push({
@@ -1021,8 +1021,8 @@
         }
       }
 
-      // Ambient particles — capped lower on mobile for extra headroom
-      const N_AMBIENT = Math.round(Math.min(isMobile ? 40 : 260, (W*H)/(isMobile ? 14000 : 4800)));
+      // Ambient particles
+      const N_AMBIENT = Math.round(Math.min(isMobile ? 120 : 260, (W*H)/(isMobile ? 8000 : 4800)));
       for(let i=0;i<N_AMBIENT;i++){
         const x = Math.random()*W, y = Math.random()*H;
         particles.push({
@@ -1065,7 +1065,10 @@
 
       const prof = getDeviceProfile();
       const age = (now - animStartTime) / 1000;
-      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.35));
+      // Fast, smooth, responsive entrance: settles in ~1.1s without lagging
+      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.25));
+      const entryT = Math.min(1.0, age / 1.15);
+      const entryBoost = 1.0 + 0.55 * Math.pow(1.0 - entryT, 2);
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
@@ -1092,11 +1095,11 @@
       const easeLogo = pv('easeLogo');
       const easeBg = pv('easeBg');
       const visc = pv('damping');
-      const easeMul = prof.easeMul || 1.0;
-      const viscMul = prof.viscMul || 1.0;
-      const smoothRate = Math.min(0.55, (1 - visc) * viscMul * dtRatio);
-      const followRateLogo = Math.min(0.55, easeLogo * easeMul * dtRatio);
-      const followRateBg = Math.min(0.55, easeBg * easeMul * dtRatio);
+      const easeMul = (prof.easeMul || 1.0) * entryBoost;
+      const viscMul = (prof.viscMul || 1.0) * entryBoost;
+      const smoothRate = Math.min(0.58, (1 - visc) * viscMul * dtRatio);
+      const followRateLogo = Math.min(0.58, easeLogo * easeMul * dtRatio);
+      const followRateBg = Math.min(0.58, easeBg * easeMul * dtRatio);
       const idleDrift = pv('idleDrift') * prof.driftMul;
       const hoverRadius = pv('hoverRadius');
       const hoverRadiusBg = pv('hoverRadiusBg');
@@ -1181,23 +1184,23 @@
           let pointSize, r, g, b, alpha, core;
           if(p.kind === 'star'){
             const tw = (0.6 + 0.4 * Math.sin(t*2.2 + p.twinkle)) * fadeMul;
-            pointSize = rDraw * 14 * DPR * ptMul;
+            pointSize = rDraw * 10 * DPR * ptMul;
             r = 0.88; g = 0.80; b = 1.0;
             alpha = tw;
             core = 1.0;
           } else if(p.kind === 'edge'){
-            pointSize = rDraw * 11 * DPR * ptMul;
+            pointSize = rDraw * 8.5 * DPR * ptMul;
             r = 1.0; g = 1.0; b = 1.0;
             alpha = 0.95 * fadeMul;
             core = 1.0;
           } else if(p.kind === 'logo'){
-            pointSize = rDraw * 9.5 * DPR * ptMul;
+            pointSize = rDraw * 7.5 * DPR * ptMul;
             r = 0.753; g = 0.518; b = 0.988; // vibrant violet
             alpha = 0.82 * fadeMul;
             core = 1.0;
           } else {
             // ambient
-            pointSize = rDraw * 8 * DPR * ptMul;
+            pointSize = rDraw * 6.5 * DPR * ptMul;
             r = 0.85; g = 0.78; b = 0.96;
             alpha = 0.35 * fadeMul;
             core = 0.0;
