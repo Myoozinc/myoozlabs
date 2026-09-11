@@ -633,20 +633,22 @@
       const isTablet = !isPhone && (/iPad|Android(?!.*Mobile)|Tablet/i.test(ua) || (isTouch && Math.min(w, h) <= 1024));
 
       if(isPhone){
-        // Mobile Phones (iOS / Android) — ultra-fluid ~700 particles, zero lag, silky smooth 60/120 FPS
+        // Mobile Phones (iOS / Android) — ultra-fluid ~350 total particles, 120 FPS locked, instant fluid snap
         return {
           type: 'mobile',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
           targetW: Math.min(w * 0.78, 300),
           verticalCenter: 0.44,
-          starCount: 60,
-          stepDiv: 110,        // ~700 particles — ultra-responsive & fluid on mobile CPUs
-          pointSizeMul: 1.85,  // Large, glowing Retina dots fill the logo silhouette solidly
-          useLetterChaos: false, // Saves thousands of trig calls per frame on phone
+          starCount: 45,
+          stepDiv: 95,         // ~266 logo particles: ultra-lightweight, 0 CPU bottlenecks on any phone
+          pointSizeMul: 2.15,  // Solid, glowing Retina fill with diamond-crisp edges
+          useLetterChaos: false,
           maxStarRx: w * 0.44,
           starPadXMul: 0.65,
           starRyScale: 1.30,
-          driftMul: 0.75
+          driftMul: 0.65,
+          easeMul: 1.6,        // 160% faster responsive fluid snap (eliminates "lento" sluggishness)
+          viscMul: 1.4         // 140% viscosity responsiveness
         };
       } else if(isTablet){
         // Tablets & foldables (iPad, Galaxy Tab)
@@ -655,14 +657,16 @@
           dpr: Math.min(window.devicePixelRatio || 1, 2),
           targetW: Math.min(w * 0.76, 640),
           verticalCenter: 0.46,
-          starCount: 110,
-          stepDiv: 200,        // ~1,800 particles
-          pointSizeMul: 1.35,
+          starCount: 80,
+          stepDiv: 180,
+          pointSizeMul: 1.45,
           useLetterChaos: false,
           maxStarRx: w * 0.46,
           starPadXMul: 0.85,
           starRyScale: 1.15,
-          driftMul: 0.9
+          driftMul: 0.85,
+          easeMul: 1.25,
+          viscMul: 1.2
         };
       } else {
         // Desktop & Laptops (Mac, Windows) — full cinematic resolution
@@ -672,13 +676,15 @@
           targetW: Math.min(w * 0.8, 980),
           verticalCenter: 0.5,
           starCount: 220,
-          stepDiv: 420,        // 10,756 particles for 4K/5K desktop displays
+          stepDiv: 420,        // Full desktop cinematic resolution
           pointSizeMul: 1.0,
           useLetterChaos: true,
           maxStarRx: w * 0.48,
           starPadXMul: 1.0,
           starRyScale: 1.0,
-          driftMul: 1.0
+          driftMul: 1.0,
+          easeMul: 1.0,
+          viscMul: 1.0
         };
       }
     }
@@ -758,10 +764,9 @@
         void main(){
           vec2 coord = gl_PointCoord - vec2(0.5);
           float dist = length(coord);
-          if(dist > 0.5) discard;
 
-          // Atmospheric radial glow falloff
-          float glow = smoothstep(0.5, 0.05, dist);
+          // Smooth radial falloff dropping to 0.0 at radius 0.5 (no discard stalls on mobile TBDR GPUs)
+          float glow = smoothstep(0.5, 0.06, dist);
           // Brilliant diamond white core
           float core = smoothstep(0.18, 0.0, dist) * vCore;
 
@@ -858,11 +863,13 @@
     // Each cell stores (fx, fy). Particles bilinearly interpolate — 0 trig per particle.
     const FLOW_GW = 18, FLOW_GH = 14; // grid resolution (32x22 = 704 cells total)
     const _fg = new Float32Array(FLOW_GW * FLOW_GH * 2); // interleaved fx,fy
-    let _fgW = 0, _fgH = 0, _fgT = -999; // last canvas size + time used
+    let _fgW = 0, _fgH = 0, _fgT = -999;
+    let _invCellW = 0, _invCellH = 0;
 
     function rebuildFlowGrid(t){
-      // Only rebuild when time changes enough (skips redundant work)
       _fgW = W; _fgH = H; _fgT = t;
+      _invCellW = FLOW_GW / W;
+      _invCellH = FLOW_GH / H;
       const s = pv('flowScale') / 1000;
       const spd = pv('flowSpeed');
       const tw = t * spd;
@@ -878,19 +885,18 @@
       }
     }
 
-    // Bilinear interpolation from pre-built grid — zero trig, just multiply+add
+    // Bilinear interpolation from pre-built grid — zero trig, zero divisions, pure multiplications
     const _flowVec = { x: 0, y: 0 };
     function flow(x, y){
-      const cellW = _fgW / FLOW_GW, cellH = _fgH / FLOW_GH;
-      let gx = x / cellW - 0.5;
-      let gy = y / cellH - 0.5;
+      const gx = x * _invCellW - 0.5;
+      const gy = y * _invCellH - 0.5;
       const gx0 = Math.max(0, Math.min(FLOW_GW - 2, Math.floor(gx)));
       const gy0 = Math.max(0, Math.min(FLOW_GH - 2, Math.floor(gy)));
       const tx = gx - gx0, ty = gy - gy0;
       const i00 = (gy0 * FLOW_GW + gx0) * 2;
-      const i10 = (gy0 * FLOW_GW + gx0 + 1) * 2;
-      const i01 = ((gy0+1) * FLOW_GW + gx0) * 2;
-      const i11 = ((gy0+1) * FLOW_GW + gx0 + 1) * 2;
+      const i10 = i00 + 2;
+      const i01 = i00 + FLOW_GW * 2;
+      const i11 = i01 + 2;
       const w00 = (1-tx)*(1-ty), w10 = tx*(1-ty), w01 = (1-tx)*ty, w11 = tx*ty;
       _flowVec.x = _fg[i00]*w00 + _fg[i10]*w10 + _fg[i01]*w01 + _fg[i11]*w11;
       _flowVec.y = _fg[i00+1]*w00 + _fg[i10+1]*w10 + _fg[i01+1]*w01 + _fg[i11+1]*w11;
@@ -955,10 +961,13 @@
       const cx = bounds ? bounds.x0 + bounds.w/2 : W/2;
       const cy = bounds ? bounds.y0 + bounds.h/2 : H/2;
 
+      const isMobile = prof.type === 'mobile';
+      const baseSpan = isMobile ? Math.min(W, H) : Math.max(W, H);
+
       for(let i=0;i<fill.length;i++){
         const p = fill[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = Math.max(W, H) * (0.24 + Math.random() * 0.16);
+        const spawnDist = baseSpan * (isMobile ? (0.14 + Math.random() * 0.10) : (0.24 + Math.random() * 0.16));
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -973,7 +982,7 @@
       for(let i=0;i<outline.length;i++){
         const p = outline[i];
         const ang = Math.random() * Math.PI * 2;
-        const spawnDist = Math.max(W, H) * (0.24 + Math.random() * 0.16);
+        const spawnDist = baseSpan * (isMobile ? (0.14 + Math.random() * 0.10) : (0.24 + Math.random() * 0.16));
         const initX = reduced ? p.x : cx + Math.cos(ang) * spawnDist;
         const initY = reduced ? p.y : cy + Math.sin(ang) * spawnDist;
         particles.push({
@@ -998,7 +1007,7 @@
           const px = cx + Math.cos(a) * rx * jitter;
           const py = cy + Math.sin(a) * ry * jitter;
           const ang = Math.random() * Math.PI * 2;
-          const spawnDist = Math.max(W, H) * (0.26 + Math.random() * 0.18);
+          const spawnDist = baseSpan * (isMobile ? (0.16 + Math.random() * 0.12) : (0.26 + Math.random() * 0.18));
           const initX = reduced ? px : cx + Math.cos(ang) * spawnDist;
           const initY = reduced ? py : cy + Math.sin(ang) * spawnDist;
           particles.push({
@@ -1013,8 +1022,7 @@
       }
 
       // Ambient particles — capped lower on mobile for extra headroom
-      const isMobile = prof.type === 'mobile';
-      const N_AMBIENT = Math.round(Math.min(isMobile ? 60 : 260, (W*H)/(isMobile ? 12000 : 4800)));
+      const N_AMBIENT = Math.round(Math.min(isMobile ? 40 : 260, (W*H)/(isMobile ? 14000 : 4800)));
       for(let i=0;i<N_AMBIENT;i++){
         const x = Math.random()*W, y = Math.random()*H;
         particles.push({
@@ -1045,16 +1053,19 @@
     }
 
     let lastTime = performance.now();
+    let smoothDt = 0.016667;
     function draw(){
       const now = performance.now();
-      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      const rawDt = Math.max(0.005, Math.min(0.045, (now - lastTime) / 1000));
       lastTime = now;
-      const dtRatio = Math.max(0.5, Math.min(2.0, dt / 0.016667));
+      smoothDt += (rawDt - smoothDt) * 0.35;
+      const dt = smoothDt;
+      const dtRatio = dt / 0.016667;
       t += dt * 0.95;
 
       const prof = getDeviceProfile();
       const age = (now - animStartTime) / 1000;
-      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.4));
+      const entryFade = Math.min(1.0, Math.max(0.0, age / 0.35));
 
       // how far the visitor has scrolled past the fullscreen animation (0 = at top, 1 = scrolled away)
       const scrollT = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.85)));
@@ -1063,6 +1074,8 @@
       // smooth the orbit rotation toward its drag target — slow, fluid, never snaps
       rotY += (rotYTarget - rotY) * Math.min(0.25, pv('rotSmoothing') * dtRatio);
       rotX += (rotXTarget - rotX) * Math.min(0.25, pv('rotSmoothing') * dtRatio);
+      if(Math.abs(rotYTarget - rotY) < 0.0003 && Math.abs(rotY) < 0.0003) rotY = 0;
+      if(Math.abs(rotXTarget - rotX) < 0.0003 && Math.abs(rotX) < 0.0003) rotX = 0;
 
       const cx = buildParticles.cx || W/2, cy = buildParticles.cy || H/2;
       const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
@@ -1079,7 +1092,11 @@
       const easeLogo = pv('easeLogo');
       const easeBg = pv('easeBg');
       const visc = pv('damping');
-      const smoothRate = Math.min(0.38, (1 - visc) * dtRatio);
+      const easeMul = prof.easeMul || 1.0;
+      const viscMul = prof.viscMul || 1.0;
+      const smoothRate = Math.min(0.55, (1 - visc) * viscMul * dtRatio);
+      const followRateLogo = Math.min(0.55, easeLogo * easeMul * dtRatio);
+      const followRateBg = Math.min(0.55, easeBg * easeMul * dtRatio);
       const idleDrift = pv('idleDrift') * prof.driftMul;
       const hoverRadius = pv('hoverRadius');
       const hoverRadiusBg = pv('hoverRadiusBg');
@@ -1141,7 +1158,7 @@
         }
 
         // liquid follow: continuous fluid convergence into target
-        const followRate = Math.min(0.38, (isLogo ? easeLogo : easeBg) * dtRatio);
+        const followRate = isLogo ? followRateLogo : followRateBg;
         p.sx += (targetX - p.sx) * smoothRate;
         p.sy += (targetY - p.sy) * smoothRate;
 
