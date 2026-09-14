@@ -439,11 +439,12 @@
     border-color:rgba(168,85,247,0.45);
   }
   .p-top-badge{
+    display:inline-flex; align-items:center;
     font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
     color:var(--violet-glow); background:rgba(168,85,247,0.15); border:1px solid rgba(192,132,252,0.3);
-    padding:4px 10px; border-radius:100px; width:fit-content; margin-bottom:16px;
+    padding:5px 12px; border-radius:100px; width:fit-content; margin-bottom:22px;
   }
-  .pricing-card h3{ font-size:22px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:10px; font-weight:600; }
+  .pricing-card h3{ font-size:22px; font-family:'Unbounded',sans-serif; color:#fff; margin-top:0; margin-bottom:12px; font-weight:600; }
   .pricing-desc{ font-size:14px; color:var(--muted); line-height:1.55; margin-bottom:24px; }
   .pricing-price{ margin-bottom:24px; }
   .p-amount{ font-size:32px; font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
@@ -460,37 +461,144 @@
   .civic-callout h4{ font-size:16px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:4px; }
   .civic-callout p{ font-size:13.5px; color:var(--muted); line-height:1.5; max-width:640px; }
 
-  /* ---------- interactive scope estimator ---------- */
+  /* ---------- interactive AI copilot estimator ---------- */
   .estimator-wrap{
     margin-top:50px; background:rgba(18,12,30,0.65); border:1px solid var(--line);
-    border-radius:24px; padding:clamp(24px,4vw,44px); position:relative; overflow:hidden;
+    border-radius:24px; padding:clamp(20px,3.5vw,36px); position:relative; overflow:hidden;
   }
   .estimator-wrap::before{
-    content:""; position:absolute; top:-120px; right:-120px; width:260px; height:260px;
-    background:radial-gradient(circle,rgba(168,85,247,0.2) 0%,transparent 70%); pointer-events:none;
+    content:""; position:absolute; top:-120px; right:-120px; width:280px; height:280px;
+    background:radial-gradient(circle,rgba(168,85,247,0.22) 0%,transparent 70%); pointer-events:none;
   }
-  .estimator-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:40px; align-items:center; }
-  .est-group{ margin-bottom:24px; }
-  .est-group label{ font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:10px; }
-  .est-pills{ display:flex; flex-wrap:wrap; gap:10px; }
-  .est-pill{
-    background:rgba(255,255,255,0.04); border:1px solid var(--line); color:var(--lavender);
-    padding:8px 16px; border-radius:100px; font-size:13px; font-family:'Manrope',sans-serif;
-    cursor:pointer; transition:all .25s ease; user-select:none;
+  .estimator-grid{ display:grid; grid-template-columns:1.35fr 1fr; gap:32px; align-items:start; }
+
+  /* AI Chat Box */
+  .est-chat-card{
+    background:rgba(10,7,16,0.75); border:1px solid rgba(192,132,252,0.25);
+    border-radius:20px; display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 15px 35px -10px rgba(0,0,0,0.5);
   }
-  .est-pill:hover{ border-color:var(--violet-glow); color:#fff; }
-  .est-pill.active{
-    background:rgba(168,85,247,0.2); border-color:var(--violet-glow); color:#fff; font-weight:600;
-    box-shadow:0 0 16px -4px rgba(168,85,247,0.5);
+  .est-chat-header{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px 20px; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--line);
   }
+  .est-chat-status{
+    display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600;
+    color:var(--violet-glow); text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .est-status-dot{
+    width:8px; height:8px; border-radius:50%; background:#10b981;
+    box-shadow:0 0 8px #10b981; animation:estPulseDot 2s infinite;
+  }
+  @keyframes estPulseDot{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(0.85); } }
+  .est-btn-reset{
+    background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:100px;
+    color:var(--muted); font-size:11.5px; padding:4px 12px; cursor:pointer;
+    transition:all .2s ease; display:flex; align-items:center; gap:5px; font-family:'Manrope',sans-serif;
+  }
+  .est-btn-reset:hover{ color:#fff; border-color:var(--violet-glow); background:rgba(168,85,247,0.15); }
+
+  .est-chat-stream{
+    padding:20px; display:flex; flex-direction:column; gap:16px; max-height:380px;
+    overflow-y:auto; scroll-behavior:smooth;
+  }
+  .est-msg{ display:flex; flex-direction:column; max-width:92%; animation:estFadeIn .3s cubic-bezier(.16,1,.3,1); }
+  @keyframes estFadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+  .est-msg.bot{ align-self:flex-start; }
+  .est-msg.user{ align-self:flex-end; }
+  .est-bubble{
+    padding:12px 16px; border-radius:16px; font-size:13.5px; line-height:1.55;
+  }
+  .est-msg.bot .est-bubble{
+    background:rgba(255,255,255,0.05); border:1px solid rgba(192,132,252,0.2);
+    color:var(--lavender); border-top-left-radius:4px;
+  }
+  .est-msg.user .est-bubble{
+    background:linear-gradient(135deg,rgba(147,51,234,0.3) 0%,rgba(168,85,247,0.45) 100%);
+    border:1px solid rgba(192,132,252,0.45); color:#fff; border-top-right-radius:4px;
+    font-weight:500;
+  }
+  .est-chips{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;
+  }
+  .est-chip{
+    background:rgba(168,85,247,0.1); border:1px solid rgba(192,132,252,0.3);
+    color:#e9d5ff; padding:7px 14px; border-radius:100px; font-size:12.5px;
+    cursor:pointer; transition:all .2s ease; font-family:'Manrope',sans-serif;
+    display:inline-flex; align-items:center; gap:5px; user-select:none;
+  }
+  .est-chip:hover{
+    background:rgba(168,85,247,0.25); border-color:var(--violet-glow); color:#fff;
+    transform:translateY(-1px); box-shadow:0 4px 12px -2px rgba(168,85,247,0.4);
+  }
+  .est-chip.selected{
+    background:var(--violet-bright); border-color:var(--violet-glow); color:#fff; font-weight:600;
+  }
+  .est-typing{
+    display:inline-flex; align-items:center; gap:5px; padding:10px 14px;
+    background:rgba(255,255,255,0.04); border-radius:12px; border:1px solid var(--line);
+    width:fit-content;
+  }
+  .est-typing span{
+    width:6px; height:6px; background:var(--violet-glow); border-radius:50%;
+    animation:estBounce 1.2s infinite ease-in-out;
+  }
+  .est-typing span:nth-child(2){ animation-delay:.2s; }
+  .est-typing span:nth-child(3){ animation-delay:.4s; }
+  @keyframes estBounce{ 0%,80%,100%{ transform:scale(0); } 40%{ transform:scale(1); } }
+
+  /* Predictive autocomplete suggestions bar */
+  .est-predictive{
+    padding:8px 16px; background:rgba(255,255,255,0.02); border-top:1px solid var(--line);
+    display:none; align-items:center; gap:8px; overflow-x:auto; white-space:nowrap;
+  }
+  .est-predictive.active{ display:flex; }
+  .est-pred-tag{
+    font-size:11.5px; color:var(--violet-glow); background:rgba(168,85,247,0.12);
+    border:1px dashed rgba(192,132,252,0.35); border-radius:100px; padding:4px 11px;
+    cursor:pointer; transition:all .2s; font-family:'Manrope',sans-serif;
+  }
+  .est-pred-tag:hover{ background:rgba(168,85,247,0.3); color:#fff; border-color:var(--violet-glow); }
+
+  /* Input row */
+  .est-input-row{
+    display:flex; gap:10px; padding:12px 16px; background:rgba(18,12,30,0.9);
+    border-top:1px solid var(--line); align-items:center;
+  }
+  .est-input{
+    flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--line);
+    border-radius:100px; padding:10px 18px; color:#fff; font-size:13.5px;
+    font-family:'Manrope',sans-serif; outline:none; transition:border-color .2s;
+  }
+  .est-input:focus{ border-color:var(--violet-glow); box-shadow:0 0 10px rgba(168,85,247,0.25); }
+  .est-input::placeholder{ color:rgba(255,255,255,0.35); }
+  .est-send-btn{
+    background:var(--violet-bright); border:none; border-radius:100px;
+    color:#fff; padding:10px 18px; font-size:13px; font-weight:600;
+    cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; gap:6px;
+    font-family:'Manrope',sans-serif;
+  }
+  .est-send-btn:hover{ background:var(--violet-glow); transform:translateY(-1px); box-shadow:0 6px 16px -3px rgba(168,85,247,0.6); }
+
+  /* Estimator summary card (Right Panel) */
   .est-summary-card{
-    background:rgba(10,7,16,0.7); border:1px solid rgba(192,132,252,0.3); border-radius:20px;
-    padding:32px 28px; text-align:center; display:flex; flex-direction:column; gap:18px;
+    background:rgba(10,7,16,0.75); border:1px solid rgba(192,132,252,0.3); border-radius:20px;
+    padding:28px 24px; display:flex; flex-direction:column; gap:16px; position:sticky; top:100px;
+    box-shadow:0 15px 35px -10px rgba(0,0,0,0.5);
   }
-  .est-range-title{ font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
-  .est-range-val{ font-size:clamp(28px,3vw,38px); font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
-  .est-time-val{ font-size:13.5px; color:var(--violet-glow); font-weight:600; }
-  .est-breakdown{ font-size:12.5px; color:var(--muted); line-height:1.5; border-top:1px solid var(--line); padding-top:14px; }
+  .est-spec-head{ display:flex; justify-content:space-between; align-items:center; }
+  .est-range-title{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); font-weight:700; }
+  .est-spec-badge{ font-size:11px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); padding:3px 8px; border-radius:100px; font-weight:600; }
+  .est-range-val{ font-size:clamp(26px,2.6vw,34px); font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
+  .est-time-val{ font-size:13.5px; color:var(--violet-glow); font-weight:600; display:flex; align-items:center; gap:6px; }
+  .est-breakdown-box{
+    background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:12px;
+    padding:12px 14px; display:flex; flex-direction:column; gap:10px;
+  }
+  .est-breakdown-item{ font-size:12.5px; color:var(--lavender); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .est-breakdown-item .b-key{ color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; }
+  .est-breakdown-item .b-val{ color:#fff; font-weight:600; text-align:right; font-size:12px; }
+  .est-note{ font-size:12px; color:var(--muted); line-height:1.5; background:rgba(255,255,255,0.02); border-radius:10px; padding:10px 12px; border:1px solid var(--line); }
 
   /* ---------- voice brief intake ---------- */
   .voice-btn{
@@ -554,6 +662,7 @@
     .h-grid{ grid-template-columns:1fr; }
     .pricing-grid{ grid-template-columns:1fr; }
     .estimator-grid{ grid-template-columns:1fr; }
+    .est-summary-card{ position:relative; top:0; }
     .h-dashboard{ grid-template-columns:1fr 1fr; }
     .h-geo-grid{ grid-template-columns:1fr; }
   }
@@ -944,7 +1053,7 @@
       <!-- Card 3: Retainer -->
       <div class="pricing-card">
         <div>
-          <span class="p-top-badge" data-i18n="p_c3_badge">Mensual · Cupo limitado</span>
+          <span class="p-top-badge" data-i18n="p_c3_badge">Suscripción Mensual · Asesoría Continua</span>
           <h3 data-i18n="p_c3_title">Retainer Técnico</h3>
           <p class="pricing-desc" data-i18n="p_c3_desc">Equipo de diseño e ingeniería dedicado para startups y empresas que necesitan iteración continua, nuevas features y SLA de soporte crítico.</p>
           <div class="pricing-price">
@@ -974,61 +1083,76 @@
 
     <!-- Interactive AI Scope & Cost Estimator -->
     <div class="estimator-wrap reveal" id="estimator">
-      <div class="section-head" style="margin-bottom:32px;">
+      <div class="section-head" style="margin-bottom:28px;">
         <div>
-          <span class="idx" data-i18n="est_idx">Planificador de Proyectos a Medida · Posibilidades Ilimitadas</span>
-          <h2 style="font-size:clamp(24px,3vw,38px);" data-i18n="est_title">Cotizador Inteligente de Proyectos</h2>
+          <span class="idx" data-i18n="est_idx">Copiloto Técnico · Posibilidades Ilimitadas</span>
+          <h2 style="font-size:clamp(24px,3vw,38px);" data-i18n="est_title">Cotizador Inteligente con IA</h2>
         </div>
-        <p data-i18n="est_desc">No nos limitamos a lo que ves en el portfolio: diseñamos y construimos cualquier solución tecnológica que imagines. Configura los parámetros iniciales de tu visión y obtén una estimación de inversión y tiempos.</p>
+        <p data-i18n="est_desc">Construimos cualquier solución tecnológica que imagines sin límites de catálogo. Conversa con nuestro copiloto o escribe una palabra (ej. "app", "saas", "ia") para modular arquitectura, módulos recomendados y presupuesto en tiempo real.</p>
       </div>
 
       <div class="estimator-grid">
-        <div class="est-controls">
-          <div class="est-group">
-            <label data-i18n="est_lbl_type">1. Tipo de Solución / Arquitectura</label>
-            <div class="est-pills" id="estTypePills">
-              <button type="button" class="est-pill active" data-type="saas" data-name="Plataforma Web / SaaS a Medida" data-cost="2800" data-weeks="4">SaaS / Web App</button>
-              <button type="button" class="est-pill" data-type="mobile" data-name="App Móvil (iOS & Android Nativo / Cross)" data-cost="3800" data-weeks="5">App Móvil (iOS & Android)</button>
-              <button type="button" class="est-pill" data-type="ai" data-name="Sistemas con IA, LLMs & Agentes Autónomos" data-cost="3400" data-weeks="4">Copiloto IA & Automatización</button>
-              <button type="button" class="est-pill" data-type="fintech" data-name="Fintech, Pagos & Comercio Complejo" data-cost="4200" data-weeks="6">Fintech & Comercio</button>
-              <button type="button" class="est-pill" data-type="civic" data-name="Sistemas de Alta Concurrencia / Red Cívica" data-cost="4600" data-weeks="6">Alta Concurrencia / Tiempo Real</button>
-              <button type="button" class="est-pill" data-type="custom" data-name="Desarrollo Especial / Arquitectura a Medida" data-cost="3200" data-weeks="4">Arquitectura a Medida / Idea Única</button>
+        <!-- Interactive AI Chat Copilot Panel -->
+        <div class="est-chat-card">
+          <div class="est-chat-header">
+            <div class="est-chat-status">
+              <span class="est-status-dot"></span>
+              <span data-i18n="est_chat_status">MYOOZ AI Copilot · Online</span>
             </div>
+            <button type="button" class="est-btn-reset" id="estResetBtn" title="Reiniciar asistente">
+              <span>🔄</span> <span data-i18n="est_btn_reset">Reiniciar</span>
+            </button>
           </div>
 
-          <div class="est-group">
-            <label data-i18n="est_lbl_scope">2. Alcance & Fase de Lanzamiento</label>
-            <div class="est-pills" id="estScopePills">
-              <button type="button" class="est-pill" data-scope="sprint" data-mult="0.65" data-name="Sprint Rápido / Validación (1-2 sem)">Sprint Rápido (1-2 sem)</button>
-              <button type="button" class="est-pill active" data-scope="mvp" data-mult="1.0" data-name="MVP Listo para Producción (4-6 sem)">MVP de Producción (4-6 sem)</button>
-              <button type="button" class="est-pill" data-scope="full" data-mult="1.6" data-name="Producto Completo Escalable (8-12 sem)">Producto Completo (8-12 sem)</button>
-              <button type="button" class="est-pill" data-scope="scale" data-mult="2.2" data-name="Arquitectura Enterprise / Misión Crítica">Escala / Misión Crítica</button>
-            </div>
+          <div class="est-chat-stream" id="estChatStream">
+            <!-- Dynamic chat messages injected here -->
           </div>
 
-          <div class="est-group">
-            <label data-i18n="est_lbl_features">3. Módulos & Capacidades Tecnológicas (selecciona las que necesites)</label>
-            <div class="est-pills" id="estFeaturePills">
-              <button type="button" class="est-pill" data-cost="600" data-feat="Modelos de IA, LLMs & Agentes">🤖 Modelos de IA & Agentes</button>
-              <button type="button" class="est-pill" data-cost="450" data-feat="Pasarelas de Pago & Checkout (Stripe/Crypto)">💳 Pagos & Suscripciones</button>
-              <button type="button" class="est-pill" data-cost="500" data-feat="Geolocalización, Mapas & Rutas en Vivo">📍 Geolocalización & GPS</button>
-              <button type="button" class="est-pill" data-cost="500" data-feat="Sincronización WebSockets / Tiempo Real">⚡ Sincronización en Tiempo Real</button>
-              <button type="button" class="est-pill" data-cost="650" data-feat="Gráficos 3D WebGL, Shaders & Audio Pro">🎧 Gráficos 3D / WebGL / Audio</button>
-              <button type="button" class="est-pill" data-cost="550" data-feat="Cifrado de Datos & Arquitectura Segura">🔒 Cifrado & Seguridad Avanzada</button>
-              <button type="button" class="est-pill" data-cost="400" data-feat="Integración de APIs & Servicios Externos">🔌 Integración de APIs Externas</button>
-              <button type="button" class="est-pill" data-cost="600" data-feat="Despliegue Multi-Región & Auto-Escalado">🌐 Infraestructura Multi-Región</button>
-            </div>
+          <!-- Predictive Auto-Complete Suggestion Bar -->
+          <div class="est-predictive" id="estPredictiveBar">
+            <span style="font-size:11px;color:var(--muted);margin-right:4px;" data-i18n="est_pred_label">✦ Sugerencia:</span>
+            <div id="estPredTags" style="display:inline-flex;gap:6px;"></div>
           </div>
+
+          <!-- Message Input -->
+          <form class="est-input-row" id="estInputForm" onsubmit="return false;">
+            <input type="text" class="est-input" id="estInput" placeholder="Escribe tu idea (ej: 'una app', 'un saas', 'un bot de ia')..." autocomplete="off">
+            <button type="submit" class="est-send-btn" id="estSendBtn">
+              <span data-i18n="est_btn_send">Enviar</span> <span>↑</span>
+            </button>
+          </form>
         </div>
 
+        <!-- Live Architecture & Budget Summary Panel -->
         <div class="est-summary-card">
-          <span class="est-range-title" data-i18n="est_est_title">Inversión Estimada</span>
+          <div class="est-spec-head">
+            <span class="est-range-title" data-i18n="est_est_title">Inversión Estimada</span>
+            <span class="est-spec-badge" data-i18n="est_badge_live">En Vivo</span>
+          </div>
           <div class="est-range-val" id="estPriceDisplay">$2,800 – $3,500 USD</div>
           <div class="est-time-val" id="estTimeDisplay">⏱ Tiempo estimado: ~4 a 6 semanas</div>
-          <div class="est-breakdown" id="estBreakdownText">Base: Plataforma Web / SaaS a Medida · Alcance: MVP de Producción (4-6 sem)</div>
-          <div class="est-note" data-i18n="est_note" style="font-size:12px;color:var(--muted);line-height:1.5;background:rgba(255,255,255,0.03);border-radius:10px;padding:10px 12px;border:1px solid var(--line);">¿Tu requerimiento es totalmente único o fuera de lo común? Lo construimos desde cero según tu necesidad técnica exacta.</div>
+
+          <div class="est-breakdown-box">
+            <div class="est-breakdown-item">
+              <span class="b-key" data-i18n="est_key_type">Arquitectura / Core:</span>
+              <span class="b-val" id="estTypeVal">SaaS / Web App</span>
+            </div>
+            <div class="est-breakdown-item">
+              <span class="b-key" data-i18n="est_key_scope">Alcance & Fase:</span>
+              <span class="b-val" id="estScopeVal">MVP de Producción</span>
+            </div>
+            <div class="est-breakdown-item">
+              <span class="b-key" data-i18n="est_key_tech">Capacidades:</span>
+              <span class="b-val" id="estTechVal">Base Esencial</span>
+            </div>
+          </div>
+
+          <div class="est-note" data-i18n="est_note">
+            ¿Tu requerimiento es totalmente único o fuera de lo común? Diseñamos la infraestructura técnica a medida desde cero para tu proyecto exacto.
+          </div>
+
           <button type="button" class="btn" id="estTransferBtn" style="width:100%;justify-content:center;" data-i18n="est_transfer_btn">
-            Transferir especificaciones al contacto →
+            Transferir brief al formulario de contacto →
           </button>
         </div>
       </div>
@@ -1068,9 +1192,9 @@
 
         <div class="priority-choice">
           <label class="check-container">
-            <input type="checkbox" id="contactPriority" name="priority" value="Prioridad Alta / Necesito lanzar antes de otoño 2026">
+            <input type="checkbox" id="contactPriority" name="priority" value="Prioridad Alta / Sprint Rápido">
             <span class="checkmark"></span>
-            <span class="check-label" data-i18n="c_priority_label">Necesito lanzar antes de otoño 2026 (Solicitud de cupo prioritario / Sprint Exprés)</span>
+            <span class="check-label" data-i18n="c_priority_label">Proyecto prioritario o con fecha de entrega inmediata (Sprint Exprés)</span>
           </label>
         </div>
 
@@ -1102,9 +1226,9 @@
       </div>
       <div class="info-block">
         <span class="label" data-i18n="c_avail_label">Disponibilidad</span>
-        <p data-i18n="c_avail_title">Nuevos proyectos — otoño 2026</p>
-        <span class="waitlist-badge" data-i18n="c_avail_badge">⚡ 2 Cupos de Sprint Exprés disponibles</span>
-        <p class="waitlist-note" data-i18n="c_avail_note">Si tu proyecto es de alto impacto o requiere respuesta urgente, consúltanos para asignación prioritaria.</p>
+        <p data-i18n="c_avail_title">Abierta todo el año</p>
+        <span class="waitlist-badge" data-i18n="c_avail_badge" style="background:rgba(16,185,129,0.14);border-color:rgba(52,211,153,0.3);color:#34d399;">⚡ Nuevos proyectos bienvenidos</span>
+        <p class="waitlist-note" data-i18n="c_avail_note">Consultas abiertas para nuevos productos, plataformas y sprints de alto impacto. Respuesta directa en menos de 24 horas.</p>
       </div>
       <div class="info-block">
         <span class="label" data-i18n="c_social_label">Redes</span>
@@ -2190,7 +2314,7 @@
       p_c2_f3: "Integración de pagos, auth y modelos IA",
       p_c2_f4: "Propiedad intelectual 100% del cliente",
       p_c2_btn: "Iniciar MVP por fases",
-      p_c3_badge: "Mensual · Cupo limitado",
+      p_c3_badge: "Suscripción Mensual · Asesoría Continua",
       p_c3_title: "Retainer Técnico",
       p_c3_desc: "Equipo de diseño e ingeniería dedicado para startups y empresas que necesitan iteración continua, nuevas features y SLA de soporte crítico.",
       p_c3_f1: "Horas de desarrollo e ingeniería senior",
@@ -2200,22 +2324,27 @@
       civic_callout_title: "¿Perteneces a una ONG, colectivo cívico o respuesta de emergencia?",
       civic_callout_desc: "Ofrecemos tarifas subvencionadas y consultoría abierta pro-bono para iniciativas humanitarias y de socorro civil. Desarrollamos herramientas que salvan vidas.",
       civic_callout_btn: "Solicitar apoyo cívico",
-      est_idx: "Planificador de Proyectos a Medida · Posibilidades Ilimitadas",
-      est_title: "Cotizador Inteligente de Proyectos",
-      est_desc: "No nos limitamos a lo que ves en el portfolio: diseñamos y construimos cualquier solución tecnológica que imagines. Configura los parámetros iniciales de tu visión y obtén una estimación de inversión y tiempos.",
-      est_note: "¿Tu requerimiento es totalmente único o fuera de lo común? Lo construimos desde cero según tu necesidad técnica exacta.",
-      est_lbl_type: "1. Tipo de Producto",
-      est_lbl_scope: "2. Alcance & Complejidad",
-      est_lbl_features: "3. Capacidades Clave (puedes elegir varias)",
+      est_idx: "Copiloto Técnico · Posibilidades Ilimitadas",
+      est_title: "Cotizador Inteligente con IA",
+      est_desc: "Construimos cualquier solución tecnológica que imagines sin límites de catálogo. Conversa con nuestro copiloto o escribe una palabra (ej. 'app', 'saas', 'ia') para modular arquitectura, módulos recomendados y presupuesto en tiempo real.",
+      est_chat_status: "MYOOZ AI Copilot · Online",
+      est_btn_reset: "Reiniciar",
+      est_pred_label: "✦ Sugerencia:",
+      est_btn_send: "Enviar",
       est_est_title: "Inversión Estimada",
-      est_transfer_btn: "Transferir al formulario de contacto →",
+      est_badge_live: "En Vivo",
+      est_key_type: "Arquitectura / Core:",
+      est_key_scope: "Alcance & Fase:",
+      est_key_tech: "Capacidades:",
+      est_note: "¿Tu requerimiento es totalmente único o fuera de lo común? Diseñamos la infraestructura técnica a medida desde cero para tu proyecto exacto.",
+      est_transfer_btn: "Transferir brief al formulario de contacto →",
       c_title: "Hablemos de tu próximo producto.",
       c_lead: "Cuéntanos qué estás construyendo. Respondemos personalmente a cada proyecto.",
       c_lbl_name: "Nombre o Empresa",
       c_lbl_email: "Correo electrónico",
       c_lbl_msg: "Cuéntanos sobre tu proyecto",
       c_voice_hint: "Dictar por voz",
-      c_priority_label: "Necesito lanzar antes de otoño 2026 (Solicitud de cupo prioritario / Sprint Exprés)",
+      c_priority_label: "Proyecto prioritario o con fecha de entrega inmediata (Sprint Exprés)",
       c_btn_send: "Enviar mensaje",
       c_err_msg: "No se pudo conectar con el servicio en este instante. Puedes enviarnos los detalles directamente con un clic:",
       c_succ_title: "¡Mensaje recibido con éxito!",
@@ -2224,9 +2353,9 @@
       c_btn_another: "Enviar otro mensaje",
       c_direct_mail: "Correo directo",
       c_avail_label: "Disponibilidad",
-      c_avail_title: "Nuevos proyectos — otoño 2026",
-      c_avail_badge: "⚡ 2 Cupos de Sprint Exprés disponibles",
-      c_avail_note: "Si tu proyecto es de alto impacto o requiere respuesta urgente, consúltanos para asignación prioritaria.",
+      c_avail_title: "Abierta todo el año",
+      c_avail_badge: "⚡ Nuevos proyectos bienvenidos",
+      c_avail_note: "Consultas abiertas para nuevos productos, plataformas y sprints de alto impacto. Respuesta directa en menos de 24 horas.",
       c_social_label: "Redes"
     },
     en: {
@@ -2280,7 +2409,7 @@
       p_c2_f3: "Stripe payments, auth, and LLM model integration",
       p_c2_f4: "100% client-owned intellectual property",
       p_c2_btn: "Start phased MVP",
-      p_c3_badge: "Monthly · Limited Capacity",
+      p_c3_badge: "Monthly Retainer · Continuous Advisory",
       p_c3_title: "Engineering Retainer",
       p_c3_desc: "Dedicated senior design and engineering capacity for startups and scaleups requiring rapid iteration and critical support SLAs.",
       p_c3_f1: "Dedicated senior engineering & design sprint hours",
@@ -2290,22 +2419,27 @@
       civic_callout_title: "Are you an NGO, civic initiative, or emergency responder?",
       civic_callout_desc: "We offer subsidized rates and pro-bono consulting for humanitarian and public relief initiatives. We engineer software that saves lives.",
       civic_callout_btn: "Request civic partnership",
-      est_idx: "Custom Product Engineering · Boundless Possibilities",
-      est_title: "Intelligent Project Estimator",
-      est_desc: "We aren't limited to past portfolio work: we architect and build any technological solution you envision. Configure initial parameters to get an instant scope, investment, and timeline estimate.",
-      est_note: "Do you have unique or non-standard technical requirements? We build custom solutions from scratch to your exact specifications.",
-      est_lbl_type: "1. Product Type",
-      est_lbl_scope: "2. Scope & Complexity",
-      est_lbl_features: "3. Key Capabilities (select multiple)",
+      est_idx: "Technical Copilot · Limitless Possibilities",
+      est_title: "AI-Powered Project Estimator",
+      est_desc: "We build any technological solution you envision without catalog limitations. Chat with our copilot or type a keyword (e.g. 'app', 'saas', 'ai') to calculate architecture, modules, and budget in real time.",
+      est_chat_status: "MYOOZ AI Copilot · Online",
+      est_btn_reset: "Reset",
+      est_pred_label: "✦ Suggestion:",
+      est_btn_send: "Send",
       est_est_title: "Estimated Investment",
-      est_transfer_btn: "Transfer scope to contact form →",
+      est_badge_live: "Live",
+      est_key_type: "Architecture / Core:",
+      est_key_scope: "Scope & Phase:",
+      est_key_tech: "Capabilities:",
+      est_note: "Have a completely unique or unorthodox technical requirement? We engineer custom infrastructure from the ground up for your exact vision.",
+      est_transfer_btn: "Transfer brief to contact form →",
       c_title: "Let's build your next product.",
       c_lead: "Tell us what you're creating. We respond personally to every inquiry.",
       c_lbl_name: "Name or Company",
       c_lbl_email: "Email address",
       c_lbl_msg: "Tell us about your project",
       c_voice_hint: "Voice dictation",
-      c_priority_label: "Need to launch before autumn 2026 (Priority slot / Express Sprint request)",
+      c_priority_label: "Priority project or urgent launch timeline (Express Sprint)",
       c_btn_send: "Send message",
       c_err_msg: "Could not connect to service right now. You can send your details directly with one click:",
       c_succ_title: "Message received successfully!",
@@ -2314,9 +2448,9 @@
       c_btn_another: "Send another message",
       c_direct_mail: "Direct email",
       c_avail_label: "Availability",
-      c_avail_title: "New client slots — autumn 2026",
-      c_avail_badge: "⚡ 2 Express Sprint slots available",
-      c_avail_note: "If your project is high impact or time-sensitive, contact us for priority sprint scheduling.",
+      c_avail_title: "Open year-round",
+      c_avail_badge: "⚡ New projects welcome",
+      c_avail_note: "Open inquiries for new products, platforms and high-impact sprints. Direct reply within 24 hours.",
       c_social_label: "Social"
     }
   };
@@ -2358,119 +2492,595 @@
   }catch(e){}
 
   // ==========================================================================
-  // ---------- Interactive Scope & Cost Estimator ----------
+  // ---------- Interactive AI Copilot Estimator (Chat & Predictor) ----------
   // ==========================================================================
-  (function initEstimator(){
-    const typePills = document.querySelectorAll('#estTypePills .est-pill');
-    const scopePills = document.querySelectorAll('#estScopePills .est-pill');
-    const featurePills = document.querySelectorAll('#estFeaturePills .est-pill');
+  (function initAICopilotEstimator(){
+    const chatStream = document.getElementById('estChatStream');
+    const inputField = document.getElementById('estInput');
+    const inputForm = document.getElementById('estInputForm');
+    const predBar = document.getElementById('estPredictiveBar');
+    const predTagsContainer = document.getElementById('estPredTags');
+    const resetBtn = document.getElementById('estResetBtn');
+
     const priceDisplay = document.getElementById('estPriceDisplay');
     const timeDisplay = document.getElementById('estTimeDisplay');
-    const breakdownText = document.getElementById('estBreakdownText');
+    const typeVal = document.getElementById('estTypeVal');
+    const scopeVal = document.getElementById('estScopeVal');
+    const techVal = document.getElementById('estTechVal');
     const transferBtn = document.getElementById('estTransferBtn');
-    if(!priceDisplay || !timeDisplay) return;
 
-    let selectedType = { type: 'saas', name: 'SaaS / Web App', cost: 2800, weeks: 4 };
-    let selectedScope = { scope: 'mvp', mult: 1.0, name: 'MVP Esencial' };
-    let selectedFeatures = [];
+    if(!chatStream || !priceDisplay) return;
 
-    function updateCalculations(){
-      const baseCost = selectedType.cost;
-      const multiplier = selectedScope.mult;
-      let featCost = 0;
-      selectedFeatures.forEach(f => featCost += f.cost);
+    // Architecture database
+    const ARCH_TYPES = {
+      mobile: {
+        id: 'mobile',
+        nameEs: 'App Móvil (iOS & Android)',
+        nameEn: 'Mobile App (iOS & Android)',
+        baseCost: 3800,
+        baseWeeks: 5,
+        platforms: [
+          { labelEs: '🍏 iOS + 🤖 Android (Multiplataforma)', labelEn: '🍏 iOS + 🤖 Android (Cross-platform)', costMod: 0 },
+          { labelEs: '📱 Solo iOS Nativo', labelEn: '📱 iOS Native Only', costMod: -300 },
+          { labelEs: '🤖 Solo Android Nativo', labelEn: '🤖 Android Native Only', costMod: -300 },
+          { labelEs: '🌐 Web App + Móvil PWA', labelEn: '🌐 Web App + Mobile PWA', costMod: -400 }
+        ]
+      },
+      saas: {
+        id: 'saas',
+        nameEs: 'Plataforma SaaS / Web App',
+        nameEn: 'SaaS Platform / Web App',
+        baseCost: 2800,
+        baseWeeks: 4,
+        platforms: [
+          { labelEs: '💻 SaaS Web Completo (Cloud)', labelEn: '💻 Full Web SaaS (Cloud)', costMod: 0 },
+          { labelEs: '📊 Dashboard & Portal B2B', labelEn: '📊 Dashboard & B2B Portal', costMod: -200 },
+          { labelEs: '⚡ Web App Tiempo Real', labelEn: '⚡ Real-Time Web App', costMod: 400 }
+        ]
+      },
+      ai: {
+        id: 'ai',
+        nameEs: 'Sistema con IA, LLMs & Agentes',
+        nameEn: 'AI System, LLMs & Autonomous Agents',
+        baseCost: 3500,
+        baseWeeks: 4,
+        platforms: [
+          { labelEs: '🤖 Agente Autónomo / Copiloto de Flujo', labelEn: '🤖 Autonomous Agent / Copilot', costMod: 0 },
+          { labelEs: '💬 Chatbot Especializado con RAG/Docs', labelEn: '💬 Custom Chatbot with RAG/Docs', costMod: -300 },
+          { labelEs: '🧠 Pipeline de IA & Automatización de Procesos', labelEn: '🧠 AI Pipeline & Process Automation', costMod: 300 }
+        ]
+      },
+      ecommerce: {
+        id: 'ecommerce',
+        nameEs: 'Comercio Complejo / Pagos / Marketplace',
+        nameEn: 'Custom Commerce / Marketplace',
+        baseCost: 4000,
+        baseWeeks: 5,
+        platforms: [
+          { labelEs: '🛒 Tienda a Medida & Checkout', labelEn: '🛒 Custom Store & Checkout', costMod: 0 },
+          { labelEs: '📦 Marketplace Multi-Vendedor', labelEn: '📦 Multi-Vendor Marketplace', costMod: 600 },
+          { labelEs: '💳 Plataforma de Suscripciones & Facturación', labelEn: '💳 Subscription & Billing Platform', costMod: 200 }
+        ]
+      },
+      custom: {
+        id: 'custom',
+        nameEs: 'Arquitectura a Medida / Idea Única',
+        nameEn: 'Custom Architecture / Unique Vision',
+        baseCost: 3200,
+        baseWeeks: 4,
+        platforms: [
+          { labelEs: '✨ Arquitectura Especializada desde Cero', labelEn: '✨ Custom Ground-Up Architecture', costMod: 0 },
+          { labelEs: '🎧 Audio / WebGL 3D / Hardware Sync', labelEn: '🎧 Audio / 3D WebGL / Hardware Sync', costMod: 500 }
+        ]
+      }
+    };
 
-      const totalMin = Math.round(((baseCost + featCost) * multiplier) / 50) * 50;
+    const SCOPE_TIERS = {
+      sprint: {
+        id: 'sprint',
+        nameEs: 'Sprint Rápido (1 a 2 sem)',
+        nameEn: 'Express Sprint (1 to 2 wks)',
+        mult: 0.65,
+        weeks: 2
+      },
+      mvp: {
+        id: 'mvp',
+        nameEs: 'MVP de Producción (4 a 6 sem)',
+        nameEn: 'Production MVP (4 to 6 wks)',
+        mult: 1.0,
+        weeks: 5
+      },
+      full: {
+        id: 'full',
+        nameEs: 'Producto Completo Escalable (8 a 12 sem)',
+        nameEn: 'Full Scalable Product (8 to 12 wks)',
+        mult: 1.6,
+        weeks: 9
+      }
+    };
+
+    const TECH_MODULES = [
+      { id: 'ai_llm', nameEs: '🤖 Modelos de IA & LLMs', nameEn: '🤖 AI Models & LLMs', cost: 600, keys: ['ia', 'ai', 'llm', 'gpt', 'agente', 'bot', 'inteligencia'] },
+      { id: 'payments', nameEs: '💳 Pasarela de Pagos & Stripe', nameEn: '💳 Payments & Stripe', cost: 450, keys: ['pago', 'pagos', 'stripe', 'checkout', 'suscripcion', 'monetizacion', 'tarjeta'] },
+      { id: 'geo', nameEs: '📍 Geolocalización & Mapas', nameEn: '📍 Geolocation & Maps', cost: 500, keys: ['mapa', 'mapas', 'gps', 'geo', 'ubicacion', 'delivery', 'rutas'] },
+      { id: 'realtime', nameEs: '⚡ WebSockets / Tiempo Real', nameEn: '⚡ Real-Time WebSockets', cost: 500, keys: ['tiempo real', 'realtime', 'chat', 'notificaciones', 'streaming'] },
+      { id: 'security', nameEs: '🔒 Cifrado & Auth Avanzada', nameEn: '🔒 Encryption & Security', cost: 450, keys: ['seguridad', 'cifrado', 'auth', 'privacidad', 'login'] },
+      { id: 'webgl_audio', nameEs: '🎧 Gráficos 3D / WebGL / Audio', nameEn: '🎧 3D WebGL / Audio Engine', cost: 650, keys: ['3d', 'webgl', 'audio', 'musica', 'sonido', 'shader'] }
+    ];
+
+    // State
+    let currentType = ARCH_TYPES.saas;
+    let currentPlatform = currentType.platforms[0];
+    let currentScope = SCOPE_TIERS.mvp;
+    let selectedTechs = new Set();
+    let currentStep = 'start'; // 'start', 'platform', 'tech', 'scope', 'ready'
+    let isTypingBot = false;
+
+    function renderCalculations(){
+      const base = currentType.baseCost + (currentPlatform ? currentPlatform.costMod : 0);
+      let techTotal = 0;
+      selectedTechs.forEach(tId => {
+        const mod = TECH_MODULES.find(m => m.id === tId);
+        if(mod) techTotal += mod.cost;
+      });
+
+      const totalMin = Math.round(((base + techTotal) * currentScope.mult) / 50) * 50;
       const totalMax = Math.round((totalMin * 1.25) / 50) * 50;
-      const weeksMin = Math.max(2, Math.round(selectedType.weeks * multiplier));
-      const weeksMax = weeksMin + (multiplier > 1.5 ? 3 : 2);
+
+      let weeksCount = Math.max(1, Math.round(currentType.baseWeeks * currentScope.mult));
+      let weeksMin = Math.max(1, weeksCount - 1);
+      let weeksMax = weeksCount + 1;
+      if(currentScope.id === 'sprint'){ weeksMin = 1; weeksMax = 2; }
 
       priceDisplay.textContent = `$${totalMin.toLocaleString()} – $${totalMax.toLocaleString()} USD`;
-      timeDisplay.textContent = `⏱ ${currentLang === 'en' ? 'Estimated timeline:' : 'Tiempo estimado:'} ~${weeksMin} ${currentLang === 'en' ? 'to' : 'a'} ${weeksMax} ${currentLang === 'en' ? 'weeks' : 'semanas'}`;
+      timeDisplay.textContent = currentLang === 'en'
+        ? `⏱ Estimated timeline: ~${weeksMin} to ${weeksMax} weeks`
+        : `⏱ Tiempo estimado: ~${weeksMin} a ${weeksMax} semanas`;
 
-      const featNames = selectedFeatures.map(f => f.name).join(', ');
-      breakdownText.textContent = `${currentLang === 'en' ? 'Type:' : 'Base:'} ${selectedType.name} · ${currentLang === 'en' ? 'Scope:' : 'Alcance:'} ${selectedScope.name}` + (featNames ? ` · ${featNames}` : '');
+      typeVal.textContent = currentLang === 'en' ? currentType.nameEn : currentType.nameEs;
+      scopeVal.textContent = currentLang === 'en' ? currentScope.nameEn : currentScope.nameEs;
+
+      if(selectedTechs.size === 0){
+        techVal.textContent = currentLang === 'en' ? 'Base Essential' : 'Base Esencial';
+      } else {
+        const names = Array.from(selectedTechs).map(tId => {
+          const mod = TECH_MODULES.find(m => m.id === tId);
+          return currentLang === 'en' ? mod.nameEn : mod.nameEs;
+        });
+        techVal.textContent = names.join(', ');
+      }
     }
 
-    typePills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        typePills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        selectedType = {
-          type: pill.dataset.type,
-          name: pill.dataset.name || pill.textContent.trim(),
-          cost: parseFloat(pill.dataset.cost),
-          weeks: parseFloat(pill.dataset.weeks)
-        };
-        updateCalculations();
-      });
-    });
+    function addMessage(text, sender = 'bot', chips = []){
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `est-msg ${sender}`;
 
-    scopePills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        scopePills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        selectedScope = {
-          scope: pill.dataset.scope,
-          mult: parseFloat(pill.dataset.mult),
-          name: pill.dataset.name || pill.textContent.trim()
-        };
-        updateCalculations();
-      });
-    });
+      const bubble = document.createElement('div');
+      bubble.className = 'est-bubble';
+      bubble.innerHTML = text;
+      msgDiv.appendChild(bubble);
 
-    featurePills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        pill.classList.toggle('active');
-        const cost = parseFloat(pill.dataset.cost);
-        const name = pill.dataset.feat;
-        if(pill.classList.contains('active')){
-          selectedFeatures.push({ cost, name });
-        } else {
-          selectedFeatures = selectedFeatures.filter(f => f.name !== name);
+      if(chips && chips.length > 0){
+        const chipsContainer = document.createElement('div');
+        chipsContainer.className = 'est-chips';
+        chips.forEach(c => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `est-chip ${c.selected ? 'selected' : ''}`;
+          btn.innerHTML = c.label;
+          btn.addEventListener('click', () => {
+            if(c.onClick) c.onClick(btn);
+          });
+          chipsContainer.appendChild(btn);
+        });
+        msgDiv.appendChild(chipsContainer);
+      }
+
+      chatStream.appendChild(msgDiv);
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    function showTypingIndicator(callback, delay = 400){
+      if(isTypingBot) return;
+      isTypingBot = true;
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'est-msg bot';
+      typingDiv.id = 'estTypingIndicator';
+      typingDiv.innerHTML = '<div class="est-typing"><span></span><span></span><span></span></div>';
+      chatStream.appendChild(typingDiv);
+      chatStream.scrollTop = chatStream.scrollHeight;
+
+      setTimeout(() => {
+        const ind = document.getElementById('estTypingIndicator');
+        if(ind) ind.remove();
+        isTypingBot = false;
+        callback();
+      }, delay);
+    }
+
+    // Step 1: Initial greeting
+    function sendInitialGreeting(){
+      chatStream.innerHTML = '';
+      currentStep = 'start';
+      renderCalculations();
+
+      const greeting = currentLang === 'en'
+        ? "Hello 👋 I am the MYOOZ LABS Technical Copilot. What would you like to build or explore today?"
+        : "Hola 👋 Soy el copiloto técnico de MYOOZ LABS. ¿Qué te gustaría construir o explorar hoy?";
+
+      const chips = [
+        {
+          label: currentLang === 'en' ? '📱 Mobile App' : '📱 App Móvil',
+          onClick: () => handleSelectType('mobile')
+        },
+        {
+          label: currentLang === 'en' ? '💻 SaaS / Web Platform' : '💻 Plataforma SaaS',
+          onClick: () => handleSelectType('saas')
+        },
+        {
+          label: currentLang === 'en' ? '🤖 AI System / Agents' : '🤖 Sistema con IA',
+          onClick: () => handleSelectType('ai')
+        },
+        {
+          label: currentLang === 'en' ? '🛒 E-commerce & Payments' : '🛒 E-commerce & Pagos',
+          onClick: () => handleSelectType('ecommerce')
+        },
+        {
+          label: currentLang === 'en' ? '⚡ 1-2 Week Sprint' : '⚡ Sprint Rápido',
+          onClick: () => handleSelectSprintDirect()
+        },
+        {
+          label: currentLang === 'en' ? '✨ Custom Architecture' : '✨ Idea Personalizada',
+          onClick: () => handleSelectType('custom')
         }
-        updateCalculations();
+      ];
+
+      addMessage(greeting, 'bot', chips);
+    }
+
+    function handleSelectSprintDirect(){
+      addMessage(currentLang === 'en' ? '⚡ I need a Fast Express Sprint (1-2 weeks)' : '⚡ Necesito un Sprint Rápido (1-2 semanas)', 'user');
+      currentScope = SCOPE_TIERS.sprint;
+      showTypingIndicator(() => {
+        const reply = currentLang === 'en'
+          ? "Understood! Our Express Sprints deliver working, production-ready modules in record time. What type of product will this sprint be for?"
+          : "¡Entendido! Nuestros Sprints Exprés entregan módulos listos para producción en tiempo récord. ¿Para qué tipo de solución será este sprint?";
+
+        const chips = [
+          { label: '📱 App Móvil', onClick: () => handleSelectType('mobile') },
+          { label: '💻 Web / SaaS', onClick: () => handleSelectType('saas') },
+          { label: '🤖 Agente / Copiloto IA', onClick: () => handleSelectType('ai') }
+        ];
+        addMessage(reply, 'bot', chips);
+        renderCalculations();
       });
-    });
+    }
 
-    if(transferBtn){
-      transferBtn.addEventListener('click', () => {
-        const msgField = document.getElementById('contactMessage');
-        if(msgField){
-          const featStr = selectedFeatures.length ? selectedFeatures.map(f => f.name).join(', ') : (currentLang === 'en' ? 'None specified' : 'Ninguna adicional');
-          const estSummary = currentLang === 'en'
-            ? `[Estimated Scope via NONA]
-• Type: ${selectedType.name}
-• Scope: ${selectedScope.name}
-• Capabilities: ${featStr}
-• Estimated Budget: ${priceDisplay.textContent} (${timeDisplay.textContent})
+    function handleSelectType(typeId){
+      currentType = ARCH_TYPES[typeId] || ARCH_TYPES.saas;
+      currentPlatform = currentType.platforms[0];
+      const typeLabel = currentLang === 'en' ? currentType.nameEn : currentType.nameEs;
+      addMessage(typeLabel, 'user');
+      renderCalculations();
 
-Project details & goals:
+      showTypingIndicator(() => {
+        currentStep = 'platform';
+        let promptText = "";
+        if(typeId === 'mobile'){
+          promptText = currentLang === 'en'
+            ? "Awesome! We engineer high-performance mobile apps with fluid UX. Which platform do you envision for the initial launch?"
+            : "¡Excelente! Diseñamos aplicaciones móviles con experiencia nativa fluida y alto rendimiento. ¿Para qué plataforma la imaginas inicialmente?";
+        } else if(typeId === 'saas'){
+          promptText = currentLang === 'en'
+            ? "Great choice. We architect scalable, modular web apps. What environment or focus best fits your SaaS?"
+            : "Gran elección. Desarrollamos arquitecturas web escalables y modulares. ¿Qué formato describe mejor tu SaaS?";
+        } else if(typeId === 'ai'){
+          promptText = currentLang === 'en'
+            ? "Superb. We integrate proprietary LLMs, agent workflows, and neural copilots. What kind of AI architecture do you need?"
+            : "Magnífico. Integramos LLMs avanzados, agentes autónomos y copilotos en misión crítica. ¿Qué arquitectura de IA buscas?";
+        } else {
+          promptText = currentLang === 'en'
+            ? "Understood. Which technical delivery environment fits best?"
+            : "Entendido. ¿Cuál es el entorno técnico que mejor se adapta a tu visión?";
+        }
+
+        const chips = currentType.platforms.map(p => ({
+          label: currentLang === 'en' ? p.labelEn : p.labelEs,
+          onClick: () => handleSelectPlatform(p)
+        }));
+
+        addMessage(promptText, 'bot', chips);
+      });
+    }
+
+    function handleSelectPlatform(plat){
+      currentPlatform = plat;
+      const platLabel = currentLang === 'en' ? plat.labelEn : plat.labelEs;
+      addMessage(platLabel, 'user');
+      renderCalculations();
+
+      showTypingIndicator(() => {
+        askTechModules();
+      });
+    }
+
+    function askTechModules(){
+      currentStep = 'tech';
+      const promptText = currentLang === 'en'
+        ? "Now, what key technical capabilities or modules will your product require? (Tap one or more, then continue):"
+        : "Ahora, ¿qué capacidades técnicas o módulos clave requerirá tu producto? (Elige las que apliquen o continúa):";
+
+      const chips = TECH_MODULES.map(m => {
+        const isSel = selectedTechs.has(m.id);
+        return {
+          label: (currentLang === 'en' ? m.nameEn : m.nameEs),
+          selected: isSel,
+          onClick: (btn) => {
+            if(selectedTechs.has(m.id)){
+              selectedTechs.delete(m.id);
+              btn.classList.remove('selected');
+            } else {
+              selectedTechs.add(m.id);
+              btn.classList.add('selected');
+            }
+            renderCalculations();
+          }
+        };
+      });
+
+      chips.push({
+        label: currentLang === 'en' ? '➡️ Continue to Timeline →' : '➡️ Continuar a Plazos de Entrega →',
+        onClick: () => askScopeTimeline()
+      });
+
+      addMessage(promptText, 'bot', chips);
+    }
+
+    function askScopeTimeline(){
+      addMessage(currentLang === 'en' ? '➡️ Next: Project Timeline & Phase' : '➡️ Siguiente: Plazos y Alcance', 'user');
+      showTypingIndicator(() => {
+        currentStep = 'scope';
+        const promptText = currentLang === 'en'
+          ? "Understood. What is your target timeline and deployment scope?"
+          : "Entendido. ¿Cuál es tu objetivo de tiempo y alcance para el primer lanzamiento?";
+
+        const chips = [
+          {
+            label: currentLang === 'en' ? '⚡ Express Sprint (1-2 weeks)' : '⚡ Sprint Rápido (1-2 sem)',
+            onClick: () => handleSelectScope(SCOPE_TIERS.sprint)
+          },
+          {
+            label: currentLang === 'en' ? '🚀 Production MVP (4-6 weeks)' : '🚀 MVP de Producción (4-6 sem)',
+            onClick: () => handleSelectScope(SCOPE_TIERS.mvp)
+          },
+          {
+            label: currentLang === 'en' ? '🏢 Full Scalable Platform (8-12 weeks)' : '🏢 Plataforma Completa Escalable (8-12 sem)',
+            onClick: () => handleSelectScope(SCOPE_TIERS.full)
+          }
+        ];
+
+        addMessage(promptText, 'bot', chips);
+      });
+    }
+
+    function handleSelectScope(scopeObj){
+      currentScope = scopeObj;
+      const scopeLabel = currentLang === 'en' ? scopeObj.nameEn : scopeObj.nameEs;
+      addMessage(scopeLabel, 'user');
+      renderCalculations();
+
+      showTypingIndicator(() => {
+        currentStep = 'ready';
+        const finishText = currentLang === 'en'
+          ? `✨ <strong>Scope model complete!</strong> I have calculated your estimated range in the live summary panel: <strong>${priceDisplay.textContent}</strong> (${timeDisplay.textContent}).<br><br>Click the button below to transfer this entire technical brief to the contact form:`
+          : `✨ <strong>¡Alcance técnico modelado!</strong> He actualizado tu presupuesto estimado en el panel: <strong>${priceDisplay.textContent}</strong> (${timeDisplay.textContent}).<br><br>Haz clic abajo para transferir este brief estructurado directamente al formulario de contacto:`;
+
+        const chips = [
+          {
+            label: currentLang === 'en' ? '🚀 Transfer brief to contact form →' : '🚀 Transferir brief al formulario →',
+            onClick: () => transferToContactForm()
+          },
+          {
+            label: currentLang === 'en' ? '🔄 Adjust another project' : '🔄 Modelar otro proyecto',
+            onClick: () => sendInitialGreeting()
+          }
+        ];
+
+        addMessage(finishText, 'bot', chips);
+      });
+    }
+
+    // Free-form user text parsing (Natural Language intent detection)
+    function processUserTextInput(text){
+      if(!text || !text.trim()) return;
+      const clean = text.trim();
+      addMessage(clean, 'user');
+      inputField.value = '';
+      hidePredictiveBar();
+
+      const lower = clean.toLowerCase();
+
+      showTypingIndicator(() => {
+        // Detect Core Type
+        let detectedType = null;
+        if(/app|m[oó]vil|celular|iphone|android|ios|tablet|flutter|react native/i.test(lower)){
+          detectedType = ARCH_TYPES.mobile;
+        } else if(/saas|web|plataforma|portal|dashboard|b2b|software|crm/i.test(lower)){
+          detectedType = ARCH_TYPES.saas;
+        } else if(/ia|ai|llm|gpt|agente|bot|inteligencia|neural/i.test(lower)){
+          detectedType = ARCH_TYPES.ai;
+        } else if(/tienda|comercio|e-commerce|ecommerce|vender|marketplace/i.test(lower)){
+          detectedType = ARCH_TYPES.ecommerce;
+        }
+
+        if(detectedType){
+          currentType = detectedType;
+          currentPlatform = detectedType.platforms[0];
+        }
+
+        // Detect Capabilities / Modules
+        TECH_MODULES.forEach(mod => {
+          const match = mod.keys.some(k => lower.includes(k));
+          if(match) selectedTechs.add(mod.id);
+        });
+
+        // Detect Timeline / Scope
+        if(/r[aá]pido|urgente|sprint|1 sem|2 sem|pronto/i.test(lower)){
+          currentScope = SCOPE_TIERS.sprint;
+        } else if(/completo|escalable|grande|empresa|enterprise/i.test(lower)){
+          currentScope = SCOPE_TIERS.full;
+        }
+
+        renderCalculations();
+
+        const typeName = currentLang === 'en' ? currentType.nameEn : currentType.nameEs;
+        const reply = currentLang === 'en'
+          ? `I processed your vision: <strong>${typeName}</strong>. ${selectedTechs.size > 0 ? "Detected specialized modules: " + Array.from(selectedTechs).map(id => TECH_MODULES.find(m => m.id === id).nameEn).join(', ') + "." : "What environment or platform fits your release?"}`
+          : `Procesé tu idea: <strong>${typeName}</strong>. ${selectedTechs.size > 0 ? "Detecté módulos clave: " + Array.from(selectedTechs).map(id => TECH_MODULES.find(m => m.id === id).nameEs).join(', ') + "." : "¿En qué plataforma o entorno planeas el lanzamiento?"}`;
+
+        const chips = currentType.platforms.map(p => ({
+          label: currentLang === 'en' ? p.labelEn : p.labelEs,
+          onClick: () => handleSelectPlatform(p)
+        }));
+
+        chips.push({
+          label: currentLang === 'en' ? '⚡ Set Timeline & Budget' : '⚡ Configurar Plazos & Presupuesto',
+          onClick: () => askScopeTimeline()
+        });
+
+        addMessage(reply, 'bot', chips);
+      });
+    }
+
+    // Real-time predictive autocomplete bar
+    const PREDICTIVE_KEYWORDS = [
+      { trigger: ['app', 'móvil', 'movil'], tagEs: '📱 App iOS & Android', tagEn: '📱 Mobile App', action: () => handleSelectType('mobile') },
+      { trigger: ['web', 'saas', 'plataforma'], tagEs: '💻 SaaS / Web Platform', tagEn: '💻 Web SaaS', action: () => handleSelectType('saas') },
+      { trigger: ['ia', 'ai', 'bot', 'llm'], tagEs: '🤖 Copiloto con IA & Agentes', tagEn: '🤖 AI Agent / Copilot', action: () => handleSelectType('ai') },
+      { trigger: ['tienda', 'pago', 'ecom'], tagEs: '🛒 E-commerce & Checkout', tagEn: '🛒 E-commerce & Payments', action: () => handleSelectType('ecommerce') },
+      { trigger: ['sprint', 'rapido', 'urgente'], tagEs: '⚡ Sprint Exprés (1-2 sem)', tagEn: '⚡ Express Sprint (1-2 wks)', action: () => handleSelectSprintDirect() }
+    ];
+
+    function updatePredictiveBar(val){
+      if(!val || val.trim().length < 2){
+        hidePredictiveBar();
+        return;
+      }
+      const v = val.toLowerCase();
+      const matches = PREDICTIVE_KEYWORDS.filter(pk => pk.trigger.some(t => v.includes(t)));
+
+      if(matches.length === 0){
+        hidePredictiveBar();
+        return;
+      }
+
+      predTagsContainer.innerHTML = '';
+      matches.forEach(m => {
+        const span = document.createElement('span');
+        span.className = 'est-pred-tag';
+        span.textContent = currentLang === 'en' ? m.tagEn : m.tagEs;
+        span.addEventListener('click', () => {
+          inputField.value = '';
+          hidePredictiveBar();
+          m.action();
+        });
+        predTagsContainer.appendChild(span);
+      });
+      predBar.classList.add('active');
+    }
+
+    function hidePredictiveBar(){
+      predBar.classList.remove('active');
+      predTagsContainer.innerHTML = '';
+    }
+
+    if(inputField){
+      inputField.addEventListener('input', (e) => {
+        updatePredictiveBar(e.target.value);
+      });
+    }
+
+    if(inputForm){
+      inputForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = inputField.value;
+        processUserTextInput(val);
+      });
+    }
+
+    if(resetBtn){
+      resetBtn.addEventListener('click', () => {
+        currentType = ARCH_TYPES.saas;
+        currentPlatform = currentType.platforms[0];
+        currentScope = SCOPE_TIERS.mvp;
+        selectedTechs.clear();
+        sendInitialGreeting();
+      });
+    }
+
+    function transferToContactForm(){
+      const msgField = document.getElementById('contactMessage');
+      if(msgField){
+        const techStr = selectedTechs.size > 0
+          ? Array.from(selectedTechs).map(id => {
+              const m = TECH_MODULES.find(item => item.id === id);
+              return currentLang === 'en' ? m.nameEn : m.nameEs;
+            }).join(', ')
+          : (currentLang === 'en' ? 'Base Essential Architecture' : 'Base de Arquitectura Esencial');
+
+        const typeStr = currentLang === 'en' ? currentType.nameEn : currentType.nameEs;
+        const platStr = currentPlatform ? (currentLang === 'en' ? currentPlatform.labelEn : currentPlatform.labelEs) : '';
+        const scopeStr = currentLang === 'en' ? currentScope.nameEn : currentScope.nameEs;
+
+        const estSummary = currentLang === 'en'
+          ? `[Estimated Technical Scope via MYOOZ AI Copilot]
+• Core Architecture: ${typeStr} ${platStr ? '(' + platStr + ')' : ''}
+• Deployment Scope: ${scopeStr}
+• Capabilities & Modules: ${techStr}
+• Estimated Investment: ${priceDisplay.textContent} (${timeDisplay.textContent})
+
+Project Vision & Specific Requirements:
 `
-            : `[Cotización Estimada vía NONA]
-• Tipo: ${selectedType.name}
-• Alcance: ${selectedScope.name}
-• Capacidades: ${featStr}
-• Presupuesto Estimado: ${priceDisplay.textContent} (${timeDisplay.textContent})
+          : `[Brief de Alcance Estimado vía MYOOZ AI Copilot]
+• Arquitectura Core: ${typeStr} ${platStr ? '(' + platStr + ')' : ''}
+• Alcance de Lanzamiento: ${scopeStr}
+• Módulos & Capacidades: ${techStr}
+• Inversión Estimada: ${priceDisplay.textContent} (${timeDisplay.textContent})
 
-Detalles y objetivos del proyecto:
+Visión del proyecto y requerimientos específicos:
 `;
 
-          msgField.value = estSummary;
-          const contactSec = document.getElementById('contact');
-          if(contactSec){
-            contactSec.scrollIntoView({ behavior: 'smooth' });
-          }
-          msgField.focus();
+        msgField.value = estSummary;
+        const contactSec = document.getElementById('contact');
+        if(contactSec){
+          contactSec.scrollIntoView({ behavior: 'smooth' });
         }
-      });
+        msgField.focus();
+      }
     }
 
-    updateCalculations();
+    if(transferBtn){
+      transferBtn.addEventListener('click', transferToContactForm);
+    }
+
+    // Update language when user changes site language
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setTimeout(() => {
+          renderCalculations();
+          if(currentStep === 'start'){
+            sendInitialGreeting();
+          }
+        }, 50);
+      });
+    });
+
+    // Start with initial greeting
+    sendInitialGreeting();
   })();
 
   // ==========================================================================
-  // ---------- Voice Brief Intake (Speech-to-Text) ----------
+  // ---------- Voice Brief Intake (Continuous Speech-to-Text) ----------
   // ==========================================================================
   (function initVoiceBrief(){
     const voiceBtn = document.getElementById('voiceBtn');
@@ -2489,49 +3099,108 @@ Detalles y objetivos del proyecto:
       return;
     }
 
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    let isRecording = false;
+    let recognition = null;
+    let isUserListening = false;
+    let baseText = "";
+    let restartTimeout = null;
+
+    function createRecognition(){
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.maxAlternatives = 1;
+      rec.lang = currentLang === 'en' ? 'en-US' : 'es-ES';
+
+      rec.onstart = () => {
+        voiceBtn.classList.add('recording');
+        if(voiceIcon) voiceIcon.textContent = '🔴';
+        if(voiceText) voiceText.textContent = currentLang === 'en' ? 'Listening... (click to stop)' : 'Escuchando... (clic para parar)';
+      };
+
+      rec.onresult = (event) => {
+        let finalTrans = '';
+        let interimTrans = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const trans = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTrans += trans + ' ';
+          } else {
+            interimTrans += trans;
+          }
+        }
+        if (finalTrans) {
+          baseText = (baseText ? baseText.trim() + ' ' : '') + finalTrans.trim();
+          msgField.value = baseText;
+        } else if (interimTrans) {
+          msgField.value = (baseText ? baseText.trim() + ' ' : '') + interimTrans;
+        }
+      };
+
+      rec.onerror = (event) => {
+        console.warn('Speech recognition warning/error:', event.error);
+        if(event.error === 'no-speech'){
+          // Ignore brief pauses so speech recognition doesn't cancel abruptly
+          return;
+        }
+        if(event.error === 'not-allowed' || event.error === 'service-not-allowed'){
+          isUserListening = false;
+          stopListeningUI();
+          alert(currentLang === 'en'
+            ? "Microphone access was denied. Please allow microphone permissions in your browser settings to dictate."
+            : "Permiso de micrófono no otorgado. Por favor permite el acceso al micrófono en la configuración de tu navegador.");
+        }
+      };
+
+      rec.onend = () => {
+        // If user wants to keep listening, auto-restart on quiet pause or browser engine tick
+        if(isUserListening){
+          clearTimeout(restartTimeout);
+          restartTimeout = setTimeout(() => {
+            if(isUserListening){
+              try {
+                rec.start();
+              } catch(e){
+                // Ignore if already active
+              }
+            }
+          }, 250);
+        } else {
+          stopListeningUI();
+        }
+      };
+
+      return rec;
+    }
+
+    function stopListeningUI(){
+      voiceBtn.classList.remove('recording');
+      if(voiceIcon) voiceIcon.textContent = '🎤';
+      if(voiceText) voiceText.textContent = currentLang === 'en' ? 'Voice dictation' : 'Dictar por voz';
+    }
 
     voiceBtn.addEventListener('click', () => {
-      if(isRecording){
-        recognition.stop();
-        return;
-      }
-      try{
-        recognition.lang = currentLang === 'en' ? 'en-US' : 'es-ES';
-        recognition.start();
-        isRecording = true;
-        voiceBtn.classList.add('recording');
-        voiceIcon.textContent = '🔴';
-        voiceText.textContent = currentLang === 'en' ? 'Listening...' : 'Escuchando...';
-      }catch(err){
-        console.warn('Speech recognition start failed:', err);
+      if(isUserListening){
+        isUserListening = false;
+        clearTimeout(restartTimeout);
+        if(recognition){
+          try { recognition.stop(); } catch(e){}
+        }
+        stopListeningUI();
+      } else {
+        baseText = msgField.value || "";
+        isUserListening = true;
+        if(!recognition){
+          recognition = createRecognition();
+        } else {
+          recognition.lang = currentLang === 'en' ? 'en-US' : 'es-ES';
+        }
+        try {
+          recognition.start();
+        } catch(err){
+          console.warn('Speech recognition start error:', err);
+        }
       }
     });
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      if(transcript){
-        msgField.value = (msgField.value ? msgField.value + " " : "") + transcript;
-      }
-    };
-
-    recognition.onend = () => {
-      isRecording = false;
-      voiceBtn.classList.remove('recording');
-      voiceIcon.textContent = '🎤';
-      voiceText.textContent = currentLang === 'en' ? 'Voice dictation' : 'Dictar por voz';
-    };
-
-    recognition.onerror = (err) => {
-      console.warn('Speech recognition error:', err);
-      isRecording = false;
-      voiceBtn.classList.remove('recording');
-      voiceIcon.textContent = '🎤';
-      voiceText.textContent = currentLang === 'en' ? 'Voice dictation' : 'Dictar por voz';
-    };
   })();
 
 </script>
