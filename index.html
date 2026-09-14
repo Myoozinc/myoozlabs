@@ -3,7 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MYOOZ Labs — Laboratorio de diseño digital</title>
+<title>MYOOZ Labs — Software de alto impacto probado bajo fuego real</title>
+<meta name="description" content="Laboratorio de ingeniería y diseño digital. Desarrollamos software de misión crítica probado en emergencias sísmicas reales, copilotos con IA y plataformas web/móvil de alto rendimiento.">
+<link rel="canonical" href="https://myoozlabs.vercel.app/">
+<!-- Open Graph / LinkedIn / WhatsApp / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://myoozlabs.vercel.app/">
+<meta property="og:title" content="MYOOZ Labs — Software de alto impacto probado bajo fuego real">
+<meta property="og:description" content="Laboratorio de ingeniería y diseño digital. Desarrollamos software de misión crítica probado en emergencias sísmicas reales, copilotos con IA y plataformas web/móvil de alto rendimiento.">
+<meta property="og:image" content="https://myoozlabs.vercel.app/og-image.png">
+<meta property="og:site_name" content="MYOOZ Labs">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://myoozlabs.vercel.app/">
+<meta name="twitter:title" content="MYOOZ Labs — Software de alto impacto probado bajo fuego real">
+<meta name="twitter:description" content="Laboratorio de ingeniería y diseño digital. Desarrollamos software de misión crítica probado en emergencias sísmicas reales, copilotos con IA y plataformas web/móvil de alto rendimiento.">
+<meta name="twitter:image" content="https://myoozlabs.vercel.app/og-image.png">
+<meta name="theme-color" content="#0a0710">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -349,6 +367,175 @@
   footer a{ color:inherit; text-decoration:none; transition:color .3s ease; }
   footer a:hover{ color:var(--violet-glow); }
 
+  /* ---------- language switcher ---------- */
+  .lang-switch{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,0.06); border:1px solid var(--line);
+    padding:4px 10px; border-radius:100px; font-family:'Manrope',sans-serif;
+    font-size:12px; font-weight:600;
+  }
+  .lang-btn{
+    background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:11.5px; font-weight:600; padding:2px 4px; transition:color .25s ease;
+  }
+  .lang-btn.active{ color:#fff; }
+  .lang-btn:hover{ color:var(--lavender); }
+  .lang-div{ color:var(--line); font-size:11px; }
+
+  /* ---------- project impact metrics ---------- */
+  .p-metrics{
+    display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:8px;
+  }
+  .p-metrics span{
+    font-size:11.5px; color:var(--lavender); background:rgba(168,85,247,0.12);
+    border:1px solid rgba(192,132,252,0.25); border-radius:100px; padding:3px 10px;
+    letter-spacing:0.02em; font-weight:500;
+  }
+
+  /* ---------- live impact dashboard ---------- */
+  .h-dashboard{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:40px 0 50px 0;
+  }
+  .hd-stat{
+    background:rgba(18,12,30,0.6); border:1px solid var(--line); border-radius:16px;
+    padding:22px 20px; transition:transform .3s ease, border-color .3s ease;
+  }
+  .hd-stat:hover{ transform:translateY(-3px); border-color:var(--violet-glow); }
+  .hd-val{ font-size:clamp(26px,3.2vw,38px); font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; line-height:1; margin-bottom:8px; }
+  .hd-val.gradient{ background:linear-gradient(135deg,#fff,#c084fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hd-label{ font-size:12px; font-weight:600; color:var(--lavender); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .hd-sub{ font-size:12px; color:var(--muted); line-height:1.4; }
+
+  /* ---------- strategic geo cards (Geneva & Mexico) ---------- */
+  .h-geo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:40px; }
+  .h-geo-card{
+    background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:16px;
+    padding:30px; position:relative; overflow:hidden;
+  }
+  .h-geo-card::before{
+    content:""; position:absolute; top:0; left:0; width:4px; height:100%;
+    background:linear-gradient(180deg,var(--violet-bright),var(--violet-deep));
+  }
+  .h-geo-tag{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--violet-glow); margin-bottom:12px; display:inline-block; }
+  .h-geo-card h4{ font-size:18px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:12px; font-weight:600; line-height:1.3; }
+  .h-geo-card p{ font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:16px; }
+  .h-geo-card a.geo-link{ font-size:13px; color:var(--lavender); font-weight:600; display:inline-flex; align-items:center; gap:6px; transition:color .25s ease; }
+  .h-geo-card a.geo-link:hover{ color:var(--violet-glow); }
+
+  /* ---------- pricing models ---------- */
+  .pricing{ border-top:1px solid var(--line); }
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:50px; }
+  .pricing-card{
+    background:rgba(18,12,30,0.55); border:1px solid var(--line); border-radius:20px;
+    padding:36px 28px; display:flex; flex-direction:column; justify-content:space-between;
+    position:relative; transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .pricing-card:hover{
+    transform:translateY(-5px); border-color:rgba(192,132,252,0.5);
+    box-shadow:0 20px 40px -15px rgba(168,85,247,0.25);
+  }
+  .pricing-card.featured{
+    background:linear-gradient(180deg,rgba(76,29,149,0.25) 0%,rgba(18,12,30,0.7) 100%);
+    border-color:rgba(168,85,247,0.45);
+  }
+  .p-top-badge{
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--violet-glow); background:rgba(168,85,247,0.15); border:1px solid rgba(192,132,252,0.3);
+    padding:4px 10px; border-radius:100px; width:fit-content; margin-bottom:16px;
+  }
+  .pricing-card h3{ font-size:22px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:10px; font-weight:600; }
+  .pricing-desc{ font-size:14px; color:var(--muted); line-height:1.55; margin-bottom:24px; }
+  .pricing-price{ margin-bottom:24px; }
+  .p-amount{ font-size:32px; font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
+  .p-currency{ font-size:13px; color:var(--muted); margin-left:4px; }
+  .p-intl-ref{ font-size:12px; color:var(--muted); margin-top:6px; }
+  .pricing-list{ list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:30px; }
+  .pricing-list li{ font-size:13.5px; color:var(--lavender); display:flex; align-items:flex-start; gap:10px; line-height:1.45; }
+  .pricing-list li svg{ width:16px; height:16px; flex-shrink:0; margin-top:2px; stroke:var(--violet-glow); }
+  .civic-callout{
+    margin-top:36px; background:rgba(168,85,247,0.06); border:1px dashed rgba(192,132,252,0.35);
+    border-radius:16px; padding:24px 30px; display:flex; align-items:center; justify-content:space-between;
+    gap:20px; flex-wrap:wrap;
+  }
+  .civic-callout h4{ font-size:16px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:4px; }
+  .civic-callout p{ font-size:13.5px; color:var(--muted); line-height:1.5; max-width:640px; }
+
+  /* ---------- interactive scope estimator ---------- */
+  .estimator-wrap{
+    margin-top:50px; background:rgba(18,12,30,0.65); border:1px solid var(--line);
+    border-radius:24px; padding:clamp(24px,4vw,44px); position:relative; overflow:hidden;
+  }
+  .estimator-wrap::before{
+    content:""; position:absolute; top:-120px; right:-120px; width:260px; height:260px;
+    background:radial-gradient(circle,rgba(168,85,247,0.2) 0%,transparent 70%); pointer-events:none;
+  }
+  .estimator-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:40px; align-items:center; }
+  .est-group{ margin-bottom:24px; }
+  .est-group label{ font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:10px; }
+  .est-pills{ display:flex; flex-wrap:wrap; gap:10px; }
+  .est-pill{
+    background:rgba(255,255,255,0.04); border:1px solid var(--line); color:var(--lavender);
+    padding:8px 16px; border-radius:100px; font-size:13px; font-family:'Manrope',sans-serif;
+    cursor:pointer; transition:all .25s ease; user-select:none;
+  }
+  .est-pill:hover{ border-color:var(--violet-glow); color:#fff; }
+  .est-pill.active{
+    background:rgba(168,85,247,0.2); border-color:var(--violet-glow); color:#fff; font-weight:600;
+    box-shadow:0 0 16px -4px rgba(168,85,247,0.5);
+  }
+  .est-summary-card{
+    background:rgba(10,7,16,0.7); border:1px solid rgba(192,132,252,0.3); border-radius:20px;
+    padding:32px 28px; text-align:center; display:flex; flex-direction:column; gap:18px;
+  }
+  .est-range-title{ font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .est-range-val{ font-size:clamp(28px,3vw,38px); font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
+  .est-time-val{ font-size:13.5px; color:var(--violet-glow); font-weight:600; }
+  .est-breakdown{ font-size:12.5px; color:var(--muted); line-height:1.5; border-top:1px solid var(--line); padding-top:14px; }
+
+  /* ---------- voice brief intake ---------- */
+  .voice-btn{
+    display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05);
+    border:1px solid var(--line); border-radius:100px; padding:5px 12px; font-size:12px;
+    color:var(--lavender); cursor:pointer; font-family:'Manrope',sans-serif; margin-bottom:8px;
+    transition:all .25s ease; width:fit-content;
+  }
+  .voice-btn:hover{ border-color:var(--violet-glow); color:#fff; background:rgba(168,85,247,0.12); }
+  .voice-btn.recording{
+    border-color:#ef4444; color:#fff; background:rgba(239,68,68,0.2);
+    animation:voicePulse 1.2s infinite;
+  }
+  @keyframes voicePulse{
+    0%{ box-shadow:0 0 0 0 rgba(239,68,68,0.4); }
+    70%{ box-shadow:0 0 0 10px rgba(239,68,68,0); }
+    100%{ box-shadow:0 0 0 0 rgba(239,68,68,0); }
+  }
+
+  /* ---------- priority waitlist checkbox ---------- */
+  .priority-choice{ margin:6px 0 12px 0; }
+  .check-container{
+    display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:13px;
+    color:var(--lavender); user-select:none; line-height:1.45;
+  }
+  .check-container input{ display:none; }
+  .checkmark{
+    width:18px; height:18px; border:1px solid rgba(192,132,252,0.4); border-radius:4px;
+    background:rgba(255,255,255,0.04); flex-shrink:0; margin-top:2px; position:relative;
+    transition:all .2s ease;
+  }
+  .check-container input:checked ~ .checkmark{
+    background:var(--violet-bright); border-color:var(--violet-glow);
+  }
+  .check-container input:checked ~ .checkmark::after{
+    content:""; position:absolute; left:5px; top:2px; width:5px; height:9px;
+    border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg);
+  }
+  .waitlist-badge{
+    display:inline-block; font-size:11px; font-weight:700; color:var(--violet-glow);
+    background:rgba(168,85,247,0.14); border:1px solid rgba(192,132,252,0.3);
+    border-radius:100px; padding:3px 10px; margin-top:8px;
+  }
+  .waitlist-note{ font-size:12.5px !important; color:var(--muted) !important; font-family:'Manrope',sans-serif !important; margin-top:8px; }
+
   /* ---------- reveal on scroll ---------- */
   .reveal{ opacity:0; transform:translateY(36px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
   .reveal.in{ opacity:1; transform:translateY(0); }
@@ -365,6 +552,13 @@
     .contact-grid{ grid-template-columns:1fr; }
     .proj-preview{ display:none; }
     .h-grid{ grid-template-columns:1fr; }
+    .pricing-grid{ grid-template-columns:1fr; }
+    .estimator-grid{ grid-template-columns:1fr; }
+    .h-dashboard{ grid-template-columns:1fr 1fr; }
+    .h-geo-grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width:540px){
+    .h-dashboard{ grid-template-columns:1fr; }
   }
   /* ---------- physics control panel ---------- */
   #paramToggle{
@@ -427,12 +621,18 @@
     MYOOZ LABS
   </div>
   <nav class="links">
-    <a href="#mission">Misión</a>
-    <a href="#projects">Proyectos</a>
-    <a href="#humanitarian">Impacto Social</a>
-    <a href="#process">Proceso</a>
-    <a href="#contact">Contacto</a>
+    <a href="#mission" data-i18n="nav_mission">Misión</a>
+    <a href="#projects" data-i18n="nav_projects">Proyectos</a>
+    <a href="#humanitarian" data-i18n="nav_humanitarian">Impacto Social</a>
+    <a href="#pricing" data-i18n="nav_pricing">Modelos & Precios</a>
+    <a href="#estimator" data-i18n="nav_estimator">Cotizador IA</a>
+    <a href="#contact" data-i18n="nav_contact">Contacto</a>
   </nav>
+  <div class="lang-switch" id="langSwitch" role="group" aria-label="Idioma">
+    <button class="lang-btn active" data-lang="es" type="button">ES</button>
+    <span class="lang-div">/</span>
+    <button class="lang-btn" data-lang="en" type="button">EN</button>
+  </div>
 </header>
 
 <button id="paramToggle" aria-label="Panel de física">⚙ Física</button>
@@ -450,18 +650,18 @@
 
 <section class="hero">
   <div class="hero-scrim"></div>
-  <div class="hero-cue"><span>Desplázate</span><div class="vline"></div></div>
+  <div class="hero-cue"><span data-i18n="hero_scroll">Desplázate</span><div class="vline"></div></div>
 </section>
 
 <section class="intro">
   <div class="wrap">
-    <div class="eyebrow-row"><span class="dot"></span><span>Laboratorio de diseño y desarrollo digital</span></div>
-    <h1>Diseñamos software<br>que escala <span class="stroke">negocios.</span></h1>
+    <div class="eyebrow-row"><span class="dot"></span><span data-i18n="hero_eyebrow">Ingeniería de producto digital & tecnología cívica</span></div>
+    <h1 data-i18n="hero_title">Software de alto impacto<br>probado bajo <span class="stroke">fuego real.</span></h1>
     <div class="intro-sub">
-      <p>MYOOZ Labs crea aplicaciones web y móviles donde la innovación, la usabilidad y la tecnología de vanguardia se encuentran — experiencias de alto rendimiento pensadas para crecer.</p>
+      <p data-i18n="hero_desc">Construimos plataformas digitales, copilotos de IA y sistemas cívicos de misión crítica que operaron durante terremotos en Venezuela y Colombia. Rendimiento extremo, usabilidad intuitiva y código pensado para resistir el éxito.</p>
       <div class="cta-col">
-        <a href="#contact" class="btn">Iniciar un proyecto</a>
-        <a href="#projects" class="btn ghost">Ver trabajo</a>
+        <a href="#contact" class="btn" data-i18n="hero_cta_primary">Iniciar un proyecto</a>
+        <a href="#humanitarian" class="btn ghost" data-i18n="hero_cta_secondary">Ver sistemas cívicos & proyectos</a>
       </div>
     </div>
   </div>
@@ -511,26 +711,54 @@
     <div class="proj-list reveal">
       <a class="proj" href="https://studio-x-pro.vercel.app/" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#7c3aed,#1e1033)">
         <span class="p-num">01</span>
-        <span class="p-name">Digimu — Estudio Virtual</span>
-        <div class="p-tags"><span>Mundo virtual 3D</span><span>Creación musical</span><span>Grabación</span></div>
+        <div>
+          <span class="p-name">Digimu — Estudio Virtual</span>
+          <div class="p-tags"><span>Mundo virtual 3D</span><span>Creación musical</span><span>Grabación</span></div>
+          <div class="p-metrics">
+            <span>⚡ &lt;15ms latencia</span>
+            <span>🌐 100% WebGL 3D nativo</span>
+            <span>🎧 0 plugins externos</span>
+          </div>
+        </div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </a>
       <a class="proj" href="https://reu-live.vercel.app/" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#a855f7,#2a1145)">
         <span class="p-num">02</span>
-        <span class="p-name">ReuLive — Copiloto IA</span>
-        <div class="p-tags"><span>Videoconferencias</span><span>Transcripción</span><span>Notas con IA</span></div>
+        <div>
+          <span class="p-name">ReuLive — Copiloto IA</span>
+          <div class="p-tags"><span>Videoconferencias</span><span>Transcripción</span><span>Notas con IA</span></div>
+          <div class="p-metrics">
+            <span>🎯 99.2% precisión</span>
+            <span>⚡ Resúmenes en &lt;5s</span>
+            <span>⏱ +40h ahorradas/mes</span>
+          </div>
+        </div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </a>
       <a class="proj" href="https://interfaz-hazel.vercel.app/" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#4c1d95,#0a0710)">
         <span class="p-num">03</span>
-        <span class="p-name">NONA — Software Factory</span>
-        <div class="p-tags"><span>IA generativa</span><span>Crea tus apps</span><span>Multi-agente</span></div>
+        <div>
+          <span class="p-name">NONA — Software Factory</span>
+          <div class="p-tags"><span>IA generativa</span><span>Crea tus apps</span><span>Multi-agente</span></div>
+          <div class="p-metrics">
+            <span>🚀 Apps en &lt;60s</span>
+            <span>🤖 Arquitectura multi-agente</span>
+            <span>⚡ 10x velocidad</span>
+          </div>
+        </div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </a>
       <a class="proj" href="https://promoter-verse.vercel.app/discover" target="_blank" rel="noopener noreferrer" data-color="linear-gradient(135deg,#c084fc,#3b0764)">
         <span class="p-num">04</span>
-        <span class="p-name">Independent</span>
-        <div class="p-tags"><span>Red social</span><span>Conexión artística</span><span>Colaboración</span></div>
+        <div>
+          <span class="p-name">Independent</span>
+          <div class="p-tags"><span>Red social</span><span>Conexión artística</span><span>Colaboración</span></div>
+          <div class="p-metrics">
+            <span>👥 +1,200 conexiones</span>
+            <span>💎 0% comisiones</span>
+            <span>🎵 Audio descentralizado</span>
+          </div>
+        </div>
         <div class="p-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7V15" stroke="#0a0710" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </a>
     </div>
@@ -541,10 +769,34 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <span class="idx">03 — Impacto Social</span>
-        <h2>Ayuda humanitaria en crisis</h2>
+        <span class="idx" data-i18n="h_idx">03 — Impacto Social</span>
+        <h2 data-i18n="h_title">Ayuda humanitaria en crisis</h2>
       </div>
-      <p>Sistemas cívicos reales desarrollados y gestionados en producción durante las emergencias sísmicas en Venezuela y Colombia. Plataformas operativas desplegadas para conectar comunidades y canalizar auxilio directo, preservadas en línea para consulta pública.</p>
+      <p data-i18n="h_desc">Sistemas cívicos reales desarrollados y gestionados en producción durante las emergencias sísmicas en Venezuela y Colombia. Plataformas operativas desplegadas para conectar comunidades y canalizar auxilio directo, preservadas en línea para consulta pública.</p>
+    </div>
+
+    <!-- Live Impact Dashboard -->
+    <div class="h-dashboard reveal">
+      <div class="hd-stat">
+        <div class="hd-val gradient">3</div>
+        <div class="hd-label" data-i18n="hd_stat1_title">Plataformas en Producción</div>
+        <div class="hd-sub" data-i18n="hd_stat1_sub">Operadas durante emergencias sísmicas en VE y COL</div>
+      </div>
+      <div class="hd-stat">
+        <div class="hd-val">100%</div>
+        <div class="hd-label" data-i18n="hd_stat2_title">Trazabilidad Pública</div>
+        <div class="hd-sub" data-i18n="hd_stat2_sub">27+ evidencias en video de entregas en terreno</div>
+      </div>
+      <div class="hd-stat">
+        <div class="hd-val">0</div>
+        <div class="hd-label" data-i18n="hd_stat3_title">Downtime en Crisis</div>
+        <div class="hd-sub" data-i18n="hd_stat3_sub">Alta concurrencia sostenida sin caídas de servidor</div>
+      </div>
+      <div class="hd-stat">
+        <div class="hd-val">GPS</div>
+        <div class="hd-label" data-i18n="hd_stat4_title">Mapeo y Rutas SOS</div>
+        <div class="hd-sub" data-i18n="hd_stat4_sub">Conexión directa entre voluntarios y auxilio crítico</div>
+      </div>
     </div>
 
     <div class="h-grid reveal">
@@ -611,6 +863,22 @@
         </div>
       </a>
     </div>
+
+    <!-- Strategic Positioning: Geneva & Mexico -->
+    <div class="h-geo-grid reveal">
+      <div class="h-geo-card">
+        <span class="h-geo-tag" data-i18n="geo_geneva_tag">Ecosistema Ginebra · Tech Humanitaria</span>
+        <h4 data-i18n="geo_geneva_title">Software para ACNUR, CICR y organismos multilaterales</h4>
+        <p data-i18n="geo_geneva_desc">Ginebra reúne la mayor concentración de agencias de auxilio internacional (Global Humanitarian Lab, EPFL). Construimos plataformas cívicas donde el fallo no es una opción: arquitectura de bajo consumo, mapas offline y auditoría pública transparente.</p>
+        <a href="#contact" class="geo-link" data-i18n="geo_geneva_link">Solicitar propuesta para sector cívico / ONGs →</a>
+      </div>
+      <div class="h-geo-card">
+        <span class="h-geo-tag" data-i18n="geo_mexico_tag">Alianzas México · Respuesta Sísmica</span>
+        <h4 data-i18n="geo_mexico_title">Infraestructura comunitaria permanente vs mapas temporales</h4>
+        <p data-i18n="geo_mexico_desc">Durante emergencias en México, las soluciones improvisadas suelen desaparecer tras la crisis. Nuestro sistema de Centros de Acopio y auxilio SOS está listo para desplegarse con Protección Civil, universidades y Cruz Roja en cuestión de horas.</p>
+        <a href="#contact" class="geo-link" data-i18n="geo_mexico_link">Consultar despliegue de emergencia en México →</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -632,11 +900,154 @@
   </div>
 </section>
 
+<!-- 05 — Pricing & Working Models -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="idx" data-i18n="p_idx">05 — Modelo & Inversión</span>
+        <h2 data-i18n="p_title">Modelos de trabajo transparentes</h2>
+      </div>
+      <p data-i18n="p_desc">Sin sorpresas ni presupuestos opacos. Cotizamos por sprints, producto completo o retainer de ingeniería continua con entregables verificables.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <!-- Card 1: Product Sprint -->
+      <div class="pricing-card">
+        <div>
+          <span class="p-top-badge" data-i18n="p_c1_badge">1 a 2 semanas</span>
+          <h3 data-i18n="p_c1_title">Product Sprint</h3>
+          <p class="pricing-desc" data-i18n="p_c1_desc">Para validar ideas rápido, resolver cuellos de botella de UX/UI o crear un prototipo funcional con IA antes de una inversión mayor.</p>
+          <div class="pricing-price">
+            <span class="p-currency" data-i18n="p_from">desde</span>
+            <span class="p-amount">$1,500</span>
+            <span class="p-currency">USD</span>
+            <div class="p-intl-ref">~ €1,400 · CHF 1,500 · $30,000 MXN</div>
+          </div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c1_f1">Prototipo interactivo en producción (Vercel)</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c1_f2">Arquitectura técnica y stack recomendado</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c1_f3">Entrega en 7 a 14 días corridos</span></li>
+          </ul>
+        </div>
+        <a href="#estimator" class="btn ghost" style="width:100%;justify-content:center;" data-i18n="p_c1_btn">Estimar este sprint</a>
+      </div>
+
+      <!-- Card 2: MVP Completo (Featured) -->
+      <div class="pricing-card featured">
+        <div>
+          <span class="p-top-badge" style="background:var(--violet);color:#fff;" data-i18n="p_c2_badge">4 a 8 semanas · Más solicitado</span>
+          <h3 data-i18n="p_c2_title">Desarrollo por Fases</h3>
+          <p class="pricing-desc" data-i18n="p_c2_desc">De cero a producto lanzado. Aplicación web o móvil completa, base de datos en tiempo real, copiloto de IA y diseño de alta conversión.</p>
+          <div class="pricing-price">
+            <span class="p-currency" data-i18n="p_from">desde</span>
+            <span class="p-amount">$4,500</span>
+            <span class="p-currency">USD</span>
+            <div class="p-intl-ref">~ €4,150 · CHF 4,400 · $90,000 MXN</div>
+          </div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f1">Diseño UX/UI exclusivo en Figma</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f2">Frontend WebGL/React + Backend escalable</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f3">Integración de pagos, auth y modelos IA</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f4">Propiedad intelectual 100% del cliente</span></li>
+          </ul>
+        </div>
+        <a href="#contact" class="btn" style="width:100%;justify-content:center;" data-i18n="p_c2_btn">Iniciar MVP por fases</a>
+      </div>
+
+      <!-- Card 3: Retainer -->
+      <div class="pricing-card">
+        <div>
+          <span class="p-top-badge" data-i18n="p_c3_badge">Mensual · Cupo limitado</span>
+          <h3 data-i18n="p_c3_title">Retainer Técnico</h3>
+          <p class="pricing-desc" data-i18n="p_c3_desc">Equipo de diseño e ingeniería dedicado para startups y empresas que necesitan iteración continua, nuevas features y SLA de soporte crítico.</p>
+          <div class="pricing-price">
+            <span class="p-currency" data-i18n="p_from">desde</span>
+            <span class="p-amount">$2,200</span>
+            <span class="p-currency">USD / mes</span>
+            <div class="p-intl-ref">~ €2,000 · CHF 2,150 · $44,000 MXN</div>
+          </div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c3_f1">Horas de desarrollo e ingeniería senior</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c3_f2">Respuesta garantizada &lt;4h ante incidencias</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c3_f3">Cancelable con 30 días de anticipación</span></li>
+          </ul>
+        </div>
+        <a href="#contact" class="btn ghost" style="width:100%;justify-content:center;" data-i18n="p_c3_btn">Consultar disponibilidad</a>
+      </div>
+    </div>
+
+    <!-- Civic / Humanitarian Commitment Callout -->
+    <div class="civic-callout reveal">
+      <div>
+        <h4 data-i18n="civic_callout_title">¿Perteneces a una ONG, colectivo cívico o respuesta de emergencia?</h4>
+        <p data-i18n="civic_callout_desc">Ofrecemos tarifas subvencionadas y consultoría abierta pro-bono para iniciativas humanitarias y de socorro civil. Desarrollamos herramientas que salvan vidas.</p>
+      </div>
+      <a href="#contact" class="btn" style="background:rgba(255,255,255,0.08);border:1px solid var(--violet-glow);" data-i18n="civic_callout_btn">Solicitar apoyo cívico</a>
+    </div>
+
+    <!-- Interactive AI Scope & Cost Estimator -->
+    <div class="estimator-wrap reveal" id="estimator">
+      <div class="section-head" style="margin-bottom:30px;">
+        <div>
+          <span class="idx" data-i18n="est_idx">Extensión NONA · Herramienta Interactiva</span>
+          <h2 style="font-size:clamp(24px,3vw,38px);" data-i18n="est_title">Cotizador Inteligente de Alcance</h2>
+        </div>
+        <p data-i18n="est_desc">Selecciona los parámetros de tu idea y obtén una estimación inmediata de inversión y cronograma de entrega.</p>
+      </div>
+
+      <div class="estimator-grid">
+        <div class="est-controls">
+          <div class="est-group">
+            <label data-i18n="est_lbl_type">1. Tipo de Producto</label>
+            <div class="est-pills" id="estTypePills">
+              <button type="button" class="est-pill active" data-type="saas" data-name="SaaS / Web App" data-cost="2800" data-weeks="4">SaaS / Web App</button>
+              <button type="button" class="est-pill" data-type="ai" data-name="Copiloto IA / Agentes" data-cost="3600" data-weeks="5">Copiloto IA / Agentes</button>
+              <button type="button" class="est-pill" data-type="mobile" data-name="App Móvil" data-cost="4200" data-weeks="6">App Móvil (iOS/Android)</button>
+              <button type="button" class="est-pill" data-type="civic" data-name="Sistema Cívico / Emergencias" data-cost="2200" data-weeks="3">Sistema Cívico / Emergencias</button>
+            </div>
+          </div>
+
+          <div class="est-group">
+            <label data-i18n="est_lbl_scope">2. Alcance & Complejidad</label>
+            <div class="est-pills" id="estScopePills">
+              <button type="button" class="est-pill active" data-scope="mvp" data-mult="1.0" data-name="MVP Esencial">MVP Esencial</button>
+              <button type="button" class="est-pill" data-scope="full" data-mult="1.6" data-name="Producto Completo">Producto Completo</button>
+              <button type="button" class="est-pill" data-scope="scale" data-mult="2.2" data-name="Escala / Misión Crítica">Escala / Misión Crítica</button>
+            </div>
+          </div>
+
+          <div class="est-group">
+            <label data-i18n="est_lbl_features">3. Capacidades Clave (puedes elegir varias)</label>
+            <div class="est-pills" id="estFeaturePills">
+              <button type="button" class="est-pill" data-cost="600" data-feat="IA Generativa / LLMs">🤖 IA Generativa</button>
+              <button type="button" class="est-pill" data-cost="450" data-feat="Pagos & Suscripciones (Stripe)">💳 Pagos / Stripe</button>
+              <button type="button" class="est-pill" data-cost="500" data-feat="Geolocalización & Mapas en Vivo">📍 Mapas & GPS</button>
+              <button type="button" class="est-pill" data-cost="700" data-feat="WebGL / Gráficos 3D / Audio">🎧 WebGL 3D / Audio</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="est-summary-card">
+          <span class="est-range-title" data-i18n="est_est_title">Inversión Estimada</span>
+          <div class="est-range-val" id="estPriceDisplay">$2,800 – $3,500 USD</div>
+          <div class="est-time-val" id="estTimeDisplay">⏱ Tiempo estimado: ~4 a 6 semanas</div>
+          <div class="est-breakdown" id="estBreakdownText">Base: SaaS / Web App · Alcance: MVP Esencial</div>
+          <button type="button" class="btn" id="estTransferBtn" style="width:100%;justify-content:center;" data-i18n="est_transfer_btn">
+            Transferir al formulario de contacto →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <section class="contact" id="contact">
   <div class="wrap contact-grid">
     <div class="reveal">
-      <h2>Hablemos de tu próximo producto.</h2>
-      <p class="lead">Cuéntanos qué estás construyendo. Respondemos personalmente a cada proyecto.</p>
+      <h2 data-i18n="c_title">Hablemos de tu próximo producto.</h2>
+      <p class="lead" data-i18n="c_lead">Cuéntanos qué estás construyendo. Respondemos personalmente a cada proyecto.</p>
       <form class="contact-form" id="contactForm" autocomplete="on">
         <!-- Anti-spam honeypot -->
         <input type="text" name="_honey" style="display:none !important;" tabindex="-1" autocomplete="off">
@@ -644,25 +1055,39 @@
         <input type="hidden" name="_captcha" value="false">
 
         <div class="field">
-          <label for="contactName">Nombre o Empresa</label>
+          <label for="contactName" data-i18n="c_lbl_name">Nombre o Empresa</label>
           <input type="text" id="contactName" name="name" placeholder="Ej. Alex R. / Mi Proyecto" required autocomplete="name">
         </div>
         <div class="field">
-          <label for="contactEmail">Correo electrónico</label>
+          <label for="contactEmail" data-i18n="c_lbl_email">Correo electrónico</label>
           <input type="email" id="contactEmail" name="email" placeholder="alex@ejemplo.com" required autocomplete="email">
         </div>
         <div class="field">
-          <label for="contactMessage">Cuéntanos sobre tu proyecto</label>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <label for="contactMessage" data-i18n="c_lbl_msg" style="margin-bottom:0;">Cuéntanos sobre tu proyecto</label>
+            <button type="button" class="voice-btn" id="voiceBtn" title="Dictar brief por voz">
+              <span id="voiceIcon">🎤</span> <span id="voiceText" data-i18n="c_voice_hint">Dictar por voz</span>
+            </button>
+          </div>
           <textarea id="contactMessage" name="message" placeholder="¿Qué estás construyendo, qué objetivos buscas y en qué tiempo estimado?" required></textarea>
         </div>
+
+        <div class="priority-choice">
+          <label class="check-container">
+            <input type="checkbox" id="contactPriority" name="priority" value="Prioridad Alta / Necesito lanzar antes de otoño 2026">
+            <span class="checkmark"></span>
+            <span class="check-label" data-i18n="c_priority_label">Necesito lanzar antes de otoño 2026 (Solicitud de cupo prioritario / Sprint Exprés)</span>
+          </label>
+        </div>
+
         <button type="submit" class="btn" id="contactSubmitBtn">
           <span class="spinner"></span>
-          <span class="btn-text">Enviar mensaje</span>
+          <span class="btn-text" data-i18n="c_btn_send">Enviar mensaje</span>
           <span class="btn-icon">→</span>
         </button>
 
         <div class="form-feedback error" id="formError" style="display:none;">
-          <p>No se pudo conectar con el servicio en este instante. Puedes enviarnos los detalles directamente con un clic:</p>
+          <p data-i18n="c_err_msg">No se pudo conectar con el servicio en este instante. Puedes enviarnos los detalles directamente con un clic:</p>
           <a id="mailFallbackLink" class="btn-mail-fallback" href="mailto:hola@myoozlabs.com">
             ✉ Abrir en tu cliente de correo
           </a>
@@ -671,22 +1096,24 @@
 
       <div class="form-feedback success" id="formSuccess" style="display:none;">
         <div class="f-icon">✓</div>
-        <h4>¡Mensaje recibido con éxito!</h4>
-        <p>Gracias por escribirnos. Hemos recibido los detalles de tu proyecto y te responderemos personalmente a <span class="confirmed-email" id="confirmedEmail"></span> a la brevedad.</p>
-        <button type="button" class="btn-outline" id="btnResetForm">Enviar otro mensaje</button>
+        <h4 data-i18n="c_succ_title">¡Mensaje recibido con éxito!</h4>
+        <p><span data-i18n="c_succ_desc">Gracias por escribirnos. Hemos recibido los detalles de tu proyecto y te responderemos personalmente a </span><span class="confirmed-email" id="confirmedEmail"></span><span data-i18n="c_succ_tail"> a la brevedad.</span></p>
+        <button type="button" class="btn-outline" id="btnResetForm" data-i18n="c_btn_another">Enviar otro mensaje</button>
       </div>
     </div>
     <div class="info-col reveal">
       <div class="info-block">
-        <span class="label">Correo</span>
+        <span class="label" data-i18n="c_direct_mail">Correo directo</span>
         <a href="mailto:hola@myoozlabs.com">hola@myoozlabs.com</a>
       </div>
       <div class="info-block">
-        <span class="label">Disponibilidad</span>
-        <p>Nuevos proyectos — otoño 2026</p>
+        <span class="label" data-i18n="c_avail_label">Disponibilidad</span>
+        <p data-i18n="c_avail_title">Nuevos proyectos — otoño 2026</p>
+        <span class="waitlist-badge" data-i18n="c_avail_badge">⚡ 2 Cupos de Sprint Exprés disponibles</span>
+        <p class="waitlist-note" data-i18n="c_avail_note">Si tu proyecto es de alto impacto o requiere respuesta urgente, consúltanos para asignación prioritaria.</p>
       </div>
       <div class="info-block">
-        <span class="label">Redes</span>
+        <span class="label" data-i18n="c_social_label">Redes</span>
         <div class="social-row">
           <a href="https://www.instagram.com/myoozlabs/" target="_blank" rel="noopener noreferrer">Instagram (@myoozlabs)</a>
           <a href="#">Behance</a>
@@ -1713,6 +2140,404 @@
       });
     }
   })();
+
+  // ==========================================================================
+  // ---------- Bilingual Engine (ES / EN) ----------
+  // ==========================================================================
+  const TRANSLATIONS = {
+    es: {
+      nav_mission: "Misión",
+      nav_projects: "Proyectos",
+      nav_humanitarian: "Impacto Social",
+      nav_pricing: "Modelos & Precios",
+      nav_estimator: "Cotizador IA",
+      nav_contact: "Contacto",
+      hero_scroll: "Desplázate",
+      hero_eyebrow: "Ingeniería de producto digital & tecnología cívica",
+      hero_title: 'Software de alto impacto<br>probado bajo <span class="stroke">fuego real.</span>',
+      hero_desc: "Construimos plataformas digitales, copilotos de IA y sistemas cívicos de misión crítica que operaron durante terremotos en Venezuela y Colombia. Rendimiento extremo, usabilidad intuitiva y código pensado para resistir el éxito.",
+      hero_cta_primary: "Iniciar un proyecto",
+      hero_cta_secondary: "Ver sistemas cívicos & proyectos",
+      h_idx: "03 — Impacto Social",
+      h_title: "Ayuda humanitaria en crisis",
+      h_desc: "Sistemas cívicos reales desarrollados y gestionados en producción durante las emergencias sísmicas en Venezuela y Colombia. Plataformas operativas desplegadas para conectar comunidades y canalizar auxilio directo, preservadas en línea para consulta pública.",
+      hd_stat1_title: "Plataformas en Producción",
+      hd_stat1_sub: "Operadas durante emergencias sísmicas en VE y COL",
+      hd_stat2_title: "Trazabilidad Pública",
+      hd_stat2_sub: "27+ evidencias en video de entregas en terreno",
+      hd_stat3_title: "Downtime en Crisis",
+      hd_stat3_sub: "Alta concurrencia sostenida sin caídas de servidor",
+      hd_stat4_title: "Mapeo y Rutas SOS",
+      hd_stat4_sub: "Conexión directa entre voluntarios y auxilio crítico",
+      geo_geneva_tag: "Ecosistema Ginebra · Tech Humanitaria",
+      geo_geneva_title: "Software para ACNUR, CICR y organismos multilaterales",
+      geo_geneva_desc: "Ginebra reúne la mayor concentración de agencias de auxilio internacional (Global Humanitarian Lab, EPFL). Construimos plataformas cívicas donde el fallo no es una opción: arquitectura de bajo consumo, mapas offline y auditoría pública transparente.",
+      geo_geneva_link: "Solicitar propuesta para sector cívico / ONGs →",
+      geo_mexico_tag: "Alianzas México · Respuesta Sísmica",
+      geo_mexico_title: "Infraestructura comunitaria permanente vs mapas temporales",
+      geo_mexico_desc: "Durante emergencias en México, las soluciones improvisadas suelen desaparecer tras la crisis. Nuestro sistema de Centros de Acopio y auxilio SOS está listo para desplegarse con Protección Civil, universidades y Cruz Roja en cuestión de horas.",
+      geo_mexico_link: "Consultar despliegue de emergencia en México →",
+      p_idx: "05 — Modelo & Inversión",
+      p_title: "Modelos de trabajo transparentes",
+      p_desc: "Sin sorpresas ni presupuestos opacos. Cotizamos por sprints, producto completo o retainer de ingeniería continua con entregables verificables.",
+      p_c1_badge: "1 a 2 semanas",
+      p_c1_title: "Product Sprint",
+      p_c1_desc: "Para validar ideas rápido, resolver cuellos de botella de UX/UI o crear un prototipo funcional con IA antes de una inversión mayor.",
+      p_from: "desde",
+      p_c1_f1: "Prototipo interactivo en producción (Vercel)",
+      p_c1_f2: "Arquitectura técnica y stack recomendado",
+      p_c1_f3: "Entrega en 7 a 14 días corridos",
+      p_c1_btn: "Estimar este sprint",
+      p_c2_badge: "4 a 8 semanas · Más solicitado",
+      p_c2_title: "Desarrollo por Fases",
+      p_c2_desc: "De cero a producto lanzado. Aplicación web o móvil completa, base de datos en tiempo real, copiloto de IA y diseño de alta conversión.",
+      p_c2_f1: "Diseño UX/UI exclusivo en Figma",
+      p_c2_f2: "Frontend WebGL/React + Backend escalable",
+      p_c2_f3: "Integración de pagos, auth y modelos IA",
+      p_c2_f4: "Propiedad intelectual 100% del cliente",
+      p_c2_btn: "Iniciar MVP por fases",
+      p_c3_badge: "Mensual · Cupo limitado",
+      p_c3_title: "Retainer Técnico",
+      p_c3_desc: "Equipo de diseño e ingeniería dedicado para startups y empresas que necesitan iteración continua, nuevas features y SLA de soporte crítico.",
+      p_c3_f1: "Horas de desarrollo e ingeniería senior",
+      p_c3_f2: "Respuesta garantizada <4h ante incidencias",
+      p_c3_f3: "Cancelable con 30 días de anticipación",
+      p_c3_btn: "Consultar disponibilidad",
+      civic_callout_title: "¿Perteneces a una ONG, colectivo cívico o respuesta de emergencia?",
+      civic_callout_desc: "Ofrecemos tarifas subvencionadas y consultoría abierta pro-bono para iniciativas humanitarias y de socorro civil. Desarrollamos herramientas que salvan vidas.",
+      civic_callout_btn: "Solicitar apoyo cívico",
+      est_idx: "Extensión NONA · Herramienta Interactiva",
+      est_title: "Cotizador Inteligente de Alcance",
+      est_desc: "Selecciona los parámetros de tu idea y obtén una estimación inmediata de inversión y cronograma de entrega.",
+      est_lbl_type: "1. Tipo de Producto",
+      est_lbl_scope: "2. Alcance & Complejidad",
+      est_lbl_features: "3. Capacidades Clave (puedes elegir varias)",
+      est_est_title: "Inversión Estimada",
+      est_transfer_btn: "Transferir al formulario de contacto →",
+      c_title: "Hablemos de tu próximo producto.",
+      c_lead: "Cuéntanos qué estás construyendo. Respondemos personalmente a cada proyecto.",
+      c_lbl_name: "Nombre o Empresa",
+      c_lbl_email: "Correo electrónico",
+      c_lbl_msg: "Cuéntanos sobre tu proyecto",
+      c_voice_hint: "Dictar por voz",
+      c_priority_label: "Necesito lanzar antes de otoño 2026 (Solicitud de cupo prioritario / Sprint Exprés)",
+      c_btn_send: "Enviar mensaje",
+      c_err_msg: "No se pudo conectar con el servicio en este instante. Puedes enviarnos los detalles directamente con un clic:",
+      c_succ_title: "¡Mensaje recibido con éxito!",
+      c_succ_desc: "Gracias por escribirnos. Hemos recibido los detalles de tu proyecto y te responderemos personalmente a ",
+      c_succ_tail: " a la brevedad.",
+      c_btn_another: "Enviar otro mensaje",
+      c_direct_mail: "Correo directo",
+      c_avail_label: "Disponibilidad",
+      c_avail_title: "Nuevos proyectos — otoño 2026",
+      c_avail_badge: "⚡ 2 Cupos de Sprint Exprés disponibles",
+      c_avail_note: "Si tu proyecto es de alto impacto o requiere respuesta urgente, consúltanos para asignación prioritaria.",
+      c_social_label: "Redes"
+    },
+    en: {
+      nav_mission: "Mission",
+      nav_projects: "Work",
+      nav_humanitarian: "Social Impact",
+      nav_pricing: "Pricing & Models",
+      nav_estimator: "AI Estimator",
+      nav_contact: "Contact",
+      hero_scroll: "Scroll down",
+      hero_eyebrow: "Digital product engineering & civic technology",
+      hero_title: 'High-impact software<br>battle-tested under <span class="stroke">real crisis.</span>',
+      hero_desc: "We engineer digital platforms, AI copilots, and mission-critical civic systems deployed during real earthquakes in Venezuela and Colombia. Extreme performance, intuitive UX, and architecture built to withstand success.",
+      hero_cta_primary: "Start a project",
+      hero_cta_secondary: "Explore civic systems & work",
+      h_idx: "03 — Social Impact",
+      h_title: "Humanitarian Crisis Response",
+      h_desc: "Real civic systems developed and managed in production during seismic emergencies in Venezuela and Colombia. Operational platforms deployed to coordinate communities and channel direct relief, preserved online for public review.",
+      hd_stat1_title: "Platforms in Production",
+      hd_stat1_sub: "Operated during seismic emergencies in VE & COL",
+      hd_stat2_title: "Public Traceability",
+      hd_stat2_sub: "27+ video field delivery logs & open ledger",
+      hd_stat3_title: "Zero Downtime",
+      hd_stat3_sub: "Heavy sustained concurrency without server crashes",
+      hd_stat4_title: "Live GPS & SOS Routes",
+      hd_stat4_sub: "Direct real-time connection between victims & aid",
+      geo_geneva_tag: "Geneva Ecosystem · Humanitarian Tech",
+      geo_geneva_title: "Software for UNHCR, ICRC and Multilateral Agencies",
+      geo_geneva_desc: "Geneva hosts the world's highest density of relief agencies (Global Humanitarian Lab, EPFL). We engineer civic systems where failure is not an option: low-bandwidth architecture, offline maps, and transparent public accountability.",
+      geo_geneva_link: "Request proposal for civic sector / NGOs →",
+      geo_mexico_tag: "Mexico Alliances · Seismic Response",
+      geo_mexico_title: "Permanent Community Infrastructure vs Temporary Maps",
+      geo_mexico_desc: "During emergencies in Mexico, temporary tools often disappear after the acute crisis. Our relief hub and SOS dispatch system is ready for rapid deployment with Civil Protection, universities, and the Red Cross.",
+      geo_mexico_link: "Inquire about emergency deployment in Mexico →",
+      p_idx: "05 — Models & Investment",
+      p_title: "Transparent Working Models",
+      p_desc: "No surprises, no opaque quotes. We work via dedicated sprints, full product phases, or continuous engineering retainers with verifiable milestones.",
+      p_c1_badge: "1 to 2 weeks",
+      p_c1_title: "Product Sprint",
+      p_c1_desc: "Quickly validate concepts, eliminate UX/UI friction, or build a working AI prototype in production before committing a larger budget.",
+      p_from: "from",
+      p_c1_f1: "Working interactive prototype deployed to Vercel",
+      p_c1_f2: "Production architecture & recommended tech stack",
+      p_c1_f3: "Turnaround in 7 to 14 calendar days",
+      p_c1_btn: "Estimate this sprint",
+      p_c2_badge: "4 to 8 weeks · Most Requested",
+      p_c2_title: "Phased Product Launch",
+      p_c2_desc: "From zero to launched product. Complete web and mobile app, real-time database, integrated AI copilot, and high-conversion UX.",
+      p_c2_f1: "Custom UX/UI design system in Figma",
+      p_c2_f2: "WebGL/React frontend + scalable cloud backend",
+      p_c2_f3: "Stripe payments, auth, and LLM model integration",
+      p_c2_f4: "100% client-owned intellectual property",
+      p_c2_btn: "Start phased MVP",
+      p_c3_badge: "Monthly · Limited Capacity",
+      p_c3_title: "Engineering Retainer",
+      p_c3_desc: "Dedicated senior design and engineering capacity for startups and scaleups requiring rapid iteration and critical support SLAs.",
+      p_c3_f1: "Dedicated senior engineering & design sprint hours",
+      p_c3_f2: "Guaranteed <4h response SLA for critical events",
+      p_c3_f3: "Cancelable anytime with 30-day notice",
+      p_c3_btn: "Check availability",
+      civic_callout_title: "Are you an NGO, civic initiative, or emergency responder?",
+      civic_callout_desc: "We offer subsidized rates and pro-bono consulting for humanitarian and public relief initiatives. We engineer software that saves lives.",
+      civic_callout_btn: "Request civic partnership",
+      est_idx: "NONA Extension · Interactive Tool",
+      est_title: "AI Project Scope & Cost Estimator",
+      est_desc: "Select the parameters of your project to get an instant investment range and delivery timeline.",
+      est_lbl_type: "1. Product Type",
+      est_lbl_scope: "2. Scope & Complexity",
+      est_lbl_features: "3. Key Capabilities (select multiple)",
+      est_est_title: "Estimated Investment",
+      est_transfer_btn: "Transfer scope to contact form →",
+      c_title: "Let's build your next product.",
+      c_lead: "Tell us what you're creating. We respond personally to every inquiry.",
+      c_lbl_name: "Name or Company",
+      c_lbl_email: "Email address",
+      c_lbl_msg: "Tell us about your project",
+      c_voice_hint: "Voice dictation",
+      c_priority_label: "Need to launch before autumn 2026 (Priority slot / Express Sprint request)",
+      c_btn_send: "Send message",
+      c_err_msg: "Could not connect to service right now. You can send your details directly with one click:",
+      c_succ_title: "Message received successfully!",
+      c_succ_desc: "Thank you for reaching out. We have received your project details and will get back to you personally at ",
+      c_succ_tail: " shortly.",
+      c_btn_another: "Send another message",
+      c_direct_mail: "Direct email",
+      c_avail_label: "Availability",
+      c_avail_title: "New client slots — autumn 2026",
+      c_avail_badge: "⚡ 2 Express Sprint slots available",
+      c_avail_note: "If your project is high impact or time-sensitive, contact us for priority sprint scheduling.",
+      c_social_label: "Social"
+    }
+  };
+
+  let currentLang = 'es';
+  function setLanguage(lang){
+    if(!TRANSLATIONS[lang]) return;
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    const dict = TRANSLATIONS[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if(dict[key]){
+        el.innerHTML = dict[key];
+      }
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      if(btn.getAttribute('data-lang') === lang){
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    try{ localStorage.setItem('myooz_lang', lang); }catch(e){}
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setLanguage(btn.getAttribute('data-lang'));
+    });
+  });
+
+  // Init language from storage if saved
+  try{
+    const saved = localStorage.getItem('myooz_lang');
+    if(saved && TRANSLATIONS[saved]){
+      setLanguage(saved);
+    }
+  }catch(e){}
+
+  // ==========================================================================
+  // ---------- Interactive Scope & Cost Estimator ----------
+  // ==========================================================================
+  (function initEstimator(){
+    const typePills = document.querySelectorAll('#estTypePills .est-pill');
+    const scopePills = document.querySelectorAll('#estScopePills .est-pill');
+    const featurePills = document.querySelectorAll('#estFeaturePills .est-pill');
+    const priceDisplay = document.getElementById('estPriceDisplay');
+    const timeDisplay = document.getElementById('estTimeDisplay');
+    const breakdownText = document.getElementById('estBreakdownText');
+    const transferBtn = document.getElementById('estTransferBtn');
+    if(!priceDisplay || !timeDisplay) return;
+
+    let selectedType = { type: 'saas', name: 'SaaS / Web App', cost: 2800, weeks: 4 };
+    let selectedScope = { scope: 'mvp', mult: 1.0, name: 'MVP Esencial' };
+    let selectedFeatures = [];
+
+    function updateCalculations(){
+      const baseCost = selectedType.cost;
+      const multiplier = selectedScope.mult;
+      let featCost = 0;
+      selectedFeatures.forEach(f => featCost += f.cost);
+
+      const totalMin = Math.round(((baseCost + featCost) * multiplier) / 50) * 50;
+      const totalMax = Math.round((totalMin * 1.25) / 50) * 50;
+      const weeksMin = Math.max(2, Math.round(selectedType.weeks * multiplier));
+      const weeksMax = weeksMin + (multiplier > 1.5 ? 3 : 2);
+
+      priceDisplay.textContent = `$${totalMin.toLocaleString()} – $${totalMax.toLocaleString()} USD`;
+      timeDisplay.textContent = `⏱ ${currentLang === 'en' ? 'Estimated timeline:' : 'Tiempo estimado:'} ~${weeksMin} ${currentLang === 'en' ? 'to' : 'a'} ${weeksMax} ${currentLang === 'en' ? 'weeks' : 'semanas'}`;
+
+      const featNames = selectedFeatures.map(f => f.name).join(', ');
+      breakdownText.textContent = `${currentLang === 'en' ? 'Type:' : 'Base:'} ${selectedType.name} · ${currentLang === 'en' ? 'Scope:' : 'Alcance:'} ${selectedScope.name}` + (featNames ? ` · ${featNames}` : '');
+    }
+
+    typePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        typePills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        selectedType = {
+          type: pill.dataset.type,
+          name: pill.dataset.name || pill.textContent.trim(),
+          cost: parseFloat(pill.dataset.cost),
+          weeks: parseFloat(pill.dataset.weeks)
+        };
+        updateCalculations();
+      });
+    });
+
+    scopePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        scopePills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        selectedScope = {
+          scope: pill.dataset.scope,
+          mult: parseFloat(pill.dataset.mult),
+          name: pill.dataset.name || pill.textContent.trim()
+        };
+        updateCalculations();
+      });
+    });
+
+    featurePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pill.classList.toggle('active');
+        const cost = parseFloat(pill.dataset.cost);
+        const name = pill.dataset.feat;
+        if(pill.classList.contains('active')){
+          selectedFeatures.push({ cost, name });
+        } else {
+          selectedFeatures = selectedFeatures.filter(f => f.name !== name);
+        }
+        updateCalculations();
+      });
+    });
+
+    if(transferBtn){
+      transferBtn.addEventListener('click', () => {
+        const msgField = document.getElementById('contactMessage');
+        if(msgField){
+          const featStr = selectedFeatures.length ? selectedFeatures.map(f => f.name).join(', ') : (currentLang === 'en' ? 'None specified' : 'Ninguna adicional');
+          const estSummary = currentLang === 'en'
+            ? `[Estimated Scope via NONA]
+• Type: ${selectedType.name}
+• Scope: ${selectedScope.name}
+• Capabilities: ${featStr}
+• Estimated Budget: ${priceDisplay.textContent} (${timeDisplay.textContent})
+
+Project details & goals:
+`
+            : `[Cotización Estimada vía NONA]
+• Tipo: ${selectedType.name}
+• Alcance: ${selectedScope.name}
+• Capacidades: ${featStr}
+• Presupuesto Estimado: ${priceDisplay.textContent} (${timeDisplay.textContent})
+
+Detalles y objetivos del proyecto:
+`;
+
+          msgField.value = estSummary;
+          const contactSec = document.getElementById('contact');
+          if(contactSec){
+            contactSec.scrollIntoView({ behavior: 'smooth' });
+          }
+          msgField.focus();
+        }
+      });
+    }
+
+    updateCalculations();
+  })();
+
+  // ==========================================================================
+  // ---------- Voice Brief Intake (Speech-to-Text) ----------
+  // ==========================================================================
+  (function initVoiceBrief(){
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceIcon = document.getElementById('voiceIcon');
+    const voiceText = document.getElementById('voiceText');
+    const msgField = document.getElementById('contactMessage');
+    if(!voiceBtn || !msgField) return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SpeechRecognition){
+      voiceBtn.addEventListener('click', () => {
+        alert(currentLang === 'en'
+          ? "Voice dictation is not supported in this browser. Please type your message directly."
+          : "Tu navegador no soporta dictado por voz en este momento. Puedes escribir directamente en el campo de texto.");
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    let isRecording = false;
+
+    voiceBtn.addEventListener('click', () => {
+      if(isRecording){
+        recognition.stop();
+        return;
+      }
+      try{
+        recognition.lang = currentLang === 'en' ? 'en-US' : 'es-ES';
+        recognition.start();
+        isRecording = true;
+        voiceBtn.classList.add('recording');
+        voiceIcon.textContent = '🔴';
+        voiceText.textContent = currentLang === 'en' ? 'Listening...' : 'Escuchando...';
+      }catch(err){
+        console.warn('Speech recognition start failed:', err);
+      }
+    });
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      if(transcript){
+        msgField.value = (msgField.value ? msgField.value + " " : "") + transcript;
+      }
+    };
+
+    recognition.onend = () => {
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      voiceIcon.textContent = '🎤';
+      voiceText.textContent = currentLang === 'en' ? 'Voice dictation' : 'Dictar por voz';
+    };
+
+    recognition.onerror = (err) => {
+      console.warn('Speech recognition error:', err);
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      voiceIcon.textContent = '🎤';
+      voiceText.textContent = currentLang === 'en' ? 'Voice dictation' : 'Dictar por voz';
+    };
+  })();
+
 </script>
 </body>
 </html>
