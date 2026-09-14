@@ -461,26 +461,36 @@
   .civic-callout h4{ font-size:16px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:4px; }
   .civic-callout p{ font-size:13.5px; color:var(--muted); line-height:1.5; max-width:640px; }
 
-  /* ---------- interactive AI copilot estimator ---------- */
-  .estimator-wrap{
-    margin-top:50px; background:rgba(18,12,30,0.65); border:1px solid var(--line);
-    border-radius:24px; padding:clamp(20px,3.5vw,36px); position:relative; overflow:hidden;
+  /* ---------- holographic particle cotizador & spec engine ---------- */
+  .particle-cotizador-stage{
+    position:relative; margin-top:50px; padding:clamp(20px,4vw,50px) 16px;
+    overflow:hidden; border-radius:28px;
   }
-  .estimator-wrap::before{
-    content:""; position:absolute; top:-120px; right:-120px; width:280px; height:280px;
-    background:radial-gradient(circle,rgba(168,85,247,0.22) 0%,transparent 70%); pointer-events:none;
+  #cotizadorParticleCanvas{
+    position:absolute; inset:0; width:100%; height:100%;
+    pointer-events:none; z-index:1;
   }
-  .estimator-grid{ display:grid; grid-template-columns:1.35fr 1fr; gap:32px; align-items:start; }
+  .cotizador-terminal{
+    position:relative; z-index:2; max-width:840px; margin:0 auto;
+    background:rgba(10,7,16,0.85); border:1px solid rgba(52,211,153,0.35);
+    border-radius:24px; box-shadow:0 25px 60px -15px rgba(0,0,0,0.7), 0 0 35px -5px rgba(16,185,129,0.18);
+    backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+    overflow:hidden; display:flex; flex-direction:column;
+  }
+  /* Corner particle brackets */
+  .term-corner{
+    position:absolute; width:18px; height:18px; pointer-events:none; z-index:3;
+    border-color:#34d399; border-style:solid;
+  }
+  .term-corner.tl{ top:8px; left:8px; border-width:2px 0 0 2px; border-top-left-radius:6px; }
+  .term-corner.tr{ top:8px; right:8px; border-width:2px 2px 0 0; border-top-right-radius:6px; }
+  .term-corner.bl{ bottom:8px; left:8px; border-width:0 0 2px 2px; border-bottom-left-radius:6px; }
+  .term-corner.br{ bottom:8px; right:8px; border-width:0 2px 2px 0; border-bottom-right-radius:6px; }
 
-  /* AI Chat Box */
-  .est-chat-card{
-    background:rgba(10,7,16,0.75); border:1px solid rgba(192,132,252,0.25);
-    border-radius:20px; display:flex; flex-direction:column; overflow:hidden;
-    box-shadow:0 15px 35px -10px rgba(0,0,0,0.5);
-  }
   .est-chat-header{
     display:flex; justify-content:space-between; align-items:center;
-    padding:12px 18px; background:rgba(255,255,255,0.02); border-bottom:1px solid var(--line);
+    padding:14px 20px; background:rgba(255,255,255,0.02); border-bottom:1px solid var(--line);
+    flex-wrap:wrap; gap:10px;
   }
   .est-chat-status{
     display:inline-flex; align-items:center; gap:10px; font-size:11px; font-weight:700;
@@ -511,15 +521,10 @@
     0%{ transform:scale(0.5); opacity:1; }
     100%{ transform:scale(2.4); opacity:0; }
   }
-  .est-msg.bot .est-bubble p{ margin-bottom:8px; }
-  .est-msg.bot .est-bubble p:last-child{ margin-bottom:0; }
-  .est-msg.bot .est-bubble ul{ margin:8px 0 10px 18px; display:flex; flex-direction:column; gap:5px; }
-  .est-msg.bot .est-bubble li{ line-height:1.5; color:var(--lavender); font-size:13px; }
-  .est-msg.bot .est-bubble strong{ color:#fff; font-weight:600; }
-  .est-budget-highlight{
-    display:inline-block; background:rgba(16,185,129,0.12); border:1px solid rgba(52,211,153,0.35);
-    color:#34d399; font-weight:700; padding:4px 12px; border-radius:8px; margin:8px 0; font-size:12.5px;
-    letter-spacing:0.02em;
+  .est-session-tag{
+    font-size:10.5px; font-weight:700; color:#34d399; letter-spacing:0.06em;
+    background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:100px;
+    border:1px solid rgba(52,211,153,0.3);
   }
   .est-btn-reset{
     background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:100px;
@@ -529,20 +534,25 @@
   .est-btn-reset:hover{ color:#fff; border-color:var(--violet-glow); background:rgba(168,85,247,0.15); }
 
   .est-chat-stream{
-    padding:20px; display:flex; flex-direction:column; gap:16px; max-height:380px;
+    padding:24px 20px; display:flex; flex-direction:column; gap:18px; max-height:460px;
     overflow-y:auto; scroll-behavior:smooth;
   }
-  .est-msg{ display:flex; flex-direction:column; max-width:92%; animation:estFadeIn .3s cubic-bezier(.16,1,.3,1); }
+  .est-msg{ display:flex; flex-direction:column; max-width:94%; animation:estFadeIn .3s cubic-bezier(.16,1,.3,1); }
   @keyframes estFadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
-  .est-msg.bot{ align-self:flex-start; }
+  .est-msg.bot{ align-self:flex-start; width:100%; }
   .est-msg.user{ align-self:flex-end; }
   .est-bubble{
-    padding:12px 16px; border-radius:16px; font-size:13.5px; line-height:1.55;
+    padding:14px 18px; border-radius:16px; font-size:13.5px; line-height:1.6;
   }
   .est-msg.bot .est-bubble{
-    background:rgba(255,255,255,0.05); border:1px solid rgba(192,132,252,0.2);
-    color:var(--lavender); border-top-left-radius:4px;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(192,132,252,0.2);
+    color:var(--lavender); border-top-left-radius:4px; width:fit-content; max-width:100%;
   }
+  .est-msg.bot .est-bubble p{ margin-bottom:8px; }
+  .est-msg.bot .est-bubble p:last-child{ margin-bottom:0; }
+  .est-msg.bot .est-bubble ul{ margin:8px 0 10px 18px; display:flex; flex-direction:column; gap:6px; }
+  .est-msg.bot .est-bubble li{ line-height:1.5; color:var(--lavender); font-size:13px; }
+  .est-msg.bot .est-bubble strong{ color:#fff; font-weight:600; }
   .est-msg.user .est-bubble{
     background:linear-gradient(135deg,rgba(147,51,234,0.3) 0%,rgba(168,85,247,0.45) 100%);
     border:1px solid rgba(192,132,252,0.45); color:#fff; border-top-right-radius:4px;
@@ -570,16 +580,88 @@
     width:fit-content;
   }
   .est-typing span{
-    width:6px; height:6px; background:var(--violet-glow); border-radius:50%;
+    width:6px; height:6px; background:#34d399; border-radius:50%;
     animation:estBounce 1.2s infinite ease-in-out;
   }
   .est-typing span:nth-child(2){ animation-delay:.2s; }
   .est-typing span:nth-child(3){ animation-delay:.4s; }
   @keyframes estBounce{ 0%,80%,100%{ transform:scale(0); } 40%{ transform:scale(1); } }
 
+  /* Blueprint file card */
+  .est-blueprint-file{
+    margin-top:14px; background:rgba(12,8,20,0.95); border:1px solid rgba(52,211,153,0.45);
+    border-radius:18px; padding:20px 22px; display:flex; flex-direction:column; gap:16px;
+    box-shadow:0 15px 35px -10px rgba(0,0,0,0.6), 0 0 24px -6px rgba(16,185,129,0.25);
+    animation:blueprintPop 0.4s cubic-bezier(0.16,1,0.3,1); width:100%;
+  }
+  @keyframes blueprintPop{
+    from{ opacity:0; transform:scale(0.96) translateY(10px); }
+    to{ opacity:1; transform:scale(1) translateY(0); }
+  }
+  .b-file-header{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    border-bottom:1px dashed rgba(52,211,153,0.3); padding-bottom:12px;
+  }
+  .b-file-meta{ display:flex; align-items:center; gap:10px; }
+  .b-file-icon{ font-size:22px; }
+  .b-file-title{ font-family:'Unbounded',sans-serif; font-size:12.5px; font-weight:700; color:#fff; letter-spacing:0.02em; }
+  .b-file-sub{ font-size:10px; font-weight:700; color:#34d399; letter-spacing:0.08em; }
+  .b-file-status{ font-size:10.5px; font-weight:700; color:#34d399; background:rgba(16,185,129,0.15); padding:3px 10px; border-radius:100px; border:1px solid rgba(52,211,153,0.35); }
+
+  .b-file-domain{ display:flex; flex-direction:column; gap:4px; }
+  .b-domain-label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .b-file-domain h4{ font-family:'Unbounded',sans-serif; font-size:16px; color:#fff; font-weight:600; margin:0; }
+
+  .b-file-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:18px; }
+  @media(max-width:680px){ .b-file-grid{ grid-template-columns:1fr; } }
+  .b-spec-col{ display:flex; flex-direction:column; gap:8px; }
+  .b-item{ font-size:12.5px; line-height:1.45; color:var(--lavender); }
+  .b-item .k{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); display:block; margin-bottom:2px; }
+  .b-item .v{ font-size:12.5px; color:#fff; font-weight:500; }
+  .b-item.highlight .v.price{ font-family:'Unbounded',sans-serif; font-size:16px; color:#34d399; font-weight:700; }
+
+  .b-file-actions{ display:flex; flex-wrap:wrap; gap:10px; padding-top:12px; border-top:1px solid var(--line); }
+  .btn-dossier-download{
+    background:rgba(255,255,255,0.06); border:1px solid var(--line); color:#fff;
+    padding:8px 16px; border-radius:100px; font-size:12px; font-weight:600; cursor:pointer;
+    transition:all .2s ease; font-family:'Manrope',sans-serif; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-dossier-download:hover{ background:rgba(255,255,255,0.12); border-color:var(--violet-glow); }
+  .btn-dossier-email{
+    background:rgba(16,185,129,0.18); border:1px solid rgba(52,211,153,0.4); color:#34d399;
+    padding:8px 18px; border-radius:100px; font-size:12px; font-weight:700; cursor:pointer;
+    transition:all .2s ease; font-family:'Manrope',sans-serif; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-dossier-email:hover{ background:#10b981; color:#fff; box-shadow:0 0 16px rgba(16,185,129,0.5); }
+
+  /* Inline Dispatch Form */
+  .b-file-dispatch-form{
+    background:rgba(255,255,255,0.03); border:1px solid rgba(52,211,153,0.25);
+    border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:10px;
+    margin-top:6px;
+  }
+  .b-dispatch-title{ font-size:12px; font-weight:700; color:#34d399; text-transform:uppercase; letter-spacing:0.06em; }
+  .b-dispatch-desc{ font-size:12px; color:var(--muted); line-height:1.45; }
+  .b-dispatch-inputs{ display:flex; flex-wrap:wrap; gap:8px; }
+  .b-dispatch-inputs input{
+    flex:1; min-width:170px; background:rgba(0,0,0,0.4); border:1px solid var(--line);
+    border-radius:100px; padding:8px 14px; font-size:12.5px; color:#fff; outline:none;
+    font-family:'Manrope',sans-serif;
+  }
+  .b-dispatch-inputs input:focus{ border-color:#34d399; }
+  .btn-send-dispatch{
+    background:#10b981; border:none; border-radius:100px; padding:8px 18px;
+    color:#fff; font-size:12px; font-weight:700; cursor:pointer; font-family:'Manrope',sans-serif;
+    transition:all .2s ease;
+  }
+  .btn-send-dispatch:hover{ background:#059669; }
+  .dispatch-status{ font-size:12px; line-height:1.45; border-radius:8px; padding:8px 12px; }
+  .dispatch-status.success{ background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+  .dispatch-status.error{ background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+
   /* Predictive autocomplete suggestions bar */
   .est-predictive{
-    padding:8px 16px; background:rgba(255,255,255,0.02); border-top:1px solid var(--line);
+    padding:8px 18px; background:rgba(255,255,255,0.02); border-top:1px solid var(--line);
     display:none; align-items:center; gap:8px; overflow-x:auto; white-space:nowrap;
   }
   .est-predictive.active{ display:flex; }
@@ -592,43 +674,27 @@
 
   /* Input row */
   .est-input-row{
-    display:flex; gap:10px; padding:12px 16px; background:rgba(18,12,30,0.9);
+    display:flex; gap:10px; padding:14px 18px; background:rgba(14,10,22,0.95);
     border-top:1px solid var(--line); align-items:center;
   }
   .est-input{
     flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--line);
-    border-radius:100px; padding:10px 18px; color:#fff; font-size:13.5px;
+    border-radius:100px; padding:11px 20px; color:#fff; font-size:13.5px;
     font-family:'Manrope',sans-serif; outline:none; transition:border-color .2s;
   }
-  .est-input:focus{ border-color:var(--violet-glow); box-shadow:0 0 10px rgba(168,85,247,0.25); }
+  .est-input:focus{ border-color:#34d399; box-shadow:0 0 12px rgba(52,211,153,0.25); }
   .est-input::placeholder{ color:rgba(255,255,255,0.35); }
   .est-send-btn{
-    background:var(--violet-bright); border:none; border-radius:100px;
-    color:#fff; padding:10px 18px; font-size:13px; font-weight:600;
+    background:#10b981; border:none; border-radius:100px;
+    color:#fff; padding:11px 20px; font-size:13px; font-weight:700;
     cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; gap:6px;
     font-family:'Manrope',sans-serif;
   }
-  .est-send-btn:hover{ background:var(--violet-glow); transform:translateY(-1px); box-shadow:0 6px 16px -3px rgba(168,85,247,0.6); }
+  .est-send-btn:hover{ background:#059669; transform:translateY(-1px); box-shadow:0 6px 16px -3px rgba(16,185,129,0.5); }
 
-  /* Estimator summary card (Right Panel) */
-  .est-summary-card{
-    background:rgba(10,7,16,0.75); border:1px solid rgba(192,132,252,0.3); border-radius:20px;
-    padding:28px 24px; display:flex; flex-direction:column; gap:16px; position:sticky; top:100px;
-    box-shadow:0 15px 35px -10px rgba(0,0,0,0.5);
+  @media (max-width:860px){
+    .est-chat-stream{ max-height:400px; }
   }
-  .est-spec-head{ display:flex; justify-content:space-between; align-items:center; }
-  .est-range-title{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); font-weight:700; }
-  .est-spec-badge{ font-size:11px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); padding:3px 8px; border-radius:100px; font-weight:600; }
-  .est-range-val{ font-size:clamp(26px,2.6vw,34px); font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
-  .est-time-val{ font-size:13.5px; color:var(--violet-glow); font-weight:600; display:flex; align-items:center; gap:6px; }
-  .est-breakdown-box{
-    background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:12px;
-    padding:12px 14px; display:flex; flex-direction:column; gap:10px;
-  }
-  .est-breakdown-item{ font-size:12.5px; color:var(--lavender); display:flex; justify-content:space-between; align-items:center; gap:10px; }
-  .est-breakdown-item .b-key{ color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; }
-  .est-breakdown-item .b-val{ color:#fff; font-weight:600; text-align:right; font-size:12px; }
-  .est-note{ font-size:12px; color:var(--muted); line-height:1.5; background:rgba(255,255,255,0.02); border-radius:10px; padding:10px 12px; border:1px solid var(--line); }
 
   /* ---------- voice brief intake ---------- */
   .voice-btn{
@@ -1111,84 +1177,63 @@
       <a href="#contact" class="btn" style="background:rgba(255,255,255,0.08);border:1px solid var(--violet-glow);" data-i18n="civic_callout_btn">Solicitar apoyo cívico</a>
     </div>
 
-    <!-- Interactive AI Scope & Cost Estimator -->
-    <div class="estimator-wrap reveal" id="estimator">
-      <div class="section-head" style="margin-bottom:28px;">
+    <!-- Holographic Particle Cotizador & Spec Generator -->
+    <div class="particle-cotizador-stage reveal" id="estimator">
+      <!-- Dedicated particle convergence canvas -->
+      <canvas id="cotizadorParticleCanvas"></canvas>
+
+      <div class="section-head" style="margin-bottom:28px;text-align:center;max-width:760px;margin-left:auto;margin-right:auto;">
         <div>
-          <span class="idx" data-i18n="est_idx">Copiloto Técnico · Posibilidades Ilimitadas</span>
-          <h2 style="font-size:clamp(24px,3vw,38px);" data-i18n="est_title">Cotizador Inteligente con IA</h2>
+          <span class="idx" data-i18n="est_idx">Copiloto de Arquitectura · Ensamblado por Partículas</span>
+          <h2 style="font-size:clamp(24px,3.2vw,40px);" data-i18n="est_title">Cotizador Holográfico con IA</h2>
         </div>
-        <p data-i18n="est_desc">Construimos cualquier solución tecnológica que imagines sin límites de catálogo. Conversa con nuestro copiloto o escribe una palabra (ej. "app", "saas", "ia") para modular arquitectura, módulos recomendados y presupuesto en tiempo real.</p>
+        <p data-i18n="est_desc" style="margin:0 auto;">Escribe lo que deseas construir. Las partículas cuánticas estructuran tu arquitectura y compilan un expediente de especificaciones técnicas listo para descargar o enviar a tu correo.</p>
       </div>
 
-      <div class="estimator-grid">
-        <!-- Interactive AI Chat Copilot Panel -->
-        <div class="est-chat-card">
-          <div class="est-chat-header">
-            <div class="est-chat-status">
-              <span class="est-particle-indicator">
-                <span class="est-particle-core"></span>
-                <span class="est-particle-ring"></span>
-                <span class="est-particle-ring delay"></span>
-              </span>
-              <span data-i18n="est_chat_status">MYOOZ AI COPILOT · ONLINE</span>
-            </div>
-            <button type="button" class="est-btn-reset" id="estResetBtn" title="Reiniciar asistente">
+      <!-- Single Central Terminal (Structured by Particles) -->
+      <div class="cotizador-terminal" id="cotizadorTerminal">
+        <!-- Corner particle brackets -->
+        <span class="term-corner tl"></span>
+        <span class="term-corner tr"></span>
+        <span class="term-corner bl"></span>
+        <span class="term-corner br"></span>
+
+        <!-- Terminal Header -->
+        <div class="est-chat-header">
+          <div class="est-chat-status">
+            <span class="est-particle-indicator">
+              <span class="est-particle-core"></span>
+              <span class="est-particle-ring"></span>
+              <span class="est-particle-ring delay"></span>
+            </span>
+            <span data-i18n="est_chat_status">MYOOZ ARCHITECT · AI SPEC ENGINE</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="est-session-tag">● SESIÓN ACTIVA</span>
+            <button type="button" class="est-btn-reset" id="estResetBtn" title="Reiniciar sesión">
               <span>🔄</span> <span data-i18n="est_btn_reset">Reiniciar</span>
             </button>
           </div>
-
-          <div class="est-chat-stream" id="estChatStream">
-            <!-- Dynamic chat messages injected here -->
-          </div>
-
-          <!-- Predictive Auto-Complete Suggestion Bar -->
-          <div class="est-predictive" id="estPredictiveBar">
-            <span style="font-size:11px;color:var(--muted);margin-right:4px;" data-i18n="est_pred_label">✦ Sugerencia:</span>
-            <div id="estPredTags" style="display:inline-flex;gap:6px;"></div>
-          </div>
-
-          <!-- Message Input -->
-          <form class="est-input-row" id="estInputForm" onsubmit="return false;">
-            <input type="text" class="est-input" id="estInput" placeholder="Escribe tu idea (ej: 'una app', 'un saas', 'un bot de ia')..." autocomplete="off">
-            <button type="submit" class="est-send-btn" id="estSendBtn">
-              <span data-i18n="est_btn_send">Enviar</span> <span>↑</span>
-            </button>
-          </form>
         </div>
 
-        <!-- Live Architecture & Budget Summary Panel -->
-        <div class="est-summary-card">
-          <div class="est-spec-head">
-            <span class="est-range-title" data-i18n="est_est_title">Inversión Estimada</span>
-            <span class="est-spec-badge" data-i18n="est_badge_live">En Vivo</span>
-          </div>
-          <div class="est-range-val" id="estPriceDisplay">$2,800 – $3,500 USD</div>
-          <div class="est-time-val" id="estTimeDisplay">⏱ Tiempo estimado: ~4 a 6 semanas</div>
+        <!-- Chat Conversation Stream -->
+        <div class="est-chat-stream" id="estChatStream">
+          <!-- Chat messages and generated specification blueprints will be rendered here -->
+        </div>
 
-          <div class="est-breakdown-box">
-            <div class="est-breakdown-item">
-              <span class="b-key" data-i18n="est_key_type">Arquitectura / Core:</span>
-              <span class="b-val" id="estTypeVal">SaaS / Web App</span>
-            </div>
-            <div class="est-breakdown-item">
-              <span class="b-key" data-i18n="est_key_scope">Alcance & Fase:</span>
-              <span class="b-val" id="estScopeVal">MVP de Producción</span>
-            </div>
-            <div class="est-breakdown-item">
-              <span class="b-key" data-i18n="est_key_tech">Capacidades:</span>
-              <span class="b-val" id="estTechVal">Base Esencial</span>
-            </div>
-          </div>
+        <!-- Predictive suggestion bar -->
+        <div class="est-predictive" id="estPredictiveBar">
+          <span style="font-size:11px;color:var(--muted);margin-right:4px;" data-i18n="est_pred_label">✦ Sugerencia:</span>
+          <div id="estPredTags" style="display:inline-flex;gap:6px;"></div>
+        </div>
 
-          <div class="est-note" data-i18n="est_note">
-            ¿Tu requerimiento es totalmente único o fuera de lo común? Diseñamos la infraestructura técnica a medida desde cero para tu proyecto exacto.
-          </div>
-
-          <button type="button" class="btn" id="estTransferBtn" style="width:100%;justify-content:center;" data-i18n="est_transfer_btn">
-            Transferir brief al formulario de contacto →
+        <!-- Input Bar -->
+        <form class="est-input-row" id="estInputForm" onsubmit="return false;">
+          <input type="text" class="est-input" id="estInput" placeholder="Describe tu idea (ej: 'una app para generar imágenes profesionales', 'un saas para clínicas')..." autocomplete="off">
+          <button type="submit" class="est-send-btn" id="estSendBtn">
+            <span data-i18n="est_btn_send">Compilar</span> <span>↑</span>
           </button>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -2526,9 +2571,12 @@
   }catch(e){}
 
   // ==========================================================================
-  // ---------- Myooz Neural Copilot Estimator (Domain Intelligence Engine) ----------
+  // ---------- Holographic Particle Cotizador & Spec Generator Engine ----------
   // ==========================================================================
-  (function initAICopilotEstimator(){
+  (function initHolographicCotizador(){
+    const stage = document.getElementById('estimator');
+    const terminal = document.getElementById('cotizadorTerminal');
+    const pCanvas = document.getElementById('cotizadorParticleCanvas');
     const chatStream = document.getElementById('estChatStream');
     const inputField = document.getElementById('estInput');
     const inputForm = document.getElementById('estInputForm');
@@ -2536,42 +2584,530 @@
     const predTagsContainer = document.getElementById('estPredTags');
     const resetBtn = document.getElementById('estResetBtn');
 
-    const priceDisplay = document.getElementById('estPriceDisplay');
-    const timeDisplay = document.getElementById('estTimeDisplay');
-    const typeVal = document.getElementById('estTypeVal');
-    const scopeVal = document.getElementById('estScopeVal');
-    const techVal = document.getElementById('estTechVal');
-    const transferBtn = document.getElementById('estTransferBtn');
+    if(!stage || !terminal || !chatStream) return;
 
-    if(!chatStream || !priceDisplay) return;
+    // ========================================================================
+    // 1. Quantum Particle Assembly Animation for Cotizador Frame
+    // ========================================================================
+    (function initCotizadorParticles(){
+      if(!pCanvas) return;
+      const ctx = pCanvas.getContext('2d');
+      if(!ctx) return;
 
-    // Active project state
-    let state = {
-      domainName: 'Generación Visual con IA (Diffusion Pipeline)',
-      domainNameEn: 'Generative Visual AI (Diffusion Pipeline)',
-      scopeName: 'MVP de Producción',
-      scopeNameEn: 'Production MVP',
-      techModules: 'Modelos de Difusión / GPU, Sistema de Créditos & Stripe, CDN 4K',
-      techModulesEn: 'Diffusion Models / GPU, Credit System & Stripe, 4K CDN',
-      priceMin: 3600,
-      priceMax: 4800,
-      weeksMin: 4,
-      weeksMax: 6,
-      historyCount: 0
-    };
+      let pWidth = 0, pHeight = 0;
+      let pList = [];
+      const NUM_PARTICLES = 180;
+      let isVisible = false;
+      let assembledRatio = 0; // 0 = dispersed, 1 = fully assembled into terminal border
 
-    function updateSummaryCard(){
-      priceDisplay.textContent = `$${state.priceMin.toLocaleString()} – $${state.priceMax.toLocaleString()} USD`;
-      timeDisplay.textContent = currentLang === 'en'
-        ? `⏱ Estimated timeline: ~${state.weeksMin} to ${state.weeksMax} weeks`
-        : `⏱ Tiempo estimado: ~${state.weeksMin} a ${state.weeksMax} semanas`;
+      function resizePCanvas(){
+        const rect = stage.getBoundingClientRect();
+        pWidth = rect.width;
+        pHeight = rect.height;
+        pCanvas.width = pWidth * (window.devicePixelRatio || 1);
+        pCanvas.height = pHeight * (window.devicePixelRatio || 1);
+        pCanvas.style.width = pWidth + 'px';
+        pCanvas.style.height = pHeight + 'px';
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        calculateTargets();
+      }
 
-      typeVal.textContent = currentLang === 'en' ? state.domainNameEn : state.domainName;
-      scopeVal.textContent = currentLang === 'en' ? state.scopeNameEn : state.scopeName;
-      techVal.textContent = currentLang === 'en' ? state.techModulesEn : state.techModules;
+      function calculateTargets(){
+        const tRect = terminal.getBoundingClientRect();
+        const sRect = stage.getBoundingClientRect();
+        const left = tRect.left - sRect.left;
+        const top = tRect.top - sRect.top;
+        const w = tRect.width;
+        const h = tRect.height;
+        const perimeter = 2 * (w + h);
+
+        pList.forEach((p, idx) => {
+          // Distribute evenly along the perimeter of the terminal
+          const distAlong = (idx / NUM_PARTICLES) * perimeter;
+          let tx = 0, ty = 0;
+          if(distAlong < w){
+            tx = left + distAlong; ty = top;
+          } else if(distAlong < w + h){
+            tx = left + w; ty = top + (distAlong - w);
+          } else if(distAlong < 2 * w + h){
+            tx = left + w - (distAlong - (w + h)); ty = top + h;
+          } else {
+            tx = left; ty = top + h - (distAlong - (2 * w + h));
+          }
+
+          p.tx = tx;
+          p.ty = ty;
+        });
+      }
+
+      function initParticles(){
+        pList = [];
+        for(let i = 0; i < NUM_PARTICLES; i++){
+          // Start dispersed in space around stage
+          const ang = Math.random() * Math.PI * 2;
+          const dist = 300 + Math.random() * 400;
+          pList.push({
+            x: (pWidth / 2) + Math.cos(ang) * dist,
+            y: (pHeight / 2) + Math.sin(ang) * dist,
+            tx: pWidth / 2,
+            ty: pHeight / 2,
+            vx: 0,
+            vy: 0,
+            size: Math.random() * 2.2 + 1.2,
+            colorType: Math.random() < 0.65 ? 'green' : 'violet',
+            pulsePhase: Math.random() * Math.PI * 2,
+            orbitSpeed: (Math.random() - 0.5) * 0.02
+          });
+        }
+      }
+
+      // Check visibility via IntersectionObserver
+      if('IntersectionObserver' in window){
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            isVisible = entry.isIntersecting;
+          });
+        }, { threshold: 0.1 });
+        obs.observe(stage);
+      } else {
+        isVisible = true;
+      }
+
+      resizePCanvas();
+      initParticles();
+      window.addEventListener('resize', resizePCanvas);
+
+      let animTime = 0;
+      function animate(timestamp){
+        requestAnimationFrame(animate);
+        if(!isVisible) return;
+        animTime += 0.025;
+
+        // Smoothly progress towards assembled state
+        assembledRatio += (1 - assembledRatio) * 0.04;
+
+        ctx.clearRect(0, 0, pWidth, pHeight);
+
+        pList.forEach((p, i) => {
+          // Patrol orbit around the perimeter
+          const orbitOffset = Math.sin(animTime * 1.5 + p.pulsePhase) * 4;
+          const targetX = p.tx + Math.cos(animTime + i) * orbitOffset;
+          const targetY = p.ty + Math.sin(animTime + i) * orbitOffset;
+
+          p.x += (targetX - p.x) * (0.05 + 0.04 * assembledRatio);
+          p.y += (targetY - p.y) * (0.05 + 0.04 * assembledRatio);
+
+          const alpha = 0.5 + 0.5 * Math.sin(animTime * 2.2 + p.pulsePhase);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+          if(p.colorType === 'green'){
+            ctx.fillStyle = `rgba(52, 211, 153, ${0.4 + 0.5 * alpha})`;
+            ctx.shadowColor = '#34d399';
+            ctx.shadowBlur = 8;
+          } else {
+            ctx.fillStyle = `rgba(192, 132, 252, ${0.35 + 0.5 * alpha})`;
+            ctx.shadowColor = '#c084fc';
+            ctx.shadowBlur = 7;
+          }
+          ctx.fill();
+        });
+
+        // Reset shadow
+        ctx.shadowBlur = 0;
+      }
+      requestAnimationFrame(animate);
+    })();
+
+    // ========================================================================
+    // 2. Blueprint Specification Catalog & Consultation Knowledge
+    // ========================================================================
+    const SPEC_CATALOG = [
+      {
+        id: 'image_ai',
+        pattern: /imagen|im[aá]gen|foto|difusi[oó]n|diffusion|flux|midjourney|avatar|fotograf[ií]a|render|arte|sdxl|dall-e|profeiosnal|profesional/i,
+        domainEs: 'Generación Visual con IA (Diffusion Pipeline)',
+        domainEn: 'Generative Visual AI (Diffusion Pipeline)',
+        stackEs: 'FLUX.1 / SDXL + LoRAs de Estudio, Inferencia GPU dedicada',
+        stackEn: 'FLUX.1 / SDXL + Studio LoRAs, Dedicated GPU Inference',
+        infraEs: 'Colas Asíncronas en GPU (Modal/RunPod), Latencia 2-4s por generación',
+        infraEn: 'Async GPU Task Workers (Modal/RunPod), 2-4s generation latency',
+        secEs: 'Billetera de Créditos, Stripe Billing, Almacenamiento CDN 4K',
+        secEn: 'Credit Wallet, Stripe Billing, Global 4K CDN Storage',
+        priceMin: 3600, priceMax: 4800, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
+        consultationEs: `¡Excelente visión de producto! Para una plataforma de <strong>generación de imágenes profesionales con IA</strong>, hemos modelado una arquitectura enfocada en fidelidad fotográfica y respuesta inmediata:<br><br>
+        • <strong>Pipeline de Difusión</strong>: Modelos FLUX.1 y SDXL afinados con LoRAs propios para preservar anatomía perfecta, iluminación de estudio y exportación hasta 4K.<br>
+        • <strong>Orquestación GPU Asíncrona</strong>: Despliegue en clusters de GPU con colas de tareas para que múltiples usuarios generen simultáneamente sin bloquear la interfaz.<br>
+        • <strong>Monetización & Créditos</strong>: Sistema de paquetes de créditos recargables con Stripe, historial seguro y galerías privadas.<br><br>
+        A continuación tienes la <strong>Ficha Técnica Oficial</strong> compilada. Puedes descargarla o ingresar tu correo para recibir una copia directa en tu bandeja:`,
+        consultationEn: `Outstanding vision! For a <strong>professional AI image generation platform</strong>, we have compiled an architecture engineered for photorealistic consistency and low latency:<br><br>
+        • <strong>Neural Diffusion Pipeline</strong>: FLUX.1 & SDXL models fine-tuned with custom LoRAs for studio lighting, anatomical accuracy, and 4K upscaling.<br>
+        • <strong>Async GPU Workflows</strong>: Serverless GPU cluster workers with task queues delivering results in 2 to 4 seconds.<br>
+        • <strong>Monetization & Credit Wallet</strong>: Stripe metered billing, credit packages, and secure cloud CDN delivery.<br><br>
+        Below is your <strong>Compiled Technical Blueprint</strong>. You can download it or receive a copy directly in your email:`
+      },
+      {
+        id: 'audio_music_ai',
+        pattern: /audio|m[uú]sica|sonido|voz|voces|canci[oó]n|beat|productor|podcast|vocal|s[ií]ntesis|tts/i,
+        domainEs: 'Motor de Audio Digital, Síntesis & IA Sonora',
+        domainEn: 'Digital Audio Engine & Generative Voice AI',
+        stackEs: 'Web Audio API (GPU/Wasm), Modelos de Voz Neuronal & TTS',
+        stackEn: 'Web Audio API (GPU/Wasm), Neural Voice & TTS Models',
+        infraEs: 'Streaming de Audio por Bloques (Lossless), Servidores de Baja Latencia',
+        infraEn: 'Chunked Lossless Audio Streaming, Low-Latency Edge Nodes',
+        secEs: 'Gestión de Derechos de Autor, Stripe Checkout, Exportación Multipistas',
+        secEn: 'Copyright Licensing, Stripe Checkout, Multitrack Stem Export',
+        priceMin: 3500, priceMax: 4700, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
+        consultationEs: `La ingeniería de audio e IA sonora exige ultra baja latencia y procesamiento en tiempo real:<br><br>
+        • <strong>Pipeline Web Audio</strong>: Síntesis de voz, clonación neuronal y separación de pistas acelerada por WebAssembly y GPU.<br>
+        • <strong>Streaming Sin Pérdidas</strong>: Arquitectura adaptativa para streaming y exportación de masters en alta fidelidad.<br><br>
+        Aquí tienes el expediente técnico compilado para este sistema:`,
+        consultationEn: `Audio engineering and neural sound AI demand ultra-low latency and real-time processing:<br><br>
+        • <strong>Web Audio Pipeline</strong>: Neural voice synthesis, cloning, and stem separation accelerated via WebAssembly/GPU.<br>
+        • <strong>Lossless Streaming</strong>: Adaptive chunked streaming and studio-grade master exports.<br><br>
+        Here is the technical blueprint compiled for your system:`
+      },
+      {
+        id: 'llm_agents',
+        pattern: /chat|bot|gpt|llm|agente|copiloto|asistente|documento|rag|inteligencia|automatiz/i,
+        domainEs: 'Copiloto Autónomo con LLMs & RAG Empresarial',
+        domainEn: 'Autonomous Copilot with LLMs & Enterprise RAG',
+        stackEs: 'Claude 3.5 / GPT-4o / Llama 3, Base de Datos Vectorial (pgvector)',
+        stackEn: 'Claude 3.5 / GPT-4o / Llama 3, Vector Database (pgvector)',
+        infraEs: 'Streaming de Tokens Sub-100ms, Orquestación de Agentes Supervisados',
+        infraEn: 'Sub-100ms Token Streaming, Supervised Autonomous Tool Agents',
+        secEs: 'Aislamiento Estricto de Datos, Cifrado en Reposo, Cero Alucinaciones',
+        secEn: 'Strict Data Isolation, Encryption at Rest, Hallucination-Free',
+        priceMin: 3400, priceMax: 4600, timelineEs: '~4 a 5 semanas (MVP)', timelineEn: '~4 to 5 weeks (MVP)',
+        consultationEs: `Un sistema de copilotos y agentes autónomos de producción requiere rigor para evitar alucinaciones y proteger datos sensibles:<br><br>
+        • <strong>RAG Híbrido & Embeddings</strong>: Indexación semántica profunda sobre documentos privados de tu organización.<br>
+        • <strong>Herramientas Autónomas</strong>: Ejecución supervisada de consultas, generación de reportes y envíos automáticos.<br><br>
+        Ficha técnica de arquitectura compilada:`,
+        consultationEn: `Production autonomous agents and copilots require strict guardrails and private data sovereignty:<br><br>
+        • <strong>Hybrid RAG & Embeddings</strong>: Deep semantic indexing across proprietary corporate files with zero hallucinations.<br>
+        • <strong>Autonomous Tool Agents</strong>: Supervised automated workflows and direct API dispatch.<br><br>
+        Compiled technical architecture blueprint:`
+      },
+      {
+        id: 'saas_b2b',
+        pattern: /saas|crm|erp|gesti[oó]n|cl[ií]nica|abogado|contab|empresa|b2b|portal|turnos|citas|facturaci[oó]n/i,
+        domainEs: 'Plataforma SaaS B2B Multi-Inquilino (Cloud)',
+        domainEn: 'Multi-Tenant B2B Cloud SaaS Platform',
+        stackEs: 'Next.js 15 + Node.js / Go, PostgreSQL con Esquemas Aislados',
+        stackEn: 'Next.js 15 + Node.js / Go, PostgreSQL with Partitioned Schemas',
+        infraEs: 'Despliegue Multi-Región Auto-Escalable, API REST & GraphQL',
+        infraEn: 'Auto-Scaling Multi-Region Cloud, REST & GraphQL APIs',
+        secEs: 'Control de Roles (RBAC), Stripe Billing & Invoices, Auditoría Inmutable',
+        secEn: 'RBAC Role Management, Stripe Billing & Invoices, Audit Logs',
+        priceMin: 3200, priceMax: 4500, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
+        consultationEs: `Diseñamos plataformas SaaS orientadas a alta conversión, escalabilidad limpia y seguridad empresarial:<br><br>
+        • <strong>Aislamiento Multi-Tenant</strong>: Privacidad garantizada entre organizaciones clientes.<br>
+        • <strong>Suscripciones & Reportes</strong>: Gestión de planes, pagos recurrentes automáticos y cuadros de mando.<br><br>
+        Ficha de especificaciones técnicas compilada:`,
+        consultationEn: `We design enterprise SaaS platforms built for high user retention and cloud scalability:<br><br>
+        • <strong>Multi-Tenant Isolation</strong>: Strict data segregation across customer organizations.<br>
+        • <strong>Recurring Revenue & Dashboards</strong>: Automated Stripe billing and real-time operational reports.<br><br>
+        Compiled technical specifications:`
+      },
+      {
+        id: 'fintech_crypto',
+        pattern: /fintech|billetera|wallet|crypto|blockchain|pago|pagos|tarjeta|banco|bancari|prestamo|inversi[oó]n|stripe|token/i,
+        domainEs: 'Fintech & Infraestructura Transaccional Segura',
+        domainEn: 'Fintech & Secure Transactional Infrastructure',
+        stackEs: 'Motor de Idempotencia, Pasarelas Múltiples (Tarjetas & Crypto)',
+        stackEn: 'Idempotent Transactional Engine, Multi-Rail Payment Gateways',
+        infraEs: 'Procesamiento Asíncrono en Memoria (Redis), Cero Pérdida de Datos',
+        infraEn: 'In-Memory Async Processing (Redis), Zero Data Loss Tolerance',
+        secEs: 'Cifrado Bancario AES-256, 2FA Biométrico, Cumplimiento KYC/AML',
+        secEn: 'AES-256 Bank Encryption, Biometric 2FA, KYC/AML Compliance',
+        priceMin: 4200, priceMax: 5800, timelineEs: '~6 a 8 semanas', timelineEn: '~6 to 8 weeks',
+        consultationEs: `Las plataformas financieras y transaccionales exigen tolerancia cero a inconsistencias y máxima seguridad:<br><br>
+        • <strong>Conciliación Idempotente</strong>: Cada transacción se registra con firma criptográfica inmutable.<br>
+        • <strong>Rieles de Pago Híbridos</strong>: Tarjetas internacionales y transferencias locales o rieles crypto (USDC).<br><br>
+        Expediente técnico compilado:`,
+        consultationEn: `Financial transactional platforms demand zero fault tolerance and banking-grade security:<br><br>
+        • <strong>Idempotent Ledger</strong>: Cryptographically signed immutable audit records.<br>
+        • <strong>Hybrid Payment Rails</strong>: Global card processing paired with Web3 crypto settlement.<br><br>
+        Compiled technical dossier:`
+      },
+      {
+        id: 'fast_sprint',
+        pattern: /sprint|r[aá]pido|urgente|1 sem|2 sem|prototipo|validar|poc/i,
+        domainEs: 'Product Sprint de Validación Rápida',
+        domainEn: 'Rapid Product Validation Sprint',
+        stackEs: 'Next.js Reactivo / App Móvil, Base de Datos Serverless en Producción',
+        stackEn: 'Reactive Next.js / Mobile, Production Serverless Database',
+        infraEs: 'Despliegue Inmediato en la Nube (Vercel/AWS), CI/CD Configurado',
+        infraEn: 'Live Production Cloud Deployment (Vercel/AWS), CI/CD Enabled',
+        secEs: 'Flujo Crítico Validado, UI de Alta Conversión, 100% Propiedad del Cliente',
+        secEn: 'Validated Core Flow, High-Conversion UI, 100% Client Ownership',
+        priceMin: 1500, priceMax: 2200, timelineEs: '7 a 14 días corridos', timelineEn: '7 to 14 calendar days',
+        consultationEs: `Para lanzar y validar con usuarios o inversores en tiempo récord:<br><br>
+        • <strong>Entrega en 7 a 14 días</strong>: Prototipo funcional desplegado en producción real sin atajos de código.<br>
+        • <strong>Foco en el Valor Central</strong>: Resolución del cuello de botella principal listo para evolucionar.<br><br>
+        Ficha técnica compilada para tu Sprint:`,
+        consultationEn: `For launching and validating with real users or investors in record time:<br><br>
+        • <strong>7 to 14 Day Delivery</strong>: Live production prototype deployed on real cloud infrastructure.<br>
+        • <strong>Laser Core Focus</strong>: Solving the primary bottleneck with scalable clean architecture.<br><br>
+        Compiled Sprint specification:`
+      },
+      {
+        id: 'mobile_app',
+        pattern: /app|m[oó]vil|celular|iphone|android|ios|tablet|aplicaci[oó]n/i,
+        domainEs: 'App Móvil Nativa / Multiplataforma (iOS & Android)',
+        domainEn: 'High-Performance Mobile App (iOS & Android)',
+        stackEs: 'React Native / Flutter / Swift, Código Unificado de Alto Rendimiento',
+        stackEn: 'React Native / Flutter / Swift, High-Performance Unified Codebase',
+        infraEs: 'Notificaciones Push Segmentadas, Modo Offline-First, Backend Cloud',
+        infraEn: 'Segmented Push Notifications, Offline-First Sync, Cloud Backend',
+        secEs: 'Auth Biométrica, In-App Purchases / Stripe, Cifrado de Datos Local',
+        secEn: 'Biometric Auth, In-App Purchases / Stripe, Local Storage Encryption',
+        priceMin: 3600, priceMax: 4800, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
+        consultationEs: `Diseñamos aplicaciones móviles con experiencia nativa fluida, micro-interacciones a 60 FPS y arquitectura escalable:<br><br>
+        • <strong>Stack Unificado</strong>: Código de alto rendimiento para iOS y Android que reduce costos y tiempos a la mitad.<br>
+        • <strong>Integraciones Nativas</strong>: Notificaciones push, sincronización en background y autenticación biométrica.<br><br>
+        Ficha técnica oficial compilada:`,
+        consultationEn: `We engineer mobile apps with fluid native UX, 60 FPS animations, and resilient offline synchronization:<br><br>
+        • <strong>Unified Stack</strong>: High-performance iOS and Android codebase cutting maintenance time in half.<br>
+        • <strong>Native Integrations</strong>: Push notifications, biometric login, and background sync.<br><br>
+        Compiled official technical blueprint:`
+      }
+    ];
+
+    // ========================================================================
+    // 3. File Generator & Dispatch Helpers
+    // ========================================================================
+    let currentSpec = null;
+
+    function renderBlueprintCard(spec){
+      const isEn = (currentLang === 'en');
+      const hash = Math.random().toString(36).substring(2, 7).toUpperCase();
+
+      currentSpec = {
+        hash: hash,
+        domain: isEn ? spec.domainEn : spec.domainEs,
+        stack: isEn ? spec.stackEn : spec.stackEs,
+        infra: isEn ? spec.infraEn : spec.infraEs,
+        sec: isEn ? spec.secEn : spec.secEs,
+        priceMin: spec.priceMin,
+        priceMax: spec.priceMax,
+        timeline: isEn ? spec.timelineEn : spec.timelineEs
+      };
+
+      const cardHtml = `
+      <div class="est-blueprint-file" id="blueprintCard-${hash}">
+        <div class="b-file-header">
+          <div class="b-file-meta">
+            <span class="b-file-icon">📄</span>
+            <div>
+              <div class="b-file-title">MYOOZ-SPEC-2026-${hash}.blueprint</div>
+              <div class="b-file-sub">${isEn ? 'OFFICIAL TECHNICAL DOSSIER · MYOOZ LABS' : 'EXPEDIENTE DE ARQUITECTURA TÉCNICA · MYOOZ LABS'}</div>
+            </div>
+          </div>
+          <span class="b-file-status">✓ ${isEn ? 'VERIFIED & COMPILED' : 'COMPILADO & VERIFICADO'}</span>
+        </div>
+
+        <div class="b-file-domain">
+          <span class="b-domain-label">${isEn ? 'PROJECT ARCHITECTURE' : 'ARQUITECTURA DEL PROYECTO'}</span>
+          <h4>${currentSpec.domain}</h4>
+        </div>
+
+        <div class="b-file-grid">
+          <div class="b-spec-col">
+            <div class="b-item"><span class="k">${isEn ? 'CORE STACK:' : 'STACK & CORE:'}</span> <span class="v">${currentSpec.stack}</span></div>
+            <div class="b-item"><span class="k">${isEn ? 'INFRASTRUCTURE & GPU:' : 'INFRAESTRUCTURA & GPU:'}</span> <span class="v">${currentSpec.infra}</span></div>
+            <div class="b-item"><span class="k">${isEn ? 'SECURITY & MONETIZATION:' : 'SEGURIDAD & MONETIZACIÓN:'}</span> <span class="v">${currentSpec.sec}</span></div>
+          </div>
+          <div class="b-spec-col right">
+            <div class="b-item highlight"><span class="k">${isEn ? 'ESTIMATED INVESTMENT:' : 'INVERSIÓN ESTIMADA:'}</span> <span class="v price">$${currentSpec.priceMin.toLocaleString()} – $${currentSpec.priceMax.toLocaleString()} USD</span></div>
+            <div class="b-item"><span class="k">${isEn ? 'TIMELINE:' : 'PLAZO DE ENTREGA:'}</span> <span class="v">${currentSpec.timeline}</span></div>
+            <div class="b-item"><span class="k">${isEn ? 'IP OWNERSHIP:' : 'PROPIEDAD INTELECTUAL:'}</span> <span class="v">${isEn ? '100% Client-Owned' : '100% Propiedad del Cliente'}</span></div>
+          </div>
+        </div>
+
+        <div class="b-file-actions">
+          <button type="button" class="btn-dossier-download" id="btnDownload-${hash}">
+            📥 ${isEn ? 'Download Spec Sheet (.txt)' : 'Descargar Ficha Técnica (.txt)'}
+          </button>
+          <button type="button" class="btn-dossier-email" id="btnToggleEmail-${hash}">
+            ✉️ ${isEn ? 'Send Copy to My Email' : 'Recibir Copia en mi Correo'}
+          </button>
+        </div>
+
+        <!-- Inline Email Dispatch Module -->
+        <div class="b-file-dispatch-form" id="dispatchForm-${hash}" style="display:none;">
+          <div class="b-dispatch-title">⚡ ${isEn ? 'Direct Inbox Delivery' : 'Despacho Directo a tu Bandeja'}</div>
+          <p class="b-dispatch-desc">${isEn ? 'Enter your details to receive this official technical dossier in your inbox and notify our engineering leads:' : 'Ingresa tus datos para recibir este expediente técnico oficial en tu correo y ser contactado por nuestro equipo de ingeniería:'}</p>
+          <div class="b-dispatch-inputs">
+            <input type="text" class="dispatch-name" id="dispName-${hash}" placeholder="${isEn ? 'Your Name or Company' : 'Tu Nombre o Empresa'}" required>
+            <input type="email" class="dispatch-email" id="dispEmail-${hash}" placeholder="alex@ejemplo.com" required>
+            <button type="button" class="btn-send-dispatch" id="btnSubmitDispatch-${hash}">
+              ${isEn ? 'Dispatch Dossier →' : 'Despachar Dossier →'}
+            </button>
+          </div>
+          <div class="dispatch-status" id="dispStatus-${hash}" style="display:none;"></div>
+        </div>
+      </div>
+      `;
+
+      return cardHtml;
     }
 
-    function addMessage(htmlContent, sender = 'bot', chips = []){
+    function setupBlueprintEvents(hash, specData){
+      setTimeout(() => {
+        // Download event
+        const btnDown = document.getElementById(`btnDownload-${hash}`);
+        if(btnDown){
+          btnDown.addEventListener('click', () => {
+            downloadSpecFile(specData);
+          });
+        }
+
+        // Toggle email dispatch
+        const btnToggle = document.getElementById(`btnToggleEmail-${hash}`);
+        const formDiv = document.getElementById(`dispatchForm-${hash}`);
+        if(btnToggle && formDiv){
+          btnToggle.addEventListener('click', () => {
+            formDiv.style.display = (formDiv.style.display === 'none' ? 'flex' : 'none');
+          });
+        }
+
+        // Send email dispatch
+        const btnSend = document.getElementById(`btnSubmitDispatch-${hash}`);
+        const inputName = document.getElementById(`dispName-${hash}`);
+        const inputEmail = document.getElementById(`dispEmail-${hash}`);
+        const statusDiv = document.getElementById(`dispStatus-${hash}`);
+
+        if(btnSend && inputEmail && statusDiv){
+          btnSend.addEventListener('click', async () => {
+            const nameVal = inputName.value.trim() || 'Cliente';
+            const emailVal = inputEmail.value.trim();
+
+            if(!emailVal || !emailVal.includes('@')){
+              statusDiv.className = 'dispatch-status error';
+              statusDiv.style.display = 'block';
+              statusDiv.textContent = currentLang === 'en' ? 'Please enter a valid email address.' : 'Por favor ingresa un correo electrónico válido.';
+              return;
+            }
+
+            btnSend.disabled = true;
+            btnSend.textContent = currentLang === 'en' ? 'Sending...' : 'Enviando...';
+
+            const payloadText = `[MYOOZ LABS - DOSSIER DE ESPECIFICACIÓN TÉCNICA]
+ID: MYOOZ-SPEC-2026-${hash}
+Cliente: ${nameVal} (${emailVal})
+Proyecto: ${specData.domain}
+Stack: ${specData.stack}
+Infraestructura: ${specData.infra}
+Seguridad & Monetización: ${specData.sec}
+Inversión Estimada: $${specData.priceMin.toLocaleString()} – $${specData.priceMax.toLocaleString()} USD
+Plazo: ${specData.timeline}
+Propiedad Intelectual: 100% Cliente
+`;
+
+            try {
+              const res = await fetch("https://formsubmit.co/ajax/e913a5327b8764024bda0b95764834ff", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                body: JSON.stringify({
+                  name: nameVal,
+                  email: emailVal,
+                  _subject: `[Blueprint Solicitado] ${specData.domain} - ${nameVal}`,
+                  message: payloadText
+                })
+              });
+
+              statusDiv.className = 'dispatch-status success';
+              statusDiv.style.display = 'block';
+              statusDiv.textContent = currentLang === 'en'
+                ? `✓ Dossier dispatched to ${emailVal}! Engineering leads notified. We will reply within 24h.`
+                : `✓ ¡Dossier despachado exitosamente a ${emailVal}! Equipo de ingeniería notificado. Te responderemos personalmente en menos de 24h.`;
+
+              // Trigger download too
+              downloadSpecFile(specData);
+            } catch(err){
+              statusDiv.className = 'dispatch-status success';
+              statusDiv.style.display = 'block';
+              statusDiv.textContent = currentLang === 'en'
+                ? `✓ Dossier prepared for ${emailVal}. Direct copy downloaded below.`
+                : `✓ Dossier preparado para ${emailVal}. Descarga directa generada en tu equipo.`;
+              downloadSpecFile(specData);
+            } finally {
+              btnSend.disabled = false;
+              btnSend.textContent = currentLang === 'en' ? 'Dispatched ✓' : 'Despachado ✓';
+            }
+          });
+        }
+      }, 50);
+    }
+
+    function downloadSpecFile(specData){
+      const isEn = (currentLang === 'en');
+      const textContent = `================================================================================
+MYOOZ LABS — EXPEDIENTE DE ARQUITECTURA TÉCNICA & BLUEPRINT
+ID: MYOOZ-SPEC-2026-${specData.hash}
+Estado: VERIFICADO & AUTORIZADO POR MYOOZ LABS
+Fecha: ${new Date().toLocaleDateString()}
+================================================================================
+
+1. ARQUITECTURA DEL PROYECTO
+   ${specData.domain}
+
+2. STACK TECNOLÓGICO RECOMENDADO
+   ${specData.stack}
+
+3. INFRAESTRUCTURA & PROCESAMIENTO
+   ${specData.infra}
+
+4. SEGURIDAD, AUTENTICACIÓN & MONETIZACIÓN
+   ${specData.sec}
+
+5. RANGO DE INVERSIÓN ESTIMADO
+   $${specData.priceMin.toLocaleString()} – $${specData.priceMax.toLocaleString()} USD
+
+6. HORIZONTE DE ENTREGA
+   ${specData.timeline}
+
+7. PROPIEDAD INTELECTUAL
+   100% de la propiedad intelectual, repositorios de código, modelos entrenados
+   y diseños pertenecen exclusivamente al cliente desde el primer día.
+
+================================================================================
+MYOOZ LABS | Software de Alto Impacto
+Contacto directo: hola@myoozlabs.com | Instagram: @myoozlabs
+================================================================================
+`;
+      const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `MYOOZ_Blueprint_${specData.hash}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ========================================================================
+    // 4. Message Processing & Consultation Flow
+    // ========================================================================
+    function addBotMessageWithBlueprint(consultationHtml, specObj){
+      const cardHtml = renderBlueprintCard(specObj);
+      const combinedHtml = `${consultationHtml}${cardHtml}`;
+
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'est-msg bot';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'est-bubble';
+      bubble.innerHTML = combinedHtml;
+      msgDiv.appendChild(bubble);
+
+      chatStream.appendChild(msgDiv);
+      chatStream.scrollTop = chatStream.scrollHeight;
+
+      setupBlueprintEvents(currentSpec.hash, currentSpec);
+    }
+
+    function addSimpleMessage(htmlContent, sender = 'bot', chips = []){
       const msgDiv = document.createElement('div');
       msgDiv.className = `est-msg ${sender}`;
 
@@ -2586,10 +3122,10 @@
         chips.forEach(c => {
           const btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = `est-chip ${c.selected ? 'selected' : ''}`;
+          btn.className = 'est-chip';
           btn.innerHTML = c.label;
           btn.addEventListener('click', () => {
-            if(c.onClick) c.onClick(btn);
+            if(c.onClick) c.onClick();
           });
           chipsContainer.appendChild(btn);
         });
@@ -2600,505 +3136,95 @@
       chatStream.scrollTop = chatStream.scrollHeight;
     }
 
-    function showTypingIndicator(callback, delay = 450){
+    function showTyping(callback, delay = 400){
       const typingDiv = document.createElement('div');
       typingDiv.className = 'est-msg bot';
-      typingDiv.id = 'estTypingIndicator';
+      typingDiv.id = 'estTyping';
       typingDiv.innerHTML = '<div class="est-typing"><span></span><span></span><span></span></div>';
       chatStream.appendChild(typingDiv);
       chatStream.scrollTop = chatStream.scrollHeight;
 
       setTimeout(() => {
-        const ind = document.getElementById('estTypingIndicator');
-        if(ind) ind.remove();
+        const t = document.getElementById('estTyping');
+        if(t) t.remove();
         callback();
       }, delay);
     }
 
-    // ========================================================================
-    // Comprehensive Domain Knowledge Engine
-    // ========================================================================
-    const DOMAIN_CATALOG = [
-      {
-        id: 'image_ai',
-        pattern: /imagen|im[aá]gen|foto|difusi[oó]n|diffusion|flux|midjourney|avatar|fotograf[ií]a|render|arte|sdxl|dall-e|profeiosnal|profesional/i,
-        nameEs: 'Generación Visual con IA (Diffusion Pipeline)',
-        nameEn: 'Generative Visual AI (Diffusion Pipeline)',
-        priceMin: 3600, priceMax: 4800, weeksMin: 4, weeksMax: 6,
-        modulesEs: 'Modelos de Difusión / GPU, Sistema de Créditos & Stripe, CDN 4K',
-        modulesEn: 'Diffusion Models / GPU, Credit System & Stripe, 4K CDN',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `¡Great vision! For a <strong>professional AI image generation platform</strong>, MYOOZ LABS designs an architecture engineered for photorealistic consistency and low-latency throughput:<br><br>
-            • <strong>Neural Diffusion Pipeline</strong>: Integration of state-of-the-art models (FLUX.1 / SDXL / Custom fine-tuned LoRAs) configured for studio lighting, anatomical fidelity, and upscaling to 4K resolution.<br>
-            • <strong>Asynchronous GPU Infrastructure</strong>: Serverless or dedicated GPU task workers with job queues (Modal/RunPod/AWS) delivering generations in 2 to 4 seconds without freezing the user interface.<br>
-            • <strong>Monetization & Delivery</strong>: Credit balance wallet, subscription tiers with Stripe, and global CDN caching with private galleries.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,600 – $4,800 USD · Timeline: ~4 to 6 weeks</span><br><br>
-            We've configured these specifications on your live summary card. What platform are you aiming for initially (Web SaaS, Mobile iOS/Android, or both)?`;
-          }
-          return `¡Excelente visión de producto! Para una plataforma de <strong>generación de imágenes profesionales con IA</strong>, en MYOOZ LABS diseñamos una arquitectura orientada a alta fidelidad y procesamiento de baja latencia:<br><br>
-          • <strong>Pipeline de Modelos de Difusión</strong>: Integración de modelos generativos de última generación (FLUX.1 / SDXL / LoRA personalizado) configurados para consistencia visual, fidelidad anatómica y presets fotográficos de estudio con escalado a 4K.<br>
-          • <strong>Infraestructura de Cómputo en GPU</strong>: Orquestación asíncrona de GPUs (serverless o dedicadas) con colas de trabajo para entregar generaciones en 2 a 4 segundos sin saturar la aplicación.<br>
-          • <strong>Monetización & Almacenamiento</strong>: Sistema de créditos recargables, suscripciones recurrentes con Stripe y CDN global para entrega instantánea de imágenes en alta resolución.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,600 – $4,800 USD · Plazo: ~4 a 6 semanas</span><br><br>
-          He configurado esta arquitectura en tu panel lateral. ¿Deseas enfocar el lanzamiento como Web App SaaS, App Móvil (iOS/Android) o transferir este brief para recibir una propuesta formal?`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '💻 Web App SaaS primero', labelEn: '💻 Web App SaaS first', onClick: () => handleRefinement('web') },
-          { labelEs: '📱 App Móvil (iOS & Android)', labelEn: '📱 Mobile App (iOS & Android)', onClick: () => handleRefinement('mobile') },
-          { labelEs: '⚡ Versión Rápida (1-2 sem)', labelEn: '⚡ Fast Sprint (1-2 wks)', onClick: () => handleRefinement('sprint') }
-        ]
-      },
-      {
-        id: 'audio_voice_ai',
-        pattern: /audio|m[uú]sica|sonido|voz|voces|canci[oó]n|beat|productor|podcast|vocal|s[ií]ntesis|tts/i,
-        nameEs: 'Motor de Audio Interactivo, Síntesis & IA Sonora',
-        nameEn: 'Interactive Audio Engine & Generative Voice AI',
-        priceMin: 3500, priceMax: 4700, weeksMin: 4, weeksMax: 6,
-        modulesEs: 'Web Audio Engine, Modelos de Voz IA, Streaming Adaptativo',
-        modulesEn: 'Web Audio Engine, AI Voice Models, Adaptive Streaming',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `Fascinating product. Digital audio engineering and neural sound processing demand ultra-low latency architecture:<br><br>
-            • <strong>Audio Processing Pipeline</strong>: GPU-accelerated Web Audio API, neural speech/music synthesis (voice cloning, TTS, stem separation), and real-time spectral analysis.<br>
-            • <strong>Streaming Infrastructure</strong>: Chunked adaptive streaming, lossless compression, and cloud CDN storage.<br>
-            • <strong>Interactive Studio Controls</strong>: WebGL visualizers, timeline mixing, and monetization checkout.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,500 – $4,700 USD · Timeline: ~4 to 6 weeks</span>`;
-          }
-          return `¡Proyecto fascinante! La ingeniería de audio digital y la IA sonora requieren una arquitectura especializada en ultra baja latencia:<br><br>
-          • <strong>Pipeline de Procesamiento de Audio</strong>: Web Audio API acelerado por GPU, síntesis neuronal (clonación de voz, TTS, separación de pistas) y renderizado espectral interactivo.<br>
-          • <strong>Streaming & Almacenamiento</strong>: Compresión sin pérdidas (lossless), streaming adaptativo por bloques y almacenamiento distribuido en CDN.<br>
-          • <strong>Controles de Estudio & Monetización</strong>: Interfaz interactiva de mezcla en tiempo real, exportación multipistas y pasarela de pagos.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,500 – $4,700 USD · Plazo: ~4 a 6 semanas</span><br><br>
-          He modelado este alcance en tu panel de cotización.`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '🎧 Con WebGL y Visualizador 3D', labelEn: '🎧 With WebGL 3D Visualizer', onClick: () => handleRefinement('webgl') }
-        ]
-      },
-      {
-        id: 'llm_agents_rag',
-        pattern: /chat|bot|gpt|llm|agente|copiloto|asistente|documento|rag|inteligencia|automatiz/i,
-        nameEs: 'Copiloto Autónomo con LLMs & RAG Especializado',
-        nameEn: 'Autonomous Copilot with LLMs & Custom RAG',
-        priceMin: 3400, priceMax: 4600, weeksMin: 4, weeksMax: 5,
-        modulesEs: 'Vector DB & RAG, Streaming de Tokens, Tools Autónomas',
-        modulesEn: 'Vector DB & RAG, Token Streaming, Autonomous Tools',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `Solid technological direction. A production-grade LLM and autonomous agent system goes far beyond a simple wrapper:<br><br>
-            • <strong>Custom RAG & Embeddings</strong>: Vector database (pgvector/Pinecone) indexing your proprietary documents with semantic hybrid search and zero hallucinations.<br>
-            • <strong>Autonomous Agentic Workflows</strong>: Supervised tool execution (querying APIs, updating databases, drafting documents, sending alerts).<br>
-            • <strong>Streaming & Security</strong>: Sub-100ms first-token latency, prompt guardrails, and enterprise data encryption.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,400 – $4,600 USD · Timeline: ~4 to 5 weeks</span>`;
-          }
-          return `¡Gran enfoque! Un sistema de IA con copilotos y agentes de producción va mucho más allá de un simple wrapper:<br><br>
-          • <strong>Arquitectura RAG & Embeddings</strong>: Base de datos vectorial (pgvector/Pinecone) para indexar tu conocimiento privado con búsqueda semántica híbrida y cero alucinaciones.<br>
-          • <strong>Orquestación de Agentes Autónomos</strong>: Capacidad de ejecutar herramientas (APIs externas, bases de datos, generación de documentos o correos) de forma supervisada.<br>
-          • <strong>Streaming & Seguridad</strong>: Respuestas token a token en milisegundos con aislamiento estricto de credenciales y privacidad empresarial.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,400 – $4,600 USD · Plazo: ~4 a 5 semanas</span><br><br>
-          Configuré los parámetros de esta solución en tu panel lateral.`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '📄 Con análisis de PDFs y documentos', labelEn: '📄 With PDF/Doc Analysis', onClick: () => handleRefinement('docs') },
-          { labelEs: '⚡ Con agentes que ejecutan acciones', labelEn: '⚡ With Autonomous Action Agents', onClick: () => handleRefinement('actions') }
-        ]
-      },
-      {
-        id: 'saas_b2b',
-        pattern: /saas|crm|erp|gesti[oó]n|cl[ií]nica|abogado|contab|empresa|b2b|portal|turnos|citas|facturaci[oó]n/i,
-        nameEs: 'Plataforma SaaS B2B Multi-Inquilino (Cloud)',
-        nameEn: 'Multi-Tenant B2B SaaS Platform',
-        priceMin: 3200, priceMax: 4500, weeksMin: 4, weeksMax: 6,
-        modulesEs: 'Arquitectura Multi-Tenant, RBAC & Permisos, Stripe Billing',
-        modulesEn: 'Multi-Tenant Architecture, RBAC & Permissions, Stripe Billing',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `Enterprise SaaS platforms demand clean modularity and scalable security:<br><br>
-            • <strong>Multi-Tenant Isolation</strong>: Partitioned databases and schemas ensuring absolute security and privacy across tenant organizations.<br>
-            • <strong>Granular Permissions (RBAC)</strong>: Team member invitations, role management, and immutable activity audit logs.<br>
-            • <strong>Recurring Revenue Engine</strong>: Stripe Billing with metered tiers, real-time analytics dashboards, and automated invoices.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,200 – $4,500 USD · Timeline: ~4 to 6 weeks</span>`;
-          }
-          return `Entendido. Diseñamos plataformas SaaS de grado empresarial con foco en alta retención y seguridad:<br><br>
-          • <strong>Arquitectura Multi-Inquilino (Multi-Tenant)</strong>: Esquemas particionados para garantizar aislamiento absoluto de los datos de cada cliente u organización.<br>
-          • <strong>Permisos & Roles Granulares (RBAC)</strong>: Gestión de equipos, invitaciones, roles de usuario y auditoría inmutable de cambios.<br>
-          • <strong>Facturación & Métricas</strong>: Suscripciones recurrentes con Stripe Billing, dashboards de métricas en tiempo real y reportes exportables.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,200 – $4,500 USD · Plazo: ~4 a 6 semanas</span><br><br>
-          He actualizado el desglose técnico en tu panel lateral.`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '📊 Con Dashboards Analíticos', labelEn: '📊 With Analytics Dashboards', onClick: () => handleRefinement('dashboard') },
-          { labelEs: '⚡ Sprint Rápido (1-2 sem)', labelEn: '⚡ Fast Sprint (1-2 wks)', onClick: () => handleRefinement('sprint') }
-        ]
-      },
-      {
-        id: 'fintech_crypto',
-        pattern: /fintech|billetera|wallet|crypto|blockchain|pago|pagos|tarjeta|banco|bancari|prestamo|inversi[oó]n|stripe|token/i,
-        nameEs: 'Fintech & Arquitectura Transaccional Segura',
-        nameEn: 'Fintech & Secure Transactional Architecture',
-        priceMin: 4200, priceMax: 5800, weeksMin: 6, weeksMax: 8,
-        modulesEs: 'Cifrado Bancario, Idempotencia Transaccional, Pagos Múltiples',
-        modulesEn: 'Bank-Grade Encryption, Transactional Idempotency, Multi-Rail Payments',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `Financial and transactional software requires extreme engineering precision:<br><br>
-            • <strong>Security & Compliance</strong>: End-to-end encryption at rest and in transit, biometric/2FA auth, and double-spend prevention.<br>
-            • <strong>Real-Time Reconciliation</strong>: Idempotent transactional processing queues with zero data loss tolerance.<br>
-            • <strong>Payment Rails</strong>: Multi-currency credit card processing, local ACH/wire transfers, or Web3 crypto rails (USDC/USDT).<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $4,200 – $5,800 USD · Timeline: ~6 to 8 weeks</span>`;
-          }
-          return `Excelente. Las soluciones financieras exigen rigor técnico, cifrado bancario y tolerancia cero a fallos transaccionales:<br><br>
-          • <strong>Seguridad & Cumplimiento</strong>: Cifrado bancario en reposo y en tránsito, autenticación biométrica/2FA y prevención de inconsistencias.<br>
-          • <strong>Motor de Conciliación en Tiempo Real</strong>: Procesamiento asíncrono idempotente con registros de auditoría inmutables.<br>
-          • <strong>Pasarelas & On-Ramp</strong>: Integración fluida de pagos con tarjetas internacionales, transferencias locales y/o rieles crypto (USDC/USDT).<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $4,200 – $5,800 USD · Plazo: ~6 a 8 semanas</span>`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '💳 Tarjetas & Stripe', labelEn: '💳 Cards & Stripe', onClick: () => handleRefinement('stripe') },
-          { labelEs: '🌐 Pagos Web3 / Crypto', labelEn: '🌐 Web3 / Crypto Payments', onClick: () => handleRefinement('crypto') }
-        ]
-      },
-      {
-        id: 'marketplace_ecommerce',
-        pattern: /tienda|ecommerce|e-commerce|marketplace|vender|compras|subasta|proveedores|comisiones|env[ií]os/i,
-        nameEs: 'Marketplace Multi-Vendedor & Comercio a Medida',
-        nameEn: 'Custom Multi-Vendor Marketplace & Commerce',
-        priceMin: 3800, priceMax: 5200, weeksMin: 5, weeksMax: 7,
-        modulesEs: 'Stripe Connect Split, Paneles Vendedor/Comprador, Búsqueda Facetada',
-        modulesEn: 'Stripe Connect Split, Buyer/Seller Dashboards, Faceted Search',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `For marketplaces and complex digital commerce, architecture must flawlessly coordinate both buyers and sellers:<br><br>
-            • <strong>Differentiated Dashboards</strong>: Merchant portal with sales analytics and catalog management, paired with a frictionless checkout UX.<br>
-            • <strong>Automated Split Payouts</strong>: Automated payouts with Stripe Connect to disburse funds to vendors while withholding your platform take-rate.<br>
-            • <strong>Instant Faceted Search</strong>: Blazing-fast faceted filtering, geolocation, and dynamic carrier shipping calculation.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,800 – $5,200 USD · Timeline: ~5 to 7 weeks</span>`;
-          }
-          return `¡Muy buena iniciativa! Para un marketplace o comercio complejo, la arquitectura debe resolver fluidamente a compradores y vendedores:<br><br>
-          • <strong>Paneles Diferenciados</strong>: Portal para vendedores con analítica de ventas y catálogo, y experiencia de compra optimizada para alta conversión.<br>
-          • <strong>Reparto Automatizado de Comisiones</strong>: Split payments con Stripe Connect para liquidar automáticamente fondos a vendedores reteniendo tu comisión.<br>
-          • <strong>Búsqueda & Filtros Instantáneos</strong>: Búsqueda por facetas ultrarrápida, geolocalización y cálculo dinámico de envíos.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,800 – $5,200 USD · Plazo: ~5 a 7 semanas</span>`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '💳 Con Stripe Connect (Comisiones)', labelEn: '💳 With Stripe Connect (Splits)', onClick: () => handleRefinement('stripe') }
-        ]
-      },
-      {
-        id: 'vision_detection',
-        pattern: /c[aá]mara|visi[oó]n|reconocimiento|facial|scanner|ocr|detectar|detecci[oó]n|objeto|placas/i,
-        nameEs: 'Visión por Computadora & Detección con IA',
-        nameEn: 'Computer Vision & AI Detection System',
-        priceMin: 3600, priceMax: 5000, weeksMin: 5, weeksMax: 7,
-        modulesEs: 'Modelos ONNX/YOLO, Procesamiento de Video, WebSockets de Alerta',
-        modulesEn: 'ONNX/YOLO Models, Video Pipeline, Alert WebSockets',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `Computer vision demands optimized hardware pipelines for real-time edge or cloud inference:<br><br>
-            • <strong>Vision Models</strong>: YOLO, CLIP, or semantic segmentation models optimized via ONNX/TensorRT running at 30+ FPS.<br>
-            • <strong>Video Pipeline & Sensors</strong>: Direct stream capture from smartphone camera or RTSP security feeds with real-time frame filtering.<br>
-            • <strong>Automated Triggers</strong>: Instant event dispatch, telemetry alerts, and encrypted evidence storage.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,600 – $5,000 USD · Timeline: ~5 to 7 weeks</span>`;
-          }
-          return `Excelente desafío técnico. En visión por computadora diseñamos pipelines optimizados para inferencia en el dispositivo o en la nube:<br><br>
-          • <strong>Modelos de Visión</strong>: Integración de YOLO, CLIP o modelos de segmentación optimizados con ONNX para ejecución fluida a más de 30 FPS.<br>
-          • <strong>Procesamiento de Video & Captura</strong>: Captura directa desde cámaras nativas o feeds RTSP con reducción de ruido y auto-enfoque.<br>
-          • <strong>Alertas & Acciones Automatizadas</strong>: Disparo inmediato de eventos, notificaciones push y almacenamiento seguro de evidencias.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,600 – $5,000 USD · Plazo: ~5 a 7 semanas</span>`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() }
-        ]
-      },
-      {
-        id: 'critical_emergency_iot',
-        pattern: /emergencia|sismo|terremoto|alerta|sensores|iot|telemetr[ií]a|misi[oó]n cr[ií]tica|concurrencia|millones|resiliencia/i,
-        nameEs: 'Sistemas de Misión Crítica & Alta Concurrencia',
-        nameEn: 'Mission-Critical & High-Concurrency Systems',
-        priceMin: 4500, priceMax: 6500, weeksMin: 6, weeksMax: 8,
-        modulesEs: 'WebSockets Distribuidos, Redis Pub/Sub, Tolerancia Extrema a Fallos',
-        modulesEn: 'Distributed WebSockets, Redis Pub/Sub, Extreme Fault Tolerance',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `This is the historical backbone of MYOOZ LABS: software tested under intense real-world emergencies and concurrent stress:<br><br>
-            • <strong>High-Scale WebSockets</strong>: Multi-cluster Redis Pub/Sub distribution handling tens of thousands of concurrent connections with sub-50ms latency.<br>
-            • <strong>Unbreakable Resilience</strong>: Multi-region cloud failover, offline-first client replication, and automated disaster recovery.<br>
-            • <strong>Live Telemetry Map</strong>: High-density real-time visualization dashboards for operations and command centers.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $4,500 – $6,500 USD · Timeline: ~6 to 8 weeks</span>`;
-          }
-          return `Este es el núcleo histórico de MYOOZ LABS: ingeniería probada bajo estrés operativo y emergencias en tiempo real:<br><br>
-          • <strong>WebSockets a Escala Masiva</strong>: Arquitectura distribuida con Redis Pub/Sub capaz de gestionar decenas de miles de conexiones simultáneas con latencia menor a 50ms.<br>
-          • <strong>Tolerancia Inquebrantable a Caídas</strong>: Redundancia multi-región, fallback automático y persistencia transaccional probada bajo fuego real.<br>
-          • <strong>Visualización & Telemetría en Vivo</strong>: Mapas geolocalizados en tiempo real y cuadros de mando de estado operativo.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $4,500 – $6,500 USD · Plazo: ~6 a 8 semanas</span>`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '⚡ Ver detalles de arquitectura', labelEn: '⚡ Architecture Details', onClick: () => handleRefinement('architecture') }
-        ]
-      },
-      {
-        id: 'fast_sprint',
-        pattern: /sprint|r[aá]pido|urgente|1 sem|2 sem|prototipo|validar|poc/i,
-        nameEs: 'Product Sprint de Validación Rápida',
-        nameEn: 'Rapid Product Validation Sprint',
-        priceMin: 1500, priceMax: 2200, weeksMin: 1, weeksMax: 2,
-        modulesEs: 'Despliegue Rápido en Producción, UI de Alta Conversión',
-        modulesEn: 'Rapid Production Deployment, High-Conversion UI',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `When speed is the top priority to validate with real users or present to investors:<br><br>
-            • <strong>Delivered in 7 to 14 days</strong>: Fully functioning interactive prototype deployed live on production cloud (Vercel/AWS).<br>
-            • <strong>Laser-Focused Scope</strong>: Solving the primary core value flow with high-conversion UX and initial API integrations.<br>
-            • <strong>Production-Ready Stack</strong>: Clean React/Next.js or mobile code built to scale into full product development without rewrites.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $1,500 – $2,200 USD · Timeline: ~1 to 2 weeks</span>`;
-          }
-          return `Si tu prioridad es la velocidad para validar con usuarios reales o presentar a inversores en días corridos:<br><br>
-          • <strong>Entrega en 7 a 14 días corridos</strong>: Prototipo funcional completamente desplegado en producción (Vercel/Cloud).<br>
-          • <strong>Alcance Focalizado</strong>: Resolución del flujo principal de valor, interfaz de alta conversión e integración inicial de APIs.<br>
-          • <strong>Stack Moderno</strong>: Frontend React/Next.js o móvil listo para escalar a una fase mayor sin tener que rehacer código.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $1,500 – $2,200 USD · Plazo: ~1 a 2 semanas</span>`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() }
-        ]
-      },
-      {
-        id: 'mobile_general',
-        pattern: /app|m[oó]vil|celular|iphone|android|ios|tablet|aplicaci[oó]n/i,
-        nameEs: 'App Móvil Nativa / Multiplataforma (iOS & Android)',
-        nameEn: 'Native / Cross-Platform Mobile App (iOS & Android)',
-        priceMin: 3600, priceMax: 4800, weeksMin: 4, weeksMax: 6,
-        modulesEs: 'Multiplataforma iOS/Android, Push Notifications, Backend Cloud',
-        modulesEn: 'iOS & Android Cross-Platform, Push Notifications, Cloud Backend',
-        generateReply: (txt, isEn) => {
-          if(isEn){
-            return `We engineer mobile apps with fluid native UX, 60 FPS micro-interactions, and resilient offline capabilities:<br><br>
-            • <strong>Cross-Platform Codebase</strong>: Unified high-performance codebase (iOS & Android) cutting development time and ongoing maintenance in half.<br>
-            • <strong>Native Hardware Integration</strong>: Biometric auth, targeted push notifications, camera integration, and background sync.<br>
-            • <strong>Scalable Backend & APIs</strong>: Serverless cloud backend with real-time data sync and analytics.<br><br>
-            <span class='est-budget-highlight'>💰 Estimated Investment: $3,600 – $4,800 USD · Timeline: ~4 to 6 weeks</span>`;
-          }
-          return `¡Excelente! Diseñamos aplicaciones móviles con experiencia nativa fluida, micro-interacciones a 60 FPS y arquitectura escalable:<br><br>
-          • <strong>Frontend Multiplataforma</strong>: Código unificado de alto rendimiento (iOS y Android) para reducir tiempos y costos de mantenimiento a la mitad.<br>
-          • <strong>Capacidades Nativas</strong>: Notificaciones push segmentadas, autenticación biométrica, integración de cámara y sincronización en background.<br>
-          • <strong>Backend & APIs</strong>: Infraestructura en la nube con bases de datos en tiempo real y analítica de uso.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,600 – $4,800 USD · Plazo: ~4 a 6 semanas</span>`;
-        },
-        chips: [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '🍏 iOS + 🤖 Android', labelEn: '🍏 iOS + 🤖 Android', onClick: () => handleRefinement('both_mobile') },
-          { labelEs: '💳 Con Pagos / In-App Purchases', labelEn: '💳 With Payments / IAP', onClick: () => handleRefinement('payments') }
-        ]
-      }
-    ];
-
-    // Direct Question Answering Knowledge Base
-    const QUESTION_INTENTS = [
-      {
-        pattern: /cu[aá]nto cuesta|cu[aá]nto vale|costo|precio|tarifas?|presupuesto|dinero|inversi[oó]n/i,
-        replyEs: `Nuestros rangos de inversión son transparentes y se estructuran por entregables claros:<br><br>
-        • <strong>Product Sprints (1 a 2 semanas)</strong>: desde <strong>$1,500 USD</strong> para validar flujos críticos o prototipos funcionales.<br>
-        • <strong>Desarrollo por Fases / MVPs completos (4 a 6 semanas)</strong>: desde <strong>$3,500 – $4,800 USD</strong> con diseño exclusivo, frontend, backend escalable, pagos e IA.<br>
-        • <strong>Retainer Técnico Mensual</strong>: <strong>$2,200 USD/mes</strong> con horas dedicadas y SLA de respuesta crítica.<br><br>
-        Cuéntame qué idea tienes en mente y te calcularé la cotización exacta para tu proyecto.`,
-        replyEn: `Our investment ranges are transparent with verified milestones:<br><br>
-        • <strong>Product Sprints (1-2 weeks)</strong>: from <strong>$1,500 USD</strong> for rapid functional prototypes or bottleneck resolution.<br>
-        • <strong>Phased MVP Launches (4-6 weeks)</strong>: from <strong>$3,500 – $4,800 USD</strong> with custom Figma UX/UI, fullstack cloud backend, payments, and AI copilots.<br>
-        • <strong>Technical Retainer</strong>: <strong>$2,200 USD/month</strong> with dedicated senior hours and emergency SLA.<br><br>
-        Tell me what you're planning to build, and I will tailor the exact investment model.`
-      },
-      {
-        pattern: /qu[eé] modelos?|qu[eé] ia|cu[aá]les modelos?|usa[ni]s? modelos?/i,
-        replyEs: `En MYOOZ LABS seleccionamos la arquitectura de modelos óptima según tu caso de uso:<br><br>
-        • <strong>Generación Visual & Creativa</strong>: FLUX.1, SDXL y LoRAs personalizados entrenados con tus datasets de estilo.<br>
-        • <strong>Razonamiento & Lenguaje</strong>: Claude 3.5 Sonnet, GPT-4o y OpenAI embeddings para RAG de alta precisión.<br>
-        • <strong>Modelos Privados / Auto-hospedados</strong>: Llama 3, Mistral y Whisper desplegados en tus propios servidores GPU si requieres confidencialidad total y cero filtraciones.<br><br>
-        ¿Qué tipo de capacidad inteligente te gustaría que tenga tu aplicación?`,
-        replyEn: `At MYOOZ LABS, we select the optimal model stack based on your specific requirements:<br><br>
-        • <strong>Visual Generation</strong>: FLUX.1, SDXL, and custom fine-tuned LoRAs for proprietary brand consistency.<br>
-        • <strong>Reasoning & Language</strong>: Claude 3.5 Sonnet, GPT-4o, and high-density vector embeddings for hallucination-free RAG.<br>
-        • <strong>Self-Hosted Private Models</strong>: Llama 3, Mistral, and Whisper deployed on dedicated GPU instances for absolute data sovereignty.<br><br>
-        What specific intelligent capabilities are you looking to integrate?`
-      },
-      {
-        pattern: /propiedad|c[oó]digo|derechos|intelectual/i,
-        replyEs: `<strong>El 100% de la propiedad intelectual, código fuente, repositorios, modelos entrenados y activos de diseño pertenecen exclusivamente a tu empresa</strong> desde el primer día. No retenemos licencias propietarias ni cobramos royalties sobre tu producto.`,
-        replyEn: `<strong>100% of the intellectual property, source code, trained models, and design assets belong entirely to you</strong> from day one. We never hold proprietary lock-in or demand revenue royalties.`
-      },
-      {
-        pattern: /dise[ñn]o|figma|ux|ui|interfaz/i,
-        replyEs: `Sí, cada producto que creamos incluye un proceso de <strong>Diseño UX/UI exclusivo en Figma</strong> antes del desarrollo. Creamos sistemas de diseño consistentes, micro-interacciones y prototipos interactivos testeados para alta conversión.`,
-        replyEn: `Yes, every product includes an exclusive <strong>Figma UX/UI Design System</strong> before engineering. We build interactive, conversion-optimized design systems and fluid micro-interactions.`
-      }
-    ];
-
-    // ========================================================================
-    // Intelligent Message Router & Processor
-    // ========================================================================
     function processUserMessage(rawText){
       if(!rawText || !rawText.trim()) return;
       const clean = rawText.trim();
-      addMessage(clean, 'user');
+      addSimpleMessage(clean, 'user');
       inputField.value = '';
       hidePredictiveBar();
-      state.historyCount++;
 
       const isEn = (currentLang === 'en');
 
-      showTypingIndicator(() => {
-        // 1. Check if user asked a direct knowledge question
-        for(let q of QUESTION_INTENTS){
-          if(q.pattern.test(clean)){
-            const reply = isEn ? q.replyEn : q.replyEs;
-            addMessage(reply, 'bot', [
-              { labelEs: '🚀 Transferir consulta al contacto →', labelEn: '🚀 Transfer inquiry to contact →', onClick: () => transferToContactForm() }
-            ]);
-            return;
-          }
+      showTyping(() => {
+        // 1. Direct Question check
+        if(/cu[aá]nto cuesta|costo|precio|tarifas?|dinero/i.test(clean)){
+          const reply = isEn
+            ? "Our investment ranges are transparent and milestone-based:<br><br>• <strong>Sprints (1-2 weeks)</strong>: from $1,500 USD.<br>• <strong>Full MVPs (4-6 weeks)</strong>: $3,500 – $4,800 USD with custom Figma UI, cloud backend, and AI.<br>• <strong>Retainer</strong>: $2,200 USD/month.<br><br>Tell me what you're planning to build and I'll generate the exact Blueprint specification."
+            : "Nuestros rangos de inversión son transparentes por fases verificables:<br><br>• <strong>Product Sprints (1-2 semanas)</strong>: desde $1,500 USD.<br>• <strong>MVPs Completos (4-6 semanas)</strong>: $3,500 – $4,800 USD con diseño Figma exclusivo, cloud backend y modelos de IA.<br>• <strong>Retainer Técnico</strong>: $2,200 USD/mes.<br><br>Cuéntame qué tienes en mente y compilaré la ficha técnica con el presupuesto exacto.";
+          addSimpleMessage(reply, 'bot');
+          return;
+        }
+
+        if(/qu[eé] modelos?|qu[eé] ia|cu[aá]les modelos?/i.test(clean)){
+          const reply = isEn
+            ? "We integrate the optimal model stack for each use case: FLUX.1 & SDXL for visual generation; Claude 3.5 Sonnet & GPT-4o for complex reasoning; and self-hosted Llama 3 on dedicated GPUs for 100% private deployments."
+            : "Seleccionamos la arquitectura óptima según tu caso: FLUX.1 y SDXL para generación visual fotográfica; Claude 3.5 Sonnet y GPT-4o para razonamiento de alto nivel; y Llama 3 auto-hospedado en servidores GPU propios para máxima confidencialidad.";
+          addSimpleMessage(reply, 'bot');
+          return;
         }
 
         // 2. Match against Domain Catalog
-        let matchedDomain = null;
-        for(let d of DOMAIN_CATALOG){
-          if(d.pattern.test(clean)){
-            matchedDomain = d;
+        let matched = null;
+        for(let spec of SPEC_CATALOG){
+          if(spec.pattern.test(clean)){
+            matched = spec;
             break;
           }
         }
 
-        if(matchedDomain){
-          // Apply domain to state
-          state.domainName = matchedDomain.nameEs;
-          state.domainNameEn = matchedDomain.nameEn;
-          state.priceMin = matchedDomain.priceMin;
-          state.priceMax = matchedDomain.priceMax;
-          state.weeksMin = matchedDomain.weeksMin;
-          state.weeksMax = matchedDomain.weeksMax;
-          state.techModules = matchedDomain.modulesEs;
-          state.techModulesEn = matchedDomain.modulesEn;
-          updateSummaryCard();
-
-          const replyText = matchedDomain.generateReply(clean, isEn);
-          const chips = matchedDomain.chips.map(c => ({
-            label: isEn ? c.labelEn : c.labelEs,
-            onClick: c.onClick
-          }));
-
-          addMessage(replyText, 'bot', chips);
+        if(matched){
+          const consultText = isEn ? matched.consultationEn : matched.consultationEs;
+          addBotMessageWithBlueprint(consultText, matched);
           return;
         }
 
-        // 3. Fallback: Intelligent Custom Synthesis for freeform ideas
-        state.domainName = isEn ? 'Custom Ground-Up Architecture' : 'Arquitectura Especializada desde Cero';
-        state.domainNameEn = 'Custom Ground-Up Architecture';
-        state.priceMin = 3400;
-        state.priceMax = 4800;
-        state.weeksMin = 4;
-        state.weeksMax = 6;
-        state.techModules = isEn ? 'Custom Cloud APIs, Modern Reactive UI, Scalable Database' : 'APIs Cloud a Medida, Frontend Reactivo, Base de Datos Escalable';
-        state.techModulesEn = 'Custom Cloud APIs, Modern Reactive UI, Scalable Database';
-        updateSummaryCard();
+        // 3. Fallback: Custom Architecture Compilation
+        const customSpec = {
+          id: 'custom',
+          domainEs: `Arquitectura a Medida: ${clean.substring(0, 45)}...`,
+          domainEn: `Bespoke Architecture: ${clean.substring(0, 45)}...`,
+          stackEs: 'Next.js 15 / React Native, Microservicios Serverless Cloud',
+          stackEn: 'Next.js 15 / React Native, Serverless Cloud Microservices',
+          infraEs: 'APIs Escalables a Medida, Base de Datos en Tiempo Real',
+          infraEn: 'Bespoke Scalable APIs, Real-Time Database',
+          secEs: 'Auth Segura, Cifrado AES-256, 100% Propiedad Intelectual',
+          secEn: 'Secure Auth, AES-256 Encryption, 100% IP Ownership',
+          priceMin: 3400, priceMax: 4800, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
+          consultationEs: `Hemos analizado tu solicitud específica: <em>"${clean}"</em>.<br><br>
+          En MYOOZ LABS modelamos arquitecturas desde cero para proyectos únicos que no encajan en plantillas prefabricadas. Hemos estructurado el expediente técnico con el stack recomendado e inversión estimada:`,
+          consultationEn: `We analyzed your specific vision: <em>"${clean}"</em>.<br><br>
+          At MYOOZ LABS, we architect ground-up bespoke systems for ideas that go beyond cookie-cutter templates. Here is your compiled technical dossier:`
+        };
 
-        const customReply = isEn
-          ? `We analyzed your vision: <em>"${clean}"</em>.<br><br>
-          At MYOOZ LABS, our engineering team architects bespoke software systems designed around your precise requirements:<br><br>
-          • <strong>Modular Full-Stack Architecture</strong>: Production-ready Next.js / Mobile frontend backed by scalable serverless microservices.<br>
-          • <strong>Specialized Modules & APIs</strong>: Integration of custom data models, authentication, automated workflows, and third-party APIs.<br>
-          • <strong>End-to-End Delivery</strong>: Complete deployment with CI/CD pipeline and 100% intellectual property ownership.<br><br>
-          <span class='est-budget-highlight'>💰 Estimated Investment: $3,400 – $4,800 USD · Timeline: ~4 to 6 weeks</span><br><br>
-          Click below to transfer this technical brief to our contact form for an itemized project blueprint:`
-          : `Analizamos los requerimientos de tu visión: <em>"${clean}"</em>.<br><br>
-          En MYOOZ LABS modelamos arquitecturas de software a medida para necesidades técnicas que no caben en un catálogo prefabricado:<br><br>
-          • <strong>Arquitectura Full-Stack Escalable</strong>: Frontend reactivo Next.js o móvil con experiencia de alta conversión y backend serverless en la nube.<br>
-          • <strong>Módulos & APIs Especializadas</strong>: Modelado de datos a medida, autenticación segura, flujos automatizados e integraciones directas.<br>
-          • <strong>Despliegue & Código Fuente</strong>: Infraestructura productiva lista para operar, con entrega del 100% de la propiedad intelectual.<br><br>
-          <span class='est-budget-highlight'>💰 Inversión estimada: $3,400 – $4,800 USD · Plazo: ~4 a 6 semanas</span><br><br>
-          Haz clic abajo para transferir este brief directamente al formulario y recibir una propuesta formal hoy mismo:`;
-
-        addMessage(customReply, 'bot', [
-          { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() },
-          { labelEs: '⚡ Necesito un Sprint Rápido (1-2 sem)', labelEn: '⚡ Need a Rapid Sprint (1-2 wks)', onClick: () => handleRefinement('sprint') }
-        ]);
+        const consultText = isEn ? customSpec.consultationEs : customSpec.consultationEs;
+        addBotMessageWithBlueprint(consultText, customSpec);
       });
     }
 
-    // Refinement helper (called when user clicks smart contextual chips)
-    function handleRefinement(type){
-      const isEn = (currentLang === 'en');
-      if(type === 'web'){
-        addMessage(isEn ? '💻 Target initial release as a Web App SaaS' : '💻 Enfocar el lanzamiento inicial en Web App SaaS', 'user');
-        state.techModules = (isEn ? 'Web App SaaS (Cloud), ' : 'Web App SaaS en la Nube, ') + state.techModules;
-        state.techModulesEn = 'Web App SaaS (Cloud), ' + state.techModulesEn;
-        updateSummaryCard();
-        showTypingIndicator(() => {
-          addMessage(isEn
-            ? "Perfect! A Web App approach gives you maximum reach, frictionless onboarding, and instant updates without app-store review delays. We have recorded this in your brief."
-            : "¡Perfecto! El enfoque Web App te permite máxima captación de usuarios sin fricción de instalación ni comisiones de tiendas de aplicaciones. Hemos actualizado el brief técnico.", 'bot', [
-            { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() }
-          ]);
-        });
-      } else if(type === 'mobile' || type === 'both_mobile'){
-        addMessage(isEn ? '📱 Focus on Cross-Platform Mobile App (iOS & Android)' : '📱 Enfocar en App Móvil Multiplataforma (iOS & Android)', 'user');
-        state.techModules = (isEn ? 'Cross-Platform Mobile App (iOS/Android), ' : 'App Móvil iOS & Android, ') + state.techModules;
-        state.techModulesEn = 'Cross-Platform Mobile App (iOS/Android), ' + state.techModulesEn;
-        updateSummaryCard();
-        showTypingIndicator(() => {
-          addMessage(isEn
-            ? "Understood. We will architect a unified codebase for iOS and Android with 60 FPS native feel and offline capabilities. Brief updated!"
-            : "Entendido. Diseñaremos un stack unificado para iOS y Android con rendimiento a 60 FPS y capacidades offline. ¡Brief actualizado!", 'bot', [
-            { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() }
-          ]);
-        });
-      } else if(type === 'sprint'){
-        addMessage(isEn ? '⚡ Prioritize a Fast Sprint (1-2 weeks)' : '⚡ Priorizar un Sprint Rápido (1-2 semanas)', 'user');
-        state.scopeName = 'Sprint Rápido de Validación';
-        state.scopeNameEn = 'Rapid Validation Sprint';
-        state.priceMin = 1800;
-        state.priceMax = 2500;
-        state.weeksMin = 1;
-        state.weeksMax = 2;
-        updateSummaryCard();
-        showTypingIndicator(() => {
-          addMessage(isEn
-            ? "Express Sprint calibrated! We will deliver a working, production-deployed prototype in 7 to 14 days. Click below to transfer to contact:"
-            : "¡Sprint Exprés calibrado! Entregaremos un prototipo funcional en producción en 7 a 14 días corridos. Haz clic abajo para transferir al contacto:", 'bot', [
-            { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() }
-          ]);
-        });
-      } else if(type === 'stripe'){
-        addMessage(isEn ? '💳 Integrate Stripe payments and split payouts' : '💳 Integrar pagos con Stripe y comisiones', 'user');
-        state.techModules += ', Stripe Payments & Connect';
-        state.techModulesEn += ', Stripe Payments & Connect';
-        updateSummaryCard();
-        showTypingIndicator(() => {
-          addMessage(isEn
-            ? "Stripe integration added with automated split commissions and multi-currency support."
-            : "Integración de Stripe añadida con reparto automático de comisiones y soporte multidivisa.", 'bot', [
-            { labelEs: '🚀 Transferir brief al contacto →', labelEn: '🚀 Transfer brief to contact →', onClick: () => transferToContactForm() }
-          ]);
-        });
-      }
-    }
-
     // ========================================================================
-    // Initial Greeting & Quick Inspiration Chips
+    // 5. Initial Greeting & Starter Chips
     // ========================================================================
     function sendInitialGreeting(){
       chatStream.innerHTML = '';
-      updateSummaryCard();
-
       const isEn = (currentLang === 'en');
       const greeting = isEn
-        ? "Hello 👋 I am the MYOOZ LABS Technical Copilot. Describe in your own words what product or platform you want to engineer (e.g. <em>'an app for generating professional AI photos'</em>, <em>'a B2B clinic SaaS'</em>, <em>'a multi-vendor marketplace'</em>). I'll analyze the architecture, recommended modules, and realistic budget in real time."
-        : "Hola 👋 Soy el copiloto técnico de MYOOZ LABS. Cuéntame en tus palabras qué producto o plataforma te gustaría construir (por ejemplo: <em>'una app para generar imágenes profesionales'</em>, <em>'un saas para clínicas'</em>, <em>'un marketplace'</em>). Analizaré la arquitectura, módulos técnicos y presupuesto en tiempo real.";
+        ? "Hello 👋 I am the MYOOZ LABS Technical Copilot. Describe what platform or system you want to build (e.g. <em>'an app to generate professional images with AI'</em>, <em>'a B2B clinic platform'</em>, <em>'a marketplace'</em>). I will compile an official Technical Blueprint dossier in real time."
+        : "Hola 👋 Soy el copiloto técnico de MYOOZ LABS. Cuéntame qué producto o sistema te gustaría construir (por ejemplo: <em>'una app para generar imágenes profesionales con IA'</em>, <em>'un saas para clínicas'</em>, <em>'un marketplace'</em>). Compilaré un expediente técnico oficial en tiempo real.";
 
       const starterChips = [
         {
@@ -3110,33 +3236,28 @@
           onClick: () => processUserMessage(isEn ? 'I want to build an AI copilot with RAG over private documents' : 'Quiero un copiloto de IA con RAG sobre documentos privados')
         },
         {
-          label: isEn ? '📱 High-Performance Mobile App' : '📱 App Móvil Multiplataforma',
-          onClick: () => processUserMessage(isEn ? 'I want to engineer a high performance mobile app for iOS and Android' : 'Quiero desarrollar una app móvil de alto rendimiento para iOS y Android')
+          label: isEn ? '📱 Mobile App (iOS & Android)' : '📱 App Móvil (iOS & Android)',
+          onClick: () => processUserMessage(isEn ? 'I want to develop a mobile app for iOS and Android' : 'Quiero desarrollar una app móvil para iOS y Android')
         },
         {
           label: isEn ? '💻 B2B SaaS Platform' : '💻 Plataforma SaaS B2B',
-          onClick: () => processUserMessage(isEn ? 'I want to build a multi-tenant B2B SaaS platform' : 'Quiero construir una plataforma SaaS B2B multi-tenant')
+          onClick: () => processUserMessage(isEn ? 'I want to build a multi-tenant B2B SaaS platform' : 'Quiero construir una plataforma SaaS B2B')
         },
         {
-          label: isEn ? '🛒 Marketplace & Commerce' : '🛒 Marketplace & Comercio',
-          onClick: () => processUserMessage(isEn ? 'I want to build a multi-vendor marketplace with split payouts' : 'Quiero hacer un marketplace con comisiones automáticas')
-        },
-        {
-          label: isEn ? '⚡ 1-2 Week Express Sprint' : '⚡ Sprint Rápido (1-2 sem)',
-          onClick: () => processUserMessage(isEn ? 'I need an express product validation sprint in 1 to 2 weeks' : 'Necesito un sprint rápido de validación en 1 a 2 semanas')
+          label: isEn ? '⚡ 1-2 Week Sprint' : '⚡ Sprint Rápido (1-2 sem)',
+          onClick: () => processUserMessage(isEn ? 'I need a fast validation sprint in 1 to 2 weeks' : 'Necesito un sprint rápido de 1 a 2 semanas')
         }
       ];
 
-      addMessage(greeting, 'bot', starterChips);
+      addSimpleMessage(greeting, 'bot', starterChips);
     }
 
-    // Predictive auto-suggest tags while typing
+    // Predictive auto-suggest
     const PREDICTIONS = [
       { trigger: ['imagen', 'foto', 'difusion', 'flux'], tagEs: '🎨 App de Imágenes con IA', tagEn: '🎨 AI Image App', text: 'Quiero hacer una app para generar imágenes profesionales con IA' },
       { trigger: ['audio', 'musica', 'voz'], tagEs: '🎧 Plataforma de Audio / Voz IA', tagEn: '🎧 Audio / AI Voice App', text: 'Quiero crear una plataforma de audio y música con IA' },
-      { trigger: ['saas', 'crm', 'b2b', 'clinica'], tagEs: '💻 Plataforma SaaS B2B', tagEn: '💻 B2B SaaS Platform', text: 'Quiero construir una plataforma SaaS B2B' },
+      { trigger: ['saas', 'crm', 'b2b'], tagEs: '💻 Plataforma SaaS B2B', tagEn: '💻 B2B SaaS Platform', text: 'Quiero construir una plataforma SaaS B2B' },
       { trigger: ['app', 'movil', 'celular'], tagEs: '📱 App Móvil iOS & Android', tagEn: '📱 Mobile App iOS & Android', text: 'Quiero desarrollar una app móvil para iOS y Android' },
-      { trigger: ['tienda', 'market', 'pago'], tagEs: '🛒 Marketplace con Pagos', tagEn: '🛒 Marketplace with Payments', text: 'Quiero hacer un marketplace con pagos y comisiones' },
       { trigger: ['sprint', 'rapido', 'urgente'], tagEs: '⚡ Sprint Rápido (1-2 sem)', tagEn: '⚡ Express Sprint (1-2 wks)', text: 'Necesito un sprint rápido de 1 a 2 semanas' }
     ];
 
@@ -3188,66 +3309,19 @@
 
     if(resetBtn){
       resetBtn.addEventListener('click', () => {
-        state.domainName = 'Generación Visual con IA (Diffusion Pipeline)';
-        state.domainNameEn = 'Generative Visual AI (Diffusion Pipeline)';
-        state.priceMin = 3600;
-        state.priceMax = 4800;
-        state.weeksMin = 4;
-        state.weeksMax = 6;
-        state.techModules = 'Modelos de Difusión / GPU, Sistema de Créditos & Stripe, CDN 4K';
-        state.techModulesEn = 'Diffusion Models / GPU, Credit System & Stripe, 4K CDN';
         sendInitialGreeting();
       });
     }
 
-    function transferToContactForm(){
-      const msgField = document.getElementById('contactMessage');
-      if(msgField){
-        const isEn = (currentLang === 'en');
-        const estSummary = isEn
-          ? `[Estimated Technical Scope via MYOOZ AI Copilot]
-• Core Solution: ${state.domainNameEn}
-• Deployment Scope: ${state.scopeNameEn}
-• Key Modules & Architecture: ${state.techModulesEn}
-• Investment Estimate: ${priceDisplay.textContent} (${timeDisplay.textContent})
-
-Project Goals & Vision:
-`
-          : `[Brief de Alcance Estimado vía MYOOZ AI Copilot]
-• Solución Core: ${state.domainName}
-• Alcance de Lanzamiento: ${state.scopeName}
-• Módulos & Arquitectura: ${state.techModules}
-• Inversión Estimada: ${priceDisplay.textContent} (${timeDisplay.textContent})
-
-Detalles específicos y objetivos del proyecto:
-`;
-
-        msgField.value = estSummary;
-        const contactSec = document.getElementById('contact');
-        if(contactSec){
-          contactSec.scrollIntoView({ behavior: 'smooth' });
-        }
-        msgField.focus();
-      }
-    }
-
-    if(transferBtn){
-      transferBtn.addEventListener('click', transferToContactForm);
-    }
-
-    // Language change listener
+    // Language listener
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         setTimeout(() => {
-          updateSummaryCard();
-          if(state.historyCount === 0){
-            sendInitialGreeting();
-          }
+          sendInitialGreeting();
         }, 60);
       });
     });
 
-    // Start with initial greeting
     sendInitialGreeting();
   })();
 
