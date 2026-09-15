@@ -96,13 +96,17 @@
   #logoCanvas{
     position:fixed; inset:0; z-index:-1; width:100vw; height:100vh; display:block;
     background:var(--ink);
+    touch-action:pan-y;
+    will-change:transform;
+    transform:translateZ(0);
+    -webkit-transform:translateZ(0);
   }
   .hero-scrim{
     position:absolute; inset:0; z-index:1; pointer-events:none;
     background:radial-gradient(ellipse at center, transparent 42%, var(--ink) 94%);
   }
   .hero-cue{
-    position:absolute; bottom:44px; left:0; right:0; margin:0 auto; width:fit-content; z-index:2;
+    position:absolute; bottom:clamp(24px, 5vh, 44px); left:0; right:0; margin:0 auto; width:fit-content; z-index:2;
     display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; font-size:12px; color:var(--muted);
     opacity:0; animation:riseIn 1s 1.8s cubic-bezier(.16,1,.3,1) forwards;
   }
@@ -422,280 +426,6 @@
   .h-geo-card a.geo-link{ font-size:13px; color:var(--lavender); font-weight:600; display:inline-flex; align-items:center; gap:6px; transition:color .25s ease; }
   .h-geo-card a.geo-link:hover{ color:var(--violet-glow); }
 
-  /* ---------- pricing models ---------- */
-  .pricing{ border-top:1px solid var(--line); }
-  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:50px; }
-  .pricing-card{
-    background:rgba(18,12,30,0.55); border:1px solid var(--line); border-radius:20px;
-    padding:36px 28px; display:flex; flex-direction:column; justify-content:space-between;
-    position:relative; transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;
-  }
-  .pricing-card:hover{
-    transform:translateY(-5px); border-color:rgba(192,132,252,0.5);
-    box-shadow:0 20px 40px -15px rgba(168,85,247,0.25);
-  }
-  .pricing-card.featured{
-    background:linear-gradient(180deg,rgba(76,29,149,0.25) 0%,rgba(18,12,30,0.7) 100%);
-    border-color:rgba(168,85,247,0.45);
-  }
-  .p-top-badge{
-    display:inline-flex; align-items:center;
-    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
-    color:var(--violet-glow); background:rgba(168,85,247,0.15); border:1px solid rgba(192,132,252,0.3);
-    padding:5px 12px; border-radius:100px; width:fit-content; margin-bottom:22px;
-  }
-  .pricing-card h3{ font-size:22px; font-family:'Unbounded',sans-serif; color:#fff; margin-top:0; margin-bottom:12px; font-weight:600; }
-  .pricing-desc{ font-size:14px; color:var(--muted); line-height:1.55; margin-bottom:24px; }
-  .pricing-price{ margin-bottom:24px; }
-  .p-amount{ font-size:32px; font-family:'Unbounded',sans-serif; font-weight:700; color:#fff; }
-  .p-currency{ font-size:13px; color:var(--muted); margin-left:4px; }
-  .p-intl-ref{ font-size:12px; color:var(--muted); margin-top:6px; }
-  .pricing-list{ list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:30px; }
-  .pricing-list li{ font-size:13.5px; color:var(--lavender); display:flex; align-items:flex-start; gap:10px; line-height:1.45; }
-  .pricing-list li svg{ width:16px; height:16px; flex-shrink:0; margin-top:2px; stroke:var(--violet-glow); }
-  .civic-callout{
-    margin-top:36px; background:rgba(168,85,247,0.06); border:1px dashed rgba(192,132,252,0.35);
-    border-radius:16px; padding:24px 30px; display:flex; align-items:center; justify-content:space-between;
-    gap:20px; flex-wrap:wrap;
-  }
-  .civic-callout h4{ font-size:16px; font-family:'Unbounded',sans-serif; color:#fff; margin-bottom:4px; }
-  .civic-callout p{ font-size:13.5px; color:var(--muted); line-height:1.5; max-width:640px; }
-
-  /* ---------- holographic particle cotizador & spec engine ---------- */
-  .particle-cotizador-stage{
-    position:relative; margin-top:50px; padding:clamp(20px,4vw,50px) 16px;
-    overflow:hidden; border-radius:28px;
-  }
-  #cotizadorParticleCanvas{
-    position:absolute; inset:0; width:100%; height:100%;
-    pointer-events:none; z-index:1;
-  }
-  .cotizador-terminal{
-    position:relative; z-index:2; max-width:840px; margin:0 auto;
-    background:rgba(10,7,16,0.85); border:1px solid rgba(52,211,153,0.35);
-    border-radius:24px; box-shadow:0 25px 60px -15px rgba(0,0,0,0.7), 0 0 35px -5px rgba(16,185,129,0.18);
-    backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
-    overflow:hidden; display:flex; flex-direction:column;
-  }
-  /* Corner particle brackets */
-  .term-corner{
-    position:absolute; width:18px; height:18px; pointer-events:none; z-index:3;
-    border-color:#34d399; border-style:solid;
-  }
-  .term-corner.tl{ top:8px; left:8px; border-width:2px 0 0 2px; border-top-left-radius:6px; }
-  .term-corner.tr{ top:8px; right:8px; border-width:2px 2px 0 0; border-top-right-radius:6px; }
-  .term-corner.bl{ bottom:8px; left:8px; border-width:0 0 2px 2px; border-bottom-left-radius:6px; }
-  .term-corner.br{ bottom:8px; right:8px; border-width:0 2px 2px 0; border-bottom-right-radius:6px; }
-
-  .est-chat-header{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:14px 20px; background:rgba(255,255,255,0.02); border-bottom:1px solid var(--line);
-    flex-wrap:wrap; gap:10px;
-  }
-  .est-chat-status{
-    display:inline-flex; align-items:center; gap:10px; font-size:11px; font-weight:700;
-    color:#34d399; text-transform:uppercase; letter-spacing:0.08em;
-    background:rgba(16,185,129,0.08); border:1px solid rgba(52,211,153,0.3);
-    padding:6px 14px; border-radius:100px;
-    box-shadow:0 0 20px -4px rgba(16,185,129,0.3);
-  }
-  .est-particle-indicator{
-    position:relative; width:12px; height:12px; display:inline-flex;
-    align-items:center; justify-content:center; flex-shrink:0;
-  }
-  .est-particle-core{
-    width:5px; height:5px; border-radius:50%; background:#fff;
-    box-shadow:0 0 6px 1px #34d399, 0 0 14px 3px rgba(16,185,129,0.9);
-    position:relative; z-index:2;
-  }
-  .est-particle-ring{
-    position:absolute; inset:-4px; border-radius:50%;
-    border:1px solid rgba(52,211,153,0.7);
-    animation:estParticlePulse 2.4s infinite cubic-bezier(0.16,1,0.3,1);
-    pointer-events:none;
-  }
-  .est-particle-ring.delay{
-    animation-delay:1.2s;
-  }
-  @keyframes estParticlePulse{
-    0%{ transform:scale(0.5); opacity:1; }
-    100%{ transform:scale(2.4); opacity:0; }
-  }
-  .est-session-tag{
-    font-size:10.5px; font-weight:700; color:#34d399; letter-spacing:0.06em;
-    background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:100px;
-    border:1px solid rgba(52,211,153,0.3);
-  }
-  .est-btn-reset{
-    background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:100px;
-    color:var(--muted); font-size:11.5px; padding:4px 12px; cursor:pointer;
-    transition:all .2s ease; display:flex; align-items:center; gap:5px; font-family:'Manrope',sans-serif;
-  }
-  .est-btn-reset:hover{ color:#fff; border-color:var(--violet-glow); background:rgba(168,85,247,0.15); }
-
-  .est-chat-stream{
-    padding:24px 20px; display:flex; flex-direction:column; gap:18px; max-height:460px;
-    overflow-y:auto; scroll-behavior:smooth;
-  }
-  .est-msg{ display:flex; flex-direction:column; max-width:94%; animation:estFadeIn .3s cubic-bezier(.16,1,.3,1); }
-  @keyframes estFadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
-  .est-msg.bot{ align-self:flex-start; width:100%; }
-  .est-msg.user{ align-self:flex-end; }
-  .est-bubble{
-    padding:14px 18px; border-radius:16px; font-size:13.5px; line-height:1.6;
-  }
-  .est-msg.bot .est-bubble{
-    background:rgba(255,255,255,0.04); border:1px solid rgba(192,132,252,0.2);
-    color:var(--lavender); border-top-left-radius:4px; width:fit-content; max-width:100%;
-  }
-  .est-msg.bot .est-bubble p{ margin-bottom:8px; }
-  .est-msg.bot .est-bubble p:last-child{ margin-bottom:0; }
-  .est-msg.bot .est-bubble ul{ margin:8px 0 10px 18px; display:flex; flex-direction:column; gap:6px; }
-  .est-msg.bot .est-bubble li{ line-height:1.5; color:var(--lavender); font-size:13px; }
-  .est-msg.bot .est-bubble strong{ color:#fff; font-weight:600; }
-  .est-msg.user .est-bubble{
-    background:linear-gradient(135deg,rgba(147,51,234,0.3) 0%,rgba(168,85,247,0.45) 100%);
-    border:1px solid rgba(192,132,252,0.45); color:#fff; border-top-right-radius:4px;
-    font-weight:500;
-  }
-  .est-chips{
-    display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;
-  }
-  .est-chip{
-    background:rgba(168,85,247,0.1); border:1px solid rgba(192,132,252,0.3);
-    color:#e9d5ff; padding:7px 14px; border-radius:100px; font-size:12.5px;
-    cursor:pointer; transition:all .2s ease; font-family:'Manrope',sans-serif;
-    display:inline-flex; align-items:center; gap:5px; user-select:none;
-  }
-  .est-chip:hover{
-    background:rgba(168,85,247,0.25); border-color:var(--violet-glow); color:#fff;
-    transform:translateY(-1px); box-shadow:0 4px 12px -2px rgba(168,85,247,0.4);
-  }
-  .est-chip.selected{
-    background:var(--violet-bright); border-color:var(--violet-glow); color:#fff; font-weight:600;
-  }
-  .est-typing{
-    display:inline-flex; align-items:center; gap:5px; padding:10px 14px;
-    background:rgba(255,255,255,0.04); border-radius:12px; border:1px solid var(--line);
-    width:fit-content;
-  }
-  .est-typing span{
-    width:6px; height:6px; background:#34d399; border-radius:50%;
-    animation:estBounce 1.2s infinite ease-in-out;
-  }
-  .est-typing span:nth-child(2){ animation-delay:.2s; }
-  .est-typing span:nth-child(3){ animation-delay:.4s; }
-  @keyframes estBounce{ 0%,80%,100%{ transform:scale(0); } 40%{ transform:scale(1); } }
-
-  /* Blueprint file card */
-  .est-blueprint-file{
-    margin-top:14px; background:rgba(12,8,20,0.95); border:1px solid rgba(52,211,153,0.45);
-    border-radius:18px; padding:20px 22px; display:flex; flex-direction:column; gap:16px;
-    box-shadow:0 15px 35px -10px rgba(0,0,0,0.6), 0 0 24px -6px rgba(16,185,129,0.25);
-    animation:blueprintPop 0.4s cubic-bezier(0.16,1,0.3,1); width:100%;
-  }
-  @keyframes blueprintPop{
-    from{ opacity:0; transform:scale(0.96) translateY(10px); }
-    to{ opacity:1; transform:scale(1) translateY(0); }
-  }
-  .b-file-header{
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
-    border-bottom:1px dashed rgba(52,211,153,0.3); padding-bottom:12px;
-  }
-  .b-file-meta{ display:flex; align-items:center; gap:10px; }
-  .b-file-icon{ font-size:22px; }
-  .b-file-title{ font-family:'Unbounded',sans-serif; font-size:12.5px; font-weight:700; color:#fff; letter-spacing:0.02em; }
-  .b-file-sub{ font-size:10px; font-weight:700; color:#34d399; letter-spacing:0.08em; }
-  .b-file-status{ font-size:10.5px; font-weight:700; color:#34d399; background:rgba(16,185,129,0.15); padding:3px 10px; border-radius:100px; border:1px solid rgba(52,211,153,0.35); }
-
-  .b-file-domain{ display:flex; flex-direction:column; gap:4px; }
-  .b-domain-label{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
-  .b-file-domain h4{ font-family:'Unbounded',sans-serif; font-size:16px; color:#fff; font-weight:600; margin:0; }
-
-  .b-file-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:18px; }
-  @media(max-width:680px){ .b-file-grid{ grid-template-columns:1fr; } }
-  .b-spec-col{ display:flex; flex-direction:column; gap:8px; }
-  .b-item{ font-size:12.5px; line-height:1.45; color:var(--lavender); }
-  .b-item .k{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); display:block; margin-bottom:2px; }
-  .b-item .v{ font-size:12.5px; color:#fff; font-weight:500; }
-  .b-item.highlight .v.price{ font-family:'Unbounded',sans-serif; font-size:16px; color:#34d399; font-weight:700; }
-
-  .b-file-actions{ display:flex; flex-wrap:wrap; gap:10px; padding-top:12px; border-top:1px solid var(--line); }
-  .btn-dossier-download{
-    background:rgba(255,255,255,0.06); border:1px solid var(--line); color:#fff;
-    padding:8px 16px; border-radius:100px; font-size:12px; font-weight:600; cursor:pointer;
-    transition:all .2s ease; font-family:'Manrope',sans-serif; display:inline-flex; align-items:center; gap:6px;
-  }
-  .btn-dossier-download:hover{ background:rgba(255,255,255,0.12); border-color:var(--violet-glow); }
-  .btn-dossier-email{
-    background:rgba(16,185,129,0.18); border:1px solid rgba(52,211,153,0.4); color:#34d399;
-    padding:8px 18px; border-radius:100px; font-size:12px; font-weight:700; cursor:pointer;
-    transition:all .2s ease; font-family:'Manrope',sans-serif; display:inline-flex; align-items:center; gap:6px;
-  }
-  .btn-dossier-email:hover{ background:#10b981; color:#fff; box-shadow:0 0 16px rgba(16,185,129,0.5); }
-
-  /* Inline Dispatch Form */
-  .b-file-dispatch-form{
-    background:rgba(255,255,255,0.03); border:1px solid rgba(52,211,153,0.25);
-    border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:10px;
-    margin-top:6px;
-  }
-  .b-dispatch-title{ font-size:12px; font-weight:700; color:#34d399; text-transform:uppercase; letter-spacing:0.06em; }
-  .b-dispatch-desc{ font-size:12px; color:var(--muted); line-height:1.45; }
-  .b-dispatch-inputs{ display:flex; flex-wrap:wrap; gap:8px; }
-  .b-dispatch-inputs input{
-    flex:1; min-width:170px; background:rgba(0,0,0,0.4); border:1px solid var(--line);
-    border-radius:100px; padding:8px 14px; font-size:12.5px; color:#fff; outline:none;
-    font-family:'Manrope',sans-serif;
-  }
-  .b-dispatch-inputs input:focus{ border-color:#34d399; }
-  .btn-send-dispatch{
-    background:#10b981; border:none; border-radius:100px; padding:8px 18px;
-    color:#fff; font-size:12px; font-weight:700; cursor:pointer; font-family:'Manrope',sans-serif;
-    transition:all .2s ease;
-  }
-  .btn-send-dispatch:hover{ background:#059669; }
-  .dispatch-status{ font-size:12px; line-height:1.45; border-radius:8px; padding:8px 12px; }
-  .dispatch-status.success{ background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
-  .dispatch-status.error{ background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
-
-  /* Predictive autocomplete suggestions bar */
-  .est-predictive{
-    padding:8px 18px; background:rgba(255,255,255,0.02); border-top:1px solid var(--line);
-    display:none; align-items:center; gap:8px; overflow-x:auto; white-space:nowrap;
-  }
-  .est-predictive.active{ display:flex; }
-  .est-pred-tag{
-    font-size:11.5px; color:var(--violet-glow); background:rgba(168,85,247,0.12);
-    border:1px dashed rgba(192,132,252,0.35); border-radius:100px; padding:4px 11px;
-    cursor:pointer; transition:all .2s; font-family:'Manrope',sans-serif;
-  }
-  .est-pred-tag:hover{ background:rgba(168,85,247,0.3); color:#fff; border-color:var(--violet-glow); }
-
-  /* Input row */
-  .est-input-row{
-    display:flex; gap:10px; padding:14px 18px; background:rgba(14,10,22,0.95);
-    border-top:1px solid var(--line); align-items:center;
-  }
-  .est-input{
-    flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--line);
-    border-radius:100px; padding:11px 20px; color:#fff; font-size:13.5px;
-    font-family:'Manrope',sans-serif; outline:none; transition:border-color .2s;
-  }
-  .est-input:focus{ border-color:#34d399; box-shadow:0 0 12px rgba(52,211,153,0.25); }
-  .est-input::placeholder{ color:rgba(255,255,255,0.35); }
-  .est-send-btn{
-    background:#10b981; border:none; border-radius:100px;
-    color:#fff; padding:11px 20px; font-size:13px; font-weight:700;
-    cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; gap:6px;
-    font-family:'Manrope',sans-serif;
-  }
-  .est-send-btn:hover{ background:#059669; transform:translateY(-1px); box-shadow:0 6px 16px -3px rgba(16,185,129,0.5); }
-
-  @media (max-width:860px){
-    .est-chat-stream{ max-height:400px; }
-  }
-
   /* ---------- voice brief intake ---------- */
   .voice-btn{
     display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05);
@@ -756,9 +486,6 @@
     .contact-grid{ grid-template-columns:1fr; }
     .proj-preview{ display:none; }
     .h-grid{ grid-template-columns:1fr; }
-    .pricing-grid{ grid-template-columns:1fr; }
-    .estimator-grid{ grid-template-columns:1fr; }
-    .est-summary-card{ position:relative; top:0; }
     .h-dashboard{ grid-template-columns:1fr 1fr; }
     .h-geo-grid{ grid-template-columns:1fr; }
   }
@@ -829,8 +556,6 @@
     <a href="#mission" data-i18n="nav_mission">Misión</a>
     <a href="#projects" data-i18n="nav_projects">Proyectos</a>
     <a href="#humanitarian" data-i18n="nav_humanitarian">Impacto Social</a>
-    <a href="#pricing" data-i18n="nav_pricing">Modelos & Precios</a>
-    <a href="#estimator" data-i18n="nav_estimator">Cotizador IA</a>
     <a href="#contact" data-i18n="nav_contact">Contacto</a>
   </nav>
   <div class="lang-switch" id="langSwitch" role="group" aria-label="Idioma">
@@ -1091,155 +816,6 @@
   </div>
 </section>
 
-<!-- 05 — Pricing & Working Models -->
-<section class="pricing" id="pricing">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="idx" data-i18n="p_idx">05 — Modelo & Inversión</span>
-        <h2 data-i18n="p_title">Modelos de trabajo transparentes</h2>
-      </div>
-      <p data-i18n="p_desc">Sin sorpresas ni presupuestos opacos. Cotizamos por sprints, producto completo o retainer de ingeniería continua con entregables verificables.</p>
-    </div>
-
-    <div class="pricing-grid reveal">
-      <!-- Card 1: Product Sprint -->
-      <div class="pricing-card">
-        <div>
-          <span class="p-top-badge" data-i18n="p_c1_badge">1 a 2 semanas</span>
-          <h3 data-i18n="p_c1_title">Product Sprint</h3>
-          <p class="pricing-desc" data-i18n="p_c1_desc">Para validar ideas rápido, resolver cuellos de botella de UX/UI o crear un prototipo funcional con IA antes de una inversión mayor.</p>
-          <div class="pricing-price">
-            <span class="p-currency" data-i18n="p_from">desde</span>
-            <span class="p-amount">$1,500</span>
-            <span class="p-currency">USD</span>
-            <div class="p-intl-ref">~ €1,400 · CHF 1,500 · $30,000 MXN</div>
-          </div>
-          <ul class="pricing-list">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c1_f1">Prototipo interactivo en producción (Vercel)</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c1_f2">Arquitectura técnica y stack recomendado</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c1_f3">Entrega en 7 a 14 días corridos</span></li>
-          </ul>
-        </div>
-        <a href="#estimator" class="btn ghost" style="width:100%;justify-content:center;" data-i18n="p_c1_btn">Estimar este sprint</a>
-      </div>
-
-      <!-- Card 2: MVP Completo (Featured) -->
-      <div class="pricing-card featured">
-        <div>
-          <span class="p-top-badge" style="background:var(--violet);color:#fff;" data-i18n="p_c2_badge">4 a 8 semanas · Más solicitado</span>
-          <h3 data-i18n="p_c2_title">Desarrollo por Fases</h3>
-          <p class="pricing-desc" data-i18n="p_c2_desc">De cero a producto lanzado. Aplicación web o móvil completa, base de datos en tiempo real, copiloto de IA y diseño de alta conversión.</p>
-          <div class="pricing-price">
-            <span class="p-currency" data-i18n="p_from">desde</span>
-            <span class="p-amount">$4,500</span>
-            <span class="p-currency">USD</span>
-            <div class="p-intl-ref">~ €4,150 · CHF 4,400 · $90,000 MXN</div>
-          </div>
-          <ul class="pricing-list">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f1">Diseño UX/UI exclusivo en Figma</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f2">Frontend WebGL/React + Backend escalable</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f3">Integración de pagos, auth y modelos IA</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c2_f4">Propiedad intelectual 100% del cliente</span></li>
-          </ul>
-        </div>
-        <a href="#contact" class="btn" style="width:100%;justify-content:center;" data-i18n="p_c2_btn">Iniciar MVP por fases</a>
-      </div>
-
-      <!-- Card 3: Retainer -->
-      <div class="pricing-card">
-        <div>
-          <span class="p-top-badge" data-i18n="p_c3_badge">Suscripción Mensual · Asesoría Continua</span>
-          <h3 data-i18n="p_c3_title">Retainer Técnico</h3>
-          <p class="pricing-desc" data-i18n="p_c3_desc">Equipo de diseño e ingeniería dedicado para startups y empresas que necesitan iteración continua, nuevas features y SLA de soporte crítico.</p>
-          <div class="pricing-price">
-            <span class="p-currency" data-i18n="p_from">desde</span>
-            <span class="p-amount">$2,200</span>
-            <span class="p-currency">USD / mes</span>
-            <div class="p-intl-ref">~ €2,000 · CHF 2,150 · $44,000 MXN</div>
-          </div>
-          <ul class="pricing-list">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c3_f1">Horas de desarrollo e ingeniería senior</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c3_f2">Respuesta garantizada &lt;4h ante incidencias</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="p_c3_f3">Cancelable con 30 días de anticipación</span></li>
-          </ul>
-        </div>
-        <a href="#contact" class="btn ghost" style="width:100%;justify-content:center;" data-i18n="p_c3_btn">Consultar disponibilidad</a>
-      </div>
-    </div>
-
-    <!-- Civic / Humanitarian Commitment Callout -->
-    <div class="civic-callout reveal">
-      <div>
-        <h4 data-i18n="civic_callout_title">¿Perteneces a una ONG, colectivo cívico o respuesta de emergencia?</h4>
-        <p data-i18n="civic_callout_desc">Ofrecemos tarifas subvencionadas y consultoría abierta pro-bono para iniciativas humanitarias y de socorro civil. Desarrollamos herramientas que salvan vidas.</p>
-      </div>
-      <a href="#contact" class="btn" style="background:rgba(255,255,255,0.08);border:1px solid var(--violet-glow);" data-i18n="civic_callout_btn">Solicitar apoyo cívico</a>
-    </div>
-
-    <!-- Holographic Particle Cotizador & Spec Generator -->
-    <div class="particle-cotizador-stage reveal" id="estimator">
-      <!-- Dedicated particle convergence canvas -->
-      <canvas id="cotizadorParticleCanvas"></canvas>
-
-      <div class="section-head" style="margin-bottom:28px;text-align:center;max-width:760px;margin-left:auto;margin-right:auto;">
-        <div>
-          <span class="idx" data-i18n="est_idx">Copiloto de Arquitectura · Ensamblado por Partículas</span>
-          <h2 style="font-size:clamp(24px,3.2vw,40px);" data-i18n="est_title">Cotizador Holográfico con IA</h2>
-        </div>
-        <p data-i18n="est_desc" style="margin:0 auto;">Escribe lo que deseas construir. Las partículas cuánticas estructuran tu arquitectura y compilan un expediente de especificaciones técnicas listo para descargar o enviar a tu correo.</p>
-      </div>
-
-      <!-- Single Central Terminal (Structured by Particles) -->
-      <div class="cotizador-terminal" id="cotizadorTerminal">
-        <!-- Corner particle brackets -->
-        <span class="term-corner tl"></span>
-        <span class="term-corner tr"></span>
-        <span class="term-corner bl"></span>
-        <span class="term-corner br"></span>
-
-        <!-- Terminal Header -->
-        <div class="est-chat-header">
-          <div class="est-chat-status">
-            <span class="est-particle-indicator">
-              <span class="est-particle-core"></span>
-              <span class="est-particle-ring"></span>
-              <span class="est-particle-ring delay"></span>
-            </span>
-            <span data-i18n="est_chat_status">MYOOZ ARCHITECT · AI SPEC ENGINE</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span class="est-session-tag">● SESIÓN ACTIVA</span>
-            <button type="button" class="est-btn-reset" id="estResetBtn" title="Reiniciar sesión">
-              <span>🔄</span> <span data-i18n="est_btn_reset">Reiniciar</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Chat Conversation Stream -->
-        <div class="est-chat-stream" id="estChatStream">
-          <!-- Chat messages and generated specification blueprints will be rendered here -->
-        </div>
-
-        <!-- Predictive suggestion bar -->
-        <div class="est-predictive" id="estPredictiveBar">
-          <span style="font-size:11px;color:var(--muted);margin-right:4px;" data-i18n="est_pred_label">✦ Sugerencia:</span>
-          <div id="estPredTags" style="display:inline-flex;gap:6px;"></div>
-        </div>
-
-        <!-- Input Bar -->
-        <form class="est-input-row" id="estInputForm" onsubmit="return false;">
-          <input type="text" class="est-input" id="estInput" placeholder="Describe tu idea (ej: 'una app para generar imágenes profesionales', 'un saas para clínicas')..." autocomplete="off">
-          <button type="submit" class="est-send-btn" id="estSendBtn">
-            <span data-i18n="est_btn_send">Compilar</span> <span>↑</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-
-
 <section class="contact" id="contact">
   <div class="wrap contact-grid">
     <div class="reveal">
@@ -1302,12 +878,7 @@
       <div class="info-block">
         <span class="label" data-i18n="c_direct_mail">Correo directo</span>
         <a href="mailto:hola@myoozlabs.com">hola@myoozlabs.com</a>
-      </div>
-      <div class="info-block">
-        <span class="label" data-i18n="c_avail_label">Disponibilidad</span>
-        <p data-i18n="c_avail_title">Abierta todo el año</p>
-        <span class="waitlist-badge" data-i18n="c_avail_badge" style="background:rgba(16,185,129,0.14);border-color:rgba(52,211,153,0.3);color:#34d399;">⚡ Nuevos proyectos bienvenidos</span>
-        <p class="waitlist-note" data-i18n="c_avail_note">Consultas abiertas para nuevos productos, plataformas y sprints de alto impacto. Respuesta directa en menos de 24 horas.</p>
+        <p style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5;" data-i18n="c_mail_note">Escríbenos directamente o usa el formulario. Respuesta directa en menos de 24 horas.</p>
       </div>
       <div class="info-block">
         <span class="label" data-i18n="c_social_label">Redes</span>
@@ -1362,16 +933,17 @@
 
       if(isPhone){
         // ===================================================================
-        // MOBILE PHONES (iOS / Android) — Tailored High-Contrast 60/120 FPS
+        // MOBILE PHONES (iOS / Android) — High-Definition 60/120 FPS Stardust
+        // Crisp, brilliant diamond cores with silky smooth fluid motion
         // ===================================================================
         return {
           type: 'mobile',
           dpr: Math.min(window.devicePixelRatio || 1, 2),
-          targetW: Math.min(w * 0.84, 330),
+          targetW: Math.min(w * 0.88, 360),
           verticalCenter: 0.44,
-          starCount: 90,       // Refined star halo (less saturating)
-          stepDiv: 240,        // step = 3 -> 1,423 sharp particles (dense, zero gaps)
-          pointSizeMul: 0.85,  // Crisp stardust scale (no blurry blobs)
+          starCount: 80,       // Elegant starry halo framing the logo
+          stepDiv: 180,        // step = 4px -> 2,693 crisp stardust points (locked 60/120 FPS, zero lag)
+          pointSizeMul: 0.90,  // Delicate, razor-sharp stardust scale
           useLetterChaos: false,
           maxStarRx: w * 0.46,
           starPadXMul: 0.72,
@@ -1380,22 +952,22 @@
           easeMul: 1.65,       // Fast spring rate for instant fluid formation
           viscMul: 1.45,
           entryFadeDuration: 0.15,
-          // Mobile particle point sizes (finer, more delicate stardust)
-          ptSizeStar: 9.5,
-          ptSizeEdge: 9.0,
-          ptSizeLogo: 8.0,
-          ptSizeAmbient: 4.2,  // Ultra-fine ambient specks
-          // High-contrast mobile colors
-          colorLogo:    { r: 0.78,  g: 0.44,  b: 1.0,   a: 0.94, core: 0.90 },
+          // Mobile particle point sizes (crisp, luminous diamond stardust)
+          ptSizeStar: 9.0,
+          ptSizeEdge: 8.2,
+          ptSizeLogo: 7.2,
+          ptSizeAmbient: 3.8,  // Ultra-fine ambient specks
+          // High-contrast mobile colors: luminous lavender & diamond core
+          colorLogo:    { r: 0.78,  g: 0.44,  b: 1.0,   a: 0.94, core: 0.92 },
           colorEdge:    { r: 1.0,   g: 0.98,  b: 1.0,   a: 1.0,  core: 1.0 },
           colorStar:    { r: 0.94,  g: 0.90,  b: 1.0,   core: 1.0 },
-          colorAmbient: { r: 0.88,  g: 0.82,  b: 0.98,  a: 0.20, core: 0.0 }, // Soft and non-intrusive
-          shaderGlowInner: 0.12,
-          shaderCoreRadius: 0.20,
-          shaderAlphaMode: 1.0, // High-contrast mobile alpha curve
-          spawnSpreadLogo: 0.09,
+          colorAmbient: { r: 0.88,  g: 0.82,  b: 0.98,  a: 0.20, core: 0.0 },
+          shaderGlowInner: 0.10,
+          shaderCoreRadius: 0.22,
+          shaderAlphaMode: 1.0,
+          spawnSpreadLogo: 0.10,
           spawnSpreadJitter: 0.05,
-          spawnSpreadStar: 0.12,
+          spawnSpreadStar: 0.14,
           spawnSpreadStarJitter: 0.06
         };
       } else if(isTablet){
@@ -1919,8 +1491,16 @@
       // Rebuild flow grid ONCE per frame — eliminates 2800+ trig calls/frame on mobile
       rebuildFlowGrid(t);
 
+      const isPastHero = scrollT >= 0.98;
+
       for(let i=0;i<particles.length;i++){
         const p = particles[i];
+        if(isPastHero && !p.keep){
+          if(useGL){
+            vBuffer[i * 9 + 3] = 0; // PointSize 0 = hidden, skip all heavy physics
+          }
+          continue;
+        }
         const isLogo = p.kind === 'logo' || p.kind === 'edge' || p.kind === 'star';
 
         let baseX = p.tx, baseY = p.ty, persp = 1;
@@ -2098,12 +1678,14 @@
       hero.style.cursor = '';
     });
     document.addEventListener('mouseleave', ()=>{ mouse.active = false; mouse.x=-9999; mouse.y=-9999; });
-    let touchStartY = 0;
+    let touchStartX = 0, touchStartY = 0, touchIsScroll = false;
     hero.addEventListener('touchstart', (e)=>{
       const touch = e.touches[0];
       if(!touch) return;
       mouse.down = true;
+      touchStartX = touch.clientX;
       touchStartY = touch.clientY;
+      touchIsScroll = false;
       mouse.lastX = touch.clientX;
       mouse.lastY = touch.clientY;
       mouse.x = touch.clientX;
@@ -2114,16 +1696,21 @@
       const touch = e.touches[0];
       if(!touch) return;
       if(mouse.down){
-        // If user is scrolling vertically, disengage 3D orbit to keep scroll buttery smooth
-        if(Math.abs(touch.clientY - touchStartY) > 35 && Math.abs(touch.clientY - touchStartY) > Math.abs(touch.clientX - mouse.lastX) * 1.4){
+        const totalDx = touch.clientX - touchStartX;
+        const totalDy = touch.clientY - touchStartY;
+        // Prioritize native vertical page scroll immediately without jerking 3D tilt
+        if(!touchIsScroll && Math.abs(totalDy) > 10 && Math.abs(totalDy) > Math.abs(totalDx) * 1.1){
+          touchIsScroll = true;
           mouse.down = false;
           mouse.active = false;
           return;
         }
+        if(touchIsScroll) return;
+
         const dx = touch.clientX - mouse.lastX;
         const dy = touch.clientY - mouse.lastY;
         rotYTarget += dx * pv('rotSensitivity');
-        rotXTarget = Math.max(-0.7, Math.min(0.7, rotXTarget + dy * pv('rotSensitivity')));
+        rotXTarget = Math.max(-0.6, Math.min(0.6, rotXTarget + dy * (pv('rotSensitivity') * 0.5)));
       }
       mouse.x = touch.clientX;
       mouse.y = touch.clientY;
@@ -2346,8 +1933,6 @@
       nav_mission: "Misión",
       nav_projects: "Proyectos",
       nav_humanitarian: "Impacto Social",
-      nav_pricing: "Modelos & Precios",
-      nav_estimator: "Cotizador IA",
       nav_contact: "Contacto",
       hero_scroll: "Desplázate",
       hero_eyebrow: "Ingeniería de producto digital & tecnología cívica",
@@ -2374,49 +1959,6 @@
       geo_mexico_title: "Infraestructura comunitaria permanente vs mapas temporales",
       geo_mexico_desc: "Durante emergencias en México, las soluciones improvisadas suelen desaparecer tras la crisis. Nuestro sistema de Centros de Acopio y auxilio SOS está listo para desplegarse con Protección Civil, universidades y Cruz Roja en cuestión de horas.",
       geo_mexico_link: "Consultar despliegue de emergencia en México →",
-      p_idx: "05 — Modelo & Inversión",
-      p_title: "Modelos de trabajo transparentes",
-      p_desc: "Sin sorpresas ni presupuestos opacos. Cotizamos por sprints, producto completo o retainer de ingeniería continua con entregables verificables.",
-      p_c1_badge: "1 a 2 semanas",
-      p_c1_title: "Product Sprint",
-      p_c1_desc: "Para validar ideas rápido, resolver cuellos de botella de UX/UI o crear un prototipo funcional con IA antes de una inversión mayor.",
-      p_from: "desde",
-      p_c1_f1: "Prototipo interactivo en producción (Vercel)",
-      p_c1_f2: "Arquitectura técnica y stack recomendado",
-      p_c1_f3: "Entrega en 7 a 14 días corridos",
-      p_c1_btn: "Estimar este sprint",
-      p_c2_badge: "4 a 8 semanas · Más solicitado",
-      p_c2_title: "Desarrollo por Fases",
-      p_c2_desc: "De cero a producto lanzado. Aplicación web o móvil completa, base de datos en tiempo real, copiloto de IA y diseño de alta conversión.",
-      p_c2_f1: "Diseño UX/UI exclusivo en Figma",
-      p_c2_f2: "Frontend WebGL/React + Backend escalable",
-      p_c2_f3: "Integración de pagos, auth y modelos IA",
-      p_c2_f4: "Propiedad intelectual 100% del cliente",
-      p_c2_btn: "Iniciar MVP por fases",
-      p_c3_badge: "Suscripción Mensual · Asesoría Continua",
-      p_c3_title: "Retainer Técnico",
-      p_c3_desc: "Equipo de diseño e ingeniería dedicado para startups y empresas que necesitan iteración continua, nuevas features y SLA de soporte crítico.",
-      p_c3_f1: "Horas de desarrollo e ingeniería senior",
-      p_c3_f2: "Respuesta garantizada <4h ante incidencias",
-      p_c3_f3: "Cancelable con 30 días de anticipación",
-      p_c3_btn: "Consultar disponibilidad",
-      civic_callout_title: "¿Perteneces a una ONG, colectivo cívico o respuesta de emergencia?",
-      civic_callout_desc: "Ofrecemos tarifas subvencionadas y consultoría abierta pro-bono para iniciativas humanitarias y de socorro civil. Desarrollamos herramientas que salvan vidas.",
-      civic_callout_btn: "Solicitar apoyo cívico",
-      est_idx: "Copiloto Técnico · Posibilidades Ilimitadas",
-      est_title: "Cotizador Inteligente con IA",
-      est_desc: "Construimos cualquier solución tecnológica que imagines sin límites de catálogo. Conversa con nuestro copiloto o escribe una palabra (ej. 'app', 'saas', 'ia') para modular arquitectura, módulos recomendados y presupuesto en tiempo real.",
-      est_chat_status: "MYOOZ AI Copilot · Online",
-      est_btn_reset: "Reiniciar",
-      est_pred_label: "✦ Sugerencia:",
-      est_btn_send: "Enviar",
-      est_est_title: "Inversión Estimada",
-      est_badge_live: "En Vivo",
-      est_key_type: "Arquitectura / Core:",
-      est_key_scope: "Alcance & Fase:",
-      est_key_tech: "Capacidades:",
-      est_note: "¿Tu requerimiento es totalmente único o fuera de lo común? Diseñamos la infraestructura técnica a medida desde cero para tu proyecto exacto.",
-      est_transfer_btn: "Transferir brief al formulario de contacto →",
       c_title: "Hablemos de tu próximo producto.",
       c_lead: "Cuéntanos qué estás construyendo. Respondemos personalmente a cada proyecto.",
       c_lbl_name: "Nombre o Empresa",
@@ -2431,18 +1973,13 @@
       c_succ_tail: " a la brevedad.",
       c_btn_another: "Enviar otro mensaje",
       c_direct_mail: "Correo directo",
-      c_avail_label: "Disponibilidad",
-      c_avail_title: "Abierta todo el año",
-      c_avail_badge: "⚡ Nuevos proyectos bienvenidos",
-      c_avail_note: "Consultas abiertas para nuevos productos, plataformas y sprints de alto impacto. Respuesta directa en menos de 24 horas.",
+      c_mail_note: "Escríbenos directamente o usa el formulario. Respuesta directa en menos de 24 horas.",
       c_social_label: "Redes"
     },
     en: {
       nav_mission: "Mission",
       nav_projects: "Work",
       nav_humanitarian: "Social Impact",
-      nav_pricing: "Pricing & Models",
-      nav_estimator: "AI Estimator",
       nav_contact: "Contact",
       hero_scroll: "Scroll down",
       hero_eyebrow: "Digital product engineering & civic technology",
@@ -2469,49 +2006,6 @@
       geo_mexico_title: "Permanent Community Infrastructure vs Temporary Maps",
       geo_mexico_desc: "During emergencies in Mexico, temporary tools often disappear after the acute crisis. Our relief hub and SOS dispatch system is ready for rapid deployment with Civil Protection, universities, and the Red Cross.",
       geo_mexico_link: "Inquire about emergency deployment in Mexico →",
-      p_idx: "05 — Models & Investment",
-      p_title: "Transparent Working Models",
-      p_desc: "No surprises, no opaque quotes. We work via dedicated sprints, full product phases, or continuous engineering retainers with verifiable milestones.",
-      p_c1_badge: "1 to 2 weeks",
-      p_c1_title: "Product Sprint",
-      p_c1_desc: "Quickly validate concepts, eliminate UX/UI friction, or build a working AI prototype in production before committing a larger budget.",
-      p_from: "from",
-      p_c1_f1: "Working interactive prototype deployed to Vercel",
-      p_c1_f2: "Production architecture & recommended tech stack",
-      p_c1_f3: "Turnaround in 7 to 14 calendar days",
-      p_c1_btn: "Estimate this sprint",
-      p_c2_badge: "4 to 8 weeks · Most Requested",
-      p_c2_title: "Phased Product Launch",
-      p_c2_desc: "From zero to launched product. Complete web and mobile app, real-time database, integrated AI copilot, and high-conversion UX.",
-      p_c2_f1: "Custom UX/UI design system in Figma",
-      p_c2_f2: "WebGL/React frontend + scalable cloud backend",
-      p_c2_f3: "Stripe payments, auth, and LLM model integration",
-      p_c2_f4: "100% client-owned intellectual property",
-      p_c2_btn: "Start phased MVP",
-      p_c3_badge: "Monthly Retainer · Continuous Advisory",
-      p_c3_title: "Engineering Retainer",
-      p_c3_desc: "Dedicated senior design and engineering capacity for startups and scaleups requiring rapid iteration and critical support SLAs.",
-      p_c3_f1: "Dedicated senior engineering & design sprint hours",
-      p_c3_f2: "Guaranteed <4h response SLA for critical events",
-      p_c3_f3: "Cancelable anytime with 30-day notice",
-      p_c3_btn: "Check availability",
-      civic_callout_title: "Are you an NGO, civic initiative, or emergency responder?",
-      civic_callout_desc: "We offer subsidized rates and pro-bono consulting for humanitarian and public relief initiatives. We engineer software that saves lives.",
-      civic_callout_btn: "Request civic partnership",
-      est_idx: "Technical Copilot · Limitless Possibilities",
-      est_title: "AI-Powered Project Estimator",
-      est_desc: "We build any technological solution you envision without catalog limitations. Chat with our copilot or type a keyword (e.g. 'app', 'saas', 'ai') to calculate architecture, modules, and budget in real time.",
-      est_chat_status: "MYOOZ AI Copilot · Online",
-      est_btn_reset: "Reset",
-      est_pred_label: "✦ Suggestion:",
-      est_btn_send: "Send",
-      est_est_title: "Estimated Investment",
-      est_badge_live: "Live",
-      est_key_type: "Architecture / Core:",
-      est_key_scope: "Scope & Phase:",
-      est_key_tech: "Capabilities:",
-      est_note: "Have a completely unique or unorthodox technical requirement? We engineer custom infrastructure from the ground up for your exact vision.",
-      est_transfer_btn: "Transfer brief to contact form →",
       c_title: "Let's build your next product.",
       c_lead: "Tell us what you're creating. We respond personally to every inquiry.",
       c_lbl_name: "Name or Company",
@@ -2526,10 +2020,7 @@
       c_succ_tail: " shortly.",
       c_btn_another: "Send another message",
       c_direct_mail: "Direct email",
-      c_avail_label: "Availability",
-      c_avail_title: "Open year-round",
-      c_avail_badge: "⚡ New projects welcome",
-      c_avail_note: "Open inquiries for new products, platforms and high-impact sprints. Direct reply within 24 hours.",
+      c_mail_note: "Email us directly or use the form. Direct response within 24 hours.",
       c_social_label: "Social"
     }
   };
@@ -2569,761 +2060,6 @@
       setLanguage(saved);
     }
   }catch(e){}
-
-  // ==========================================================================
-  // ---------- Holographic Particle Cotizador & Spec Generator Engine ----------
-  // ==========================================================================
-  (function initHolographicCotizador(){
-    const stage = document.getElementById('estimator');
-    const terminal = document.getElementById('cotizadorTerminal');
-    const pCanvas = document.getElementById('cotizadorParticleCanvas');
-    const chatStream = document.getElementById('estChatStream');
-    const inputField = document.getElementById('estInput');
-    const inputForm = document.getElementById('estInputForm');
-    const predBar = document.getElementById('estPredictiveBar');
-    const predTagsContainer = document.getElementById('estPredTags');
-    const resetBtn = document.getElementById('estResetBtn');
-
-    if(!stage || !terminal || !chatStream) return;
-
-    // ========================================================================
-    // 1. Quantum Particle Assembly Animation for Cotizador Frame
-    // ========================================================================
-    (function initCotizadorParticles(){
-      if(!pCanvas) return;
-      const ctx = pCanvas.getContext('2d');
-      if(!ctx) return;
-
-      let pWidth = 0, pHeight = 0;
-      let pList = [];
-      const NUM_PARTICLES = 180;
-      let isVisible = false;
-      let assembledRatio = 0; // 0 = dispersed, 1 = fully assembled into terminal border
-
-      function resizePCanvas(){
-        const rect = stage.getBoundingClientRect();
-        pWidth = rect.width;
-        pHeight = rect.height;
-        pCanvas.width = pWidth * (window.devicePixelRatio || 1);
-        pCanvas.height = pHeight * (window.devicePixelRatio || 1);
-        pCanvas.style.width = pWidth + 'px';
-        pCanvas.style.height = pHeight + 'px';
-        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-        calculateTargets();
-      }
-
-      function calculateTargets(){
-        const tRect = terminal.getBoundingClientRect();
-        const sRect = stage.getBoundingClientRect();
-        const left = tRect.left - sRect.left;
-        const top = tRect.top - sRect.top;
-        const w = tRect.width;
-        const h = tRect.height;
-        const perimeter = 2 * (w + h);
-
-        pList.forEach((p, idx) => {
-          // Distribute evenly along the perimeter of the terminal
-          const distAlong = (idx / NUM_PARTICLES) * perimeter;
-          let tx = 0, ty = 0;
-          if(distAlong < w){
-            tx = left + distAlong; ty = top;
-          } else if(distAlong < w + h){
-            tx = left + w; ty = top + (distAlong - w);
-          } else if(distAlong < 2 * w + h){
-            tx = left + w - (distAlong - (w + h)); ty = top + h;
-          } else {
-            tx = left; ty = top + h - (distAlong - (2 * w + h));
-          }
-
-          p.tx = tx;
-          p.ty = ty;
-        });
-      }
-
-      function initParticles(){
-        pList = [];
-        for(let i = 0; i < NUM_PARTICLES; i++){
-          // Start dispersed in space around stage
-          const ang = Math.random() * Math.PI * 2;
-          const dist = 300 + Math.random() * 400;
-          pList.push({
-            x: (pWidth / 2) + Math.cos(ang) * dist,
-            y: (pHeight / 2) + Math.sin(ang) * dist,
-            tx: pWidth / 2,
-            ty: pHeight / 2,
-            vx: 0,
-            vy: 0,
-            size: Math.random() * 2.2 + 1.2,
-            colorType: Math.random() < 0.65 ? 'green' : 'violet',
-            pulsePhase: Math.random() * Math.PI * 2,
-            orbitSpeed: (Math.random() - 0.5) * 0.02
-          });
-        }
-      }
-
-      // Check visibility via IntersectionObserver
-      if('IntersectionObserver' in window){
-        const obs = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            isVisible = entry.isIntersecting;
-          });
-        }, { threshold: 0.1 });
-        obs.observe(stage);
-      } else {
-        isVisible = true;
-      }
-
-      resizePCanvas();
-      initParticles();
-      window.addEventListener('resize', resizePCanvas);
-
-      let animTime = 0;
-      function animate(timestamp){
-        requestAnimationFrame(animate);
-        if(!isVisible) return;
-        animTime += 0.025;
-
-        // Smoothly progress towards assembled state
-        assembledRatio += (1 - assembledRatio) * 0.04;
-
-        ctx.clearRect(0, 0, pWidth, pHeight);
-
-        pList.forEach((p, i) => {
-          // Patrol orbit around the perimeter
-          const orbitOffset = Math.sin(animTime * 1.5 + p.pulsePhase) * 4;
-          const targetX = p.tx + Math.cos(animTime + i) * orbitOffset;
-          const targetY = p.ty + Math.sin(animTime + i) * orbitOffset;
-
-          p.x += (targetX - p.x) * (0.05 + 0.04 * assembledRatio);
-          p.y += (targetY - p.y) * (0.05 + 0.04 * assembledRatio);
-
-          const alpha = 0.5 + 0.5 * Math.sin(animTime * 2.2 + p.pulsePhase);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-
-          if(p.colorType === 'green'){
-            ctx.fillStyle = `rgba(52, 211, 153, ${0.4 + 0.5 * alpha})`;
-            ctx.shadowColor = '#34d399';
-            ctx.shadowBlur = 8;
-          } else {
-            ctx.fillStyle = `rgba(192, 132, 252, ${0.35 + 0.5 * alpha})`;
-            ctx.shadowColor = '#c084fc';
-            ctx.shadowBlur = 7;
-          }
-          ctx.fill();
-        });
-
-        // Reset shadow
-        ctx.shadowBlur = 0;
-      }
-      requestAnimationFrame(animate);
-    })();
-
-    // ========================================================================
-    // 2. Blueprint Specification Catalog & Consultation Knowledge
-    // ========================================================================
-    const SPEC_CATALOG = [
-      {
-        id: 'image_ai',
-        pattern: /imagen|im[aá]gen|foto|difusi[oó]n|diffusion|flux|midjourney|avatar|fotograf[ií]a|render|arte|sdxl|dall-e|profeiosnal|profesional/i,
-        domainEs: 'Generación Visual con IA (Diffusion Pipeline)',
-        domainEn: 'Generative Visual AI (Diffusion Pipeline)',
-        stackEs: 'FLUX.1 / SDXL + LoRAs de Estudio, Inferencia GPU dedicada',
-        stackEn: 'FLUX.1 / SDXL + Studio LoRAs, Dedicated GPU Inference',
-        infraEs: 'Colas Asíncronas en GPU (Modal/RunPod), Latencia 2-4s por generación',
-        infraEn: 'Async GPU Task Workers (Modal/RunPod), 2-4s generation latency',
-        secEs: 'Billetera de Créditos, Stripe Billing, Almacenamiento CDN 4K',
-        secEn: 'Credit Wallet, Stripe Billing, Global 4K CDN Storage',
-        priceMin: 3600, priceMax: 4800, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
-        consultationEs: `¡Excelente visión de producto! Para una plataforma de <strong>generación de imágenes profesionales con IA</strong>, hemos modelado una arquitectura enfocada en fidelidad fotográfica y respuesta inmediata:<br><br>
-        • <strong>Pipeline de Difusión</strong>: Modelos FLUX.1 y SDXL afinados con LoRAs propios para preservar anatomía perfecta, iluminación de estudio y exportación hasta 4K.<br>
-        • <strong>Orquestación GPU Asíncrona</strong>: Despliegue en clusters de GPU con colas de tareas para que múltiples usuarios generen simultáneamente sin bloquear la interfaz.<br>
-        • <strong>Monetización & Créditos</strong>: Sistema de paquetes de créditos recargables con Stripe, historial seguro y galerías privadas.<br><br>
-        A continuación tienes la <strong>Ficha Técnica Oficial</strong> compilada. Puedes descargarla o ingresar tu correo para recibir una copia directa en tu bandeja:`,
-        consultationEn: `Outstanding vision! For a <strong>professional AI image generation platform</strong>, we have compiled an architecture engineered for photorealistic consistency and low latency:<br><br>
-        • <strong>Neural Diffusion Pipeline</strong>: FLUX.1 & SDXL models fine-tuned with custom LoRAs for studio lighting, anatomical accuracy, and 4K upscaling.<br>
-        • <strong>Async GPU Workflows</strong>: Serverless GPU cluster workers with task queues delivering results in 2 to 4 seconds.<br>
-        • <strong>Monetization & Credit Wallet</strong>: Stripe metered billing, credit packages, and secure cloud CDN delivery.<br><br>
-        Below is your <strong>Compiled Technical Blueprint</strong>. You can download it or receive a copy directly in your email:`
-      },
-      {
-        id: 'audio_music_ai',
-        pattern: /audio|m[uú]sica|sonido|voz|voces|canci[oó]n|beat|productor|podcast|vocal|s[ií]ntesis|tts/i,
-        domainEs: 'Motor de Audio Digital, Síntesis & IA Sonora',
-        domainEn: 'Digital Audio Engine & Generative Voice AI',
-        stackEs: 'Web Audio API (GPU/Wasm), Modelos de Voz Neuronal & TTS',
-        stackEn: 'Web Audio API (GPU/Wasm), Neural Voice & TTS Models',
-        infraEs: 'Streaming de Audio por Bloques (Lossless), Servidores de Baja Latencia',
-        infraEn: 'Chunked Lossless Audio Streaming, Low-Latency Edge Nodes',
-        secEs: 'Gestión de Derechos de Autor, Stripe Checkout, Exportación Multipistas',
-        secEn: 'Copyright Licensing, Stripe Checkout, Multitrack Stem Export',
-        priceMin: 3500, priceMax: 4700, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
-        consultationEs: `La ingeniería de audio e IA sonora exige ultra baja latencia y procesamiento en tiempo real:<br><br>
-        • <strong>Pipeline Web Audio</strong>: Síntesis de voz, clonación neuronal y separación de pistas acelerada por WebAssembly y GPU.<br>
-        • <strong>Streaming Sin Pérdidas</strong>: Arquitectura adaptativa para streaming y exportación de masters en alta fidelidad.<br><br>
-        Aquí tienes el expediente técnico compilado para este sistema:`,
-        consultationEn: `Audio engineering and neural sound AI demand ultra-low latency and real-time processing:<br><br>
-        • <strong>Web Audio Pipeline</strong>: Neural voice synthesis, cloning, and stem separation accelerated via WebAssembly/GPU.<br>
-        • <strong>Lossless Streaming</strong>: Adaptive chunked streaming and studio-grade master exports.<br><br>
-        Here is the technical blueprint compiled for your system:`
-      },
-      {
-        id: 'llm_agents',
-        pattern: /chat|bot|gpt|llm|agente|copiloto|asistente|documento|rag|inteligencia|automatiz/i,
-        domainEs: 'Copiloto Autónomo con LLMs & RAG Empresarial',
-        domainEn: 'Autonomous Copilot with LLMs & Enterprise RAG',
-        stackEs: 'Claude 3.5 / GPT-4o / Llama 3, Base de Datos Vectorial (pgvector)',
-        stackEn: 'Claude 3.5 / GPT-4o / Llama 3, Vector Database (pgvector)',
-        infraEs: 'Streaming de Tokens Sub-100ms, Orquestación de Agentes Supervisados',
-        infraEn: 'Sub-100ms Token Streaming, Supervised Autonomous Tool Agents',
-        secEs: 'Aislamiento Estricto de Datos, Cifrado en Reposo, Cero Alucinaciones',
-        secEn: 'Strict Data Isolation, Encryption at Rest, Hallucination-Free',
-        priceMin: 3400, priceMax: 4600, timelineEs: '~4 a 5 semanas (MVP)', timelineEn: '~4 to 5 weeks (MVP)',
-        consultationEs: `Un sistema de copilotos y agentes autónomos de producción requiere rigor para evitar alucinaciones y proteger datos sensibles:<br><br>
-        • <strong>RAG Híbrido & Embeddings</strong>: Indexación semántica profunda sobre documentos privados de tu organización.<br>
-        • <strong>Herramientas Autónomas</strong>: Ejecución supervisada de consultas, generación de reportes y envíos automáticos.<br><br>
-        Ficha técnica de arquitectura compilada:`,
-        consultationEn: `Production autonomous agents and copilots require strict guardrails and private data sovereignty:<br><br>
-        • <strong>Hybrid RAG & Embeddings</strong>: Deep semantic indexing across proprietary corporate files with zero hallucinations.<br>
-        • <strong>Autonomous Tool Agents</strong>: Supervised automated workflows and direct API dispatch.<br><br>
-        Compiled technical architecture blueprint:`
-      },
-      {
-        id: 'saas_b2b',
-        pattern: /saas|crm|erp|gesti[oó]n|cl[ií]nica|abogado|contab|empresa|b2b|portal|turnos|citas|facturaci[oó]n/i,
-        domainEs: 'Plataforma SaaS B2B Multi-Inquilino (Cloud)',
-        domainEn: 'Multi-Tenant B2B Cloud SaaS Platform',
-        stackEs: 'Next.js 15 + Node.js / Go, PostgreSQL con Esquemas Aislados',
-        stackEn: 'Next.js 15 + Node.js / Go, PostgreSQL with Partitioned Schemas',
-        infraEs: 'Despliegue Multi-Región Auto-Escalable, API REST & GraphQL',
-        infraEn: 'Auto-Scaling Multi-Region Cloud, REST & GraphQL APIs',
-        secEs: 'Control de Roles (RBAC), Stripe Billing & Invoices, Auditoría Inmutable',
-        secEn: 'RBAC Role Management, Stripe Billing & Invoices, Audit Logs',
-        priceMin: 3200, priceMax: 4500, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
-        consultationEs: `Diseñamos plataformas SaaS orientadas a alta conversión, escalabilidad limpia y seguridad empresarial:<br><br>
-        • <strong>Aislamiento Multi-Tenant</strong>: Privacidad garantizada entre organizaciones clientes.<br>
-        • <strong>Suscripciones & Reportes</strong>: Gestión de planes, pagos recurrentes automáticos y cuadros de mando.<br><br>
-        Ficha de especificaciones técnicas compilada:`,
-        consultationEn: `We design enterprise SaaS platforms built for high user retention and cloud scalability:<br><br>
-        • <strong>Multi-Tenant Isolation</strong>: Strict data segregation across customer organizations.<br>
-        • <strong>Recurring Revenue & Dashboards</strong>: Automated Stripe billing and real-time operational reports.<br><br>
-        Compiled technical specifications:`
-      },
-      {
-        id: 'fintech_crypto',
-        pattern: /fintech|billetera|wallet|crypto|blockchain|pago|pagos|tarjeta|banco|bancari|prestamo|inversi[oó]n|stripe|token/i,
-        domainEs: 'Fintech & Infraestructura Transaccional Segura',
-        domainEn: 'Fintech & Secure Transactional Infrastructure',
-        stackEs: 'Motor de Idempotencia, Pasarelas Múltiples (Tarjetas & Crypto)',
-        stackEn: 'Idempotent Transactional Engine, Multi-Rail Payment Gateways',
-        infraEs: 'Procesamiento Asíncrono en Memoria (Redis), Cero Pérdida de Datos',
-        infraEn: 'In-Memory Async Processing (Redis), Zero Data Loss Tolerance',
-        secEs: 'Cifrado Bancario AES-256, 2FA Biométrico, Cumplimiento KYC/AML',
-        secEn: 'AES-256 Bank Encryption, Biometric 2FA, KYC/AML Compliance',
-        priceMin: 4200, priceMax: 5800, timelineEs: '~6 a 8 semanas', timelineEn: '~6 to 8 weeks',
-        consultationEs: `Las plataformas financieras y transaccionales exigen tolerancia cero a inconsistencias y máxima seguridad:<br><br>
-        • <strong>Conciliación Idempotente</strong>: Cada transacción se registra con firma criptográfica inmutable.<br>
-        • <strong>Rieles de Pago Híbridos</strong>: Tarjetas internacionales y transferencias locales o rieles crypto (USDC).<br><br>
-        Expediente técnico compilado:`,
-        consultationEn: `Financial transactional platforms demand zero fault tolerance and banking-grade security:<br><br>
-        • <strong>Idempotent Ledger</strong>: Cryptographically signed immutable audit records.<br>
-        • <strong>Hybrid Payment Rails</strong>: Global card processing paired with Web3 crypto settlement.<br><br>
-        Compiled technical dossier:`
-      },
-      {
-        id: 'fast_sprint',
-        pattern: /sprint|r[aá]pido|urgente|1 sem|2 sem|prototipo|validar|poc/i,
-        domainEs: 'Product Sprint de Validación Rápida',
-        domainEn: 'Rapid Product Validation Sprint',
-        stackEs: 'Next.js Reactivo / App Móvil, Base de Datos Serverless en Producción',
-        stackEn: 'Reactive Next.js / Mobile, Production Serverless Database',
-        infraEs: 'Despliegue Inmediato en la Nube (Vercel/AWS), CI/CD Configurado',
-        infraEn: 'Live Production Cloud Deployment (Vercel/AWS), CI/CD Enabled',
-        secEs: 'Flujo Crítico Validado, UI de Alta Conversión, 100% Propiedad del Cliente',
-        secEn: 'Validated Core Flow, High-Conversion UI, 100% Client Ownership',
-        priceMin: 1500, priceMax: 2200, timelineEs: '7 a 14 días corridos', timelineEn: '7 to 14 calendar days',
-        consultationEs: `Para lanzar y validar con usuarios o inversores en tiempo récord:<br><br>
-        • <strong>Entrega en 7 a 14 días</strong>: Prototipo funcional desplegado en producción real sin atajos de código.<br>
-        • <strong>Foco en el Valor Central</strong>: Resolución del cuello de botella principal listo para evolucionar.<br><br>
-        Ficha técnica compilada para tu Sprint:`,
-        consultationEn: `For launching and validating with real users or investors in record time:<br><br>
-        • <strong>7 to 14 Day Delivery</strong>: Live production prototype deployed on real cloud infrastructure.<br>
-        • <strong>Laser Core Focus</strong>: Solving the primary bottleneck with scalable clean architecture.<br><br>
-        Compiled Sprint specification:`
-      },
-      {
-        id: 'mobile_app',
-        pattern: /app|m[oó]vil|celular|iphone|android|ios|tablet|aplicaci[oó]n/i,
-        domainEs: 'App Móvil Nativa / Multiplataforma (iOS & Android)',
-        domainEn: 'High-Performance Mobile App (iOS & Android)',
-        stackEs: 'React Native / Flutter / Swift, Código Unificado de Alto Rendimiento',
-        stackEn: 'React Native / Flutter / Swift, High-Performance Unified Codebase',
-        infraEs: 'Notificaciones Push Segmentadas, Modo Offline-First, Backend Cloud',
-        infraEn: 'Segmented Push Notifications, Offline-First Sync, Cloud Backend',
-        secEs: 'Auth Biométrica, In-App Purchases / Stripe, Cifrado de Datos Local',
-        secEn: 'Biometric Auth, In-App Purchases / Stripe, Local Storage Encryption',
-        priceMin: 3600, priceMax: 4800, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
-        consultationEs: `Diseñamos aplicaciones móviles con experiencia nativa fluida, micro-interacciones a 60 FPS y arquitectura escalable:<br><br>
-        • <strong>Stack Unificado</strong>: Código de alto rendimiento para iOS y Android que reduce costos y tiempos a la mitad.<br>
-        • <strong>Integraciones Nativas</strong>: Notificaciones push, sincronización en background y autenticación biométrica.<br><br>
-        Ficha técnica oficial compilada:`,
-        consultationEn: `We engineer mobile apps with fluid native UX, 60 FPS animations, and resilient offline synchronization:<br><br>
-        • <strong>Unified Stack</strong>: High-performance iOS and Android codebase cutting maintenance time in half.<br>
-        • <strong>Native Integrations</strong>: Push notifications, biometric login, and background sync.<br><br>
-        Compiled official technical blueprint:`
-      }
-    ];
-
-    // ========================================================================
-    // 3. File Generator & Dispatch Helpers
-    // ========================================================================
-    let currentSpec = null;
-
-    function renderBlueprintCard(spec){
-      const isEn = (currentLang === 'en');
-      const hash = Math.random().toString(36).substring(2, 7).toUpperCase();
-
-      currentSpec = {
-        hash: hash,
-        domain: isEn ? spec.domainEn : spec.domainEs,
-        stack: isEn ? spec.stackEn : spec.stackEs,
-        infra: isEn ? spec.infraEn : spec.infraEs,
-        sec: isEn ? spec.secEn : spec.secEs,
-        priceMin: spec.priceMin,
-        priceMax: spec.priceMax,
-        timeline: isEn ? spec.timelineEn : spec.timelineEs
-      };
-
-      const cardHtml = `
-      <div class="est-blueprint-file" id="blueprintCard-${hash}">
-        <div class="b-file-header">
-          <div class="b-file-meta">
-            <span class="b-file-icon">📄</span>
-            <div>
-              <div class="b-file-title">MYOOZ-SPEC-2026-${hash}.blueprint</div>
-              <div class="b-file-sub">${isEn ? 'OFFICIAL TECHNICAL DOSSIER · MYOOZ LABS' : 'EXPEDIENTE DE ARQUITECTURA TÉCNICA · MYOOZ LABS'}</div>
-            </div>
-          </div>
-          <span class="b-file-status">✓ ${isEn ? 'VERIFIED & COMPILED' : 'COMPILADO & VERIFICADO'}</span>
-        </div>
-
-        <div class="b-file-domain">
-          <span class="b-domain-label">${isEn ? 'PROJECT ARCHITECTURE' : 'ARQUITECTURA DEL PROYECTO'}</span>
-          <h4>${currentSpec.domain}</h4>
-        </div>
-
-        <div class="b-file-grid">
-          <div class="b-spec-col">
-            <div class="b-item"><span class="k">${isEn ? 'CORE STACK:' : 'STACK & CORE:'}</span> <span class="v">${currentSpec.stack}</span></div>
-            <div class="b-item"><span class="k">${isEn ? 'INFRASTRUCTURE & GPU:' : 'INFRAESTRUCTURA & GPU:'}</span> <span class="v">${currentSpec.infra}</span></div>
-            <div class="b-item"><span class="k">${isEn ? 'SECURITY & MONETIZATION:' : 'SEGURIDAD & MONETIZACIÓN:'}</span> <span class="v">${currentSpec.sec}</span></div>
-          </div>
-          <div class="b-spec-col right">
-            <div class="b-item highlight"><span class="k">${isEn ? 'ESTIMATED INVESTMENT:' : 'INVERSIÓN ESTIMADA:'}</span> <span class="v price">$${currentSpec.priceMin.toLocaleString()} – $${currentSpec.priceMax.toLocaleString()} USD</span></div>
-            <div class="b-item"><span class="k">${isEn ? 'TIMELINE:' : 'PLAZO DE ENTREGA:'}</span> <span class="v">${currentSpec.timeline}</span></div>
-            <div class="b-item"><span class="k">${isEn ? 'IP OWNERSHIP:' : 'PROPIEDAD INTELECTUAL:'}</span> <span class="v">${isEn ? '100% Client-Owned' : '100% Propiedad del Cliente'}</span></div>
-          </div>
-        </div>
-
-        <div class="b-file-actions">
-          <button type="button" class="btn-dossier-download" id="btnDownload-${hash}">
-            📥 ${isEn ? 'Download Spec Sheet (.txt)' : 'Descargar Ficha Técnica (.txt)'}
-          </button>
-          <button type="button" class="btn-dossier-email" id="btnToggleEmail-${hash}">
-            ✉️ ${isEn ? 'Send Copy to My Email' : 'Recibir Copia en mi Correo'}
-          </button>
-        </div>
-
-        <!-- Inline Email Dispatch Module -->
-        <div class="b-file-dispatch-form" id="dispatchForm-${hash}" style="display:none;">
-          <div class="b-dispatch-title">⚡ ${isEn ? 'Direct Inbox Delivery' : 'Despacho Directo a tu Bandeja'}</div>
-          <p class="b-dispatch-desc">${isEn ? 'Enter your details to receive this official technical dossier in your inbox and notify our engineering leads:' : 'Ingresa tus datos para recibir este expediente técnico oficial en tu correo y ser contactado por nuestro equipo de ingeniería:'}</p>
-          <div class="b-dispatch-inputs">
-            <input type="text" class="dispatch-name" id="dispName-${hash}" placeholder="${isEn ? 'Your Name or Company' : 'Tu Nombre o Empresa'}" required>
-            <input type="email" class="dispatch-email" id="dispEmail-${hash}" placeholder="alex@ejemplo.com" required>
-            <button type="button" class="btn-send-dispatch" id="btnSubmitDispatch-${hash}">
-              ${isEn ? 'Dispatch Dossier →' : 'Despachar Dossier →'}
-            </button>
-          </div>
-          <div class="dispatch-status" id="dispStatus-${hash}" style="display:none;"></div>
-        </div>
-      </div>
-      `;
-
-      return cardHtml;
-    }
-
-    function setupBlueprintEvents(hash, specData){
-      setTimeout(() => {
-        // Download event
-        const btnDown = document.getElementById(`btnDownload-${hash}`);
-        if(btnDown){
-          btnDown.addEventListener('click', () => {
-            downloadSpecFile(specData);
-          });
-        }
-
-        // Toggle email dispatch
-        const btnToggle = document.getElementById(`btnToggleEmail-${hash}`);
-        const formDiv = document.getElementById(`dispatchForm-${hash}`);
-        if(btnToggle && formDiv){
-          btnToggle.addEventListener('click', () => {
-            formDiv.style.display = (formDiv.style.display === 'none' ? 'flex' : 'none');
-          });
-        }
-
-        // Send email dispatch
-        const btnSend = document.getElementById(`btnSubmitDispatch-${hash}`);
-        const inputName = document.getElementById(`dispName-${hash}`);
-        const inputEmail = document.getElementById(`dispEmail-${hash}`);
-        const statusDiv = document.getElementById(`dispStatus-${hash}`);
-
-        if(btnSend && inputEmail && statusDiv){
-          btnSend.addEventListener('click', async () => {
-            const nameVal = inputName.value.trim() || 'Cliente';
-            const emailVal = inputEmail.value.trim();
-
-            if(!emailVal || !emailVal.includes('@')){
-              statusDiv.className = 'dispatch-status error';
-              statusDiv.style.display = 'block';
-              statusDiv.textContent = currentLang === 'en' ? 'Please enter a valid email address.' : 'Por favor ingresa un correo electrónico válido.';
-              return;
-            }
-
-            btnSend.disabled = true;
-            btnSend.textContent = currentLang === 'en' ? 'Sending...' : 'Enviando...';
-
-            const payloadText = `[MYOOZ LABS - DOSSIER DE ESPECIFICACIÓN TÉCNICA]
-ID: MYOOZ-SPEC-2026-${hash}
-Cliente: ${nameVal} (${emailVal})
-Proyecto: ${specData.domain}
-Stack: ${specData.stack}
-Infraestructura: ${specData.infra}
-Seguridad & Monetización: ${specData.sec}
-Inversión Estimada: $${specData.priceMin.toLocaleString()} – $${specData.priceMax.toLocaleString()} USD
-Plazo: ${specData.timeline}
-Propiedad Intelectual: 100% Cliente
-`;
-
-            try {
-              const res = await fetch("https://formsubmit.co/ajax/e913a5327b8764024bda0b95764834ff", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                body: JSON.stringify({
-                  name: nameVal,
-                  email: emailVal,
-                  _subject: `[Blueprint Solicitado] ${specData.domain} - ${nameVal}`,
-                  message: payloadText
-                })
-              });
-
-              statusDiv.className = 'dispatch-status success';
-              statusDiv.style.display = 'block';
-              statusDiv.textContent = currentLang === 'en'
-                ? `✓ Dossier dispatched to ${emailVal}! Engineering leads notified. We will reply within 24h.`
-                : `✓ ¡Dossier despachado exitosamente a ${emailVal}! Equipo de ingeniería notificado. Te responderemos personalmente en menos de 24h.`;
-
-              // Trigger download too
-              downloadSpecFile(specData);
-            } catch(err){
-              statusDiv.className = 'dispatch-status success';
-              statusDiv.style.display = 'block';
-              statusDiv.textContent = currentLang === 'en'
-                ? `✓ Dossier prepared for ${emailVal}. Direct copy downloaded below.`
-                : `✓ Dossier preparado para ${emailVal}. Descarga directa generada en tu equipo.`;
-              downloadSpecFile(specData);
-            } finally {
-              btnSend.disabled = false;
-              btnSend.textContent = currentLang === 'en' ? 'Dispatched ✓' : 'Despachado ✓';
-            }
-          });
-        }
-      }, 50);
-    }
-
-    function downloadSpecFile(specData){
-      const isEn = (currentLang === 'en');
-      const textContent = `================================================================================
-MYOOZ LABS — EXPEDIENTE DE ARQUITECTURA TÉCNICA & BLUEPRINT
-ID: MYOOZ-SPEC-2026-${specData.hash}
-Estado: VERIFICADO & AUTORIZADO POR MYOOZ LABS
-Fecha: ${new Date().toLocaleDateString()}
-================================================================================
-
-1. ARQUITECTURA DEL PROYECTO
-   ${specData.domain}
-
-2. STACK TECNOLÓGICO RECOMENDADO
-   ${specData.stack}
-
-3. INFRAESTRUCTURA & PROCESAMIENTO
-   ${specData.infra}
-
-4. SEGURIDAD, AUTENTICACIÓN & MONETIZACIÓN
-   ${specData.sec}
-
-5. RANGO DE INVERSIÓN ESTIMADO
-   $${specData.priceMin.toLocaleString()} – $${specData.priceMax.toLocaleString()} USD
-
-6. HORIZONTE DE ENTREGA
-   ${specData.timeline}
-
-7. PROPIEDAD INTELECTUAL
-   100% de la propiedad intelectual, repositorios de código, modelos entrenados
-   y diseños pertenecen exclusivamente al cliente desde el primer día.
-
-================================================================================
-MYOOZ LABS | Software de Alto Impacto
-Contacto directo: hola@myoozlabs.com | Instagram: @myoozlabs
-================================================================================
-`;
-      const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `MYOOZ_Blueprint_${specData.hash}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    // ========================================================================
-    // 4. Message Processing & Consultation Flow
-    // ========================================================================
-    function addBotMessageWithBlueprint(consultationHtml, specObj){
-      const cardHtml = renderBlueprintCard(specObj);
-      const combinedHtml = `${consultationHtml}${cardHtml}`;
-
-      const msgDiv = document.createElement('div');
-      msgDiv.className = 'est-msg bot';
-
-      const bubble = document.createElement('div');
-      bubble.className = 'est-bubble';
-      bubble.innerHTML = combinedHtml;
-      msgDiv.appendChild(bubble);
-
-      chatStream.appendChild(msgDiv);
-      chatStream.scrollTop = chatStream.scrollHeight;
-
-      setupBlueprintEvents(currentSpec.hash, currentSpec);
-    }
-
-    function addSimpleMessage(htmlContent, sender = 'bot', chips = []){
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `est-msg ${sender}`;
-
-      const bubble = document.createElement('div');
-      bubble.className = 'est-bubble';
-      bubble.innerHTML = htmlContent;
-      msgDiv.appendChild(bubble);
-
-      if(chips && chips.length > 0){
-        const chipsContainer = document.createElement('div');
-        chipsContainer.className = 'est-chips';
-        chips.forEach(c => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'est-chip';
-          btn.innerHTML = c.label;
-          btn.addEventListener('click', () => {
-            if(c.onClick) c.onClick();
-          });
-          chipsContainer.appendChild(btn);
-        });
-        msgDiv.appendChild(chipsContainer);
-      }
-
-      chatStream.appendChild(msgDiv);
-      chatStream.scrollTop = chatStream.scrollHeight;
-    }
-
-    function showTyping(callback, delay = 400){
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'est-msg bot';
-      typingDiv.id = 'estTyping';
-      typingDiv.innerHTML = '<div class="est-typing"><span></span><span></span><span></span></div>';
-      chatStream.appendChild(typingDiv);
-      chatStream.scrollTop = chatStream.scrollHeight;
-
-      setTimeout(() => {
-        const t = document.getElementById('estTyping');
-        if(t) t.remove();
-        callback();
-      }, delay);
-    }
-
-    function processUserMessage(rawText){
-      if(!rawText || !rawText.trim()) return;
-      const clean = rawText.trim();
-      addSimpleMessage(clean, 'user');
-      inputField.value = '';
-      hidePredictiveBar();
-
-      const isEn = (currentLang === 'en');
-
-      showTyping(() => {
-        // 1. Direct Question check
-        if(/cu[aá]nto cuesta|costo|precio|tarifas?|dinero/i.test(clean)){
-          const reply = isEn
-            ? "Our investment ranges are transparent and milestone-based:<br><br>• <strong>Sprints (1-2 weeks)</strong>: from $1,500 USD.<br>• <strong>Full MVPs (4-6 weeks)</strong>: $3,500 – $4,800 USD with custom Figma UI, cloud backend, and AI.<br>• <strong>Retainer</strong>: $2,200 USD/month.<br><br>Tell me what you're planning to build and I'll generate the exact Blueprint specification."
-            : "Nuestros rangos de inversión son transparentes por fases verificables:<br><br>• <strong>Product Sprints (1-2 semanas)</strong>: desde $1,500 USD.<br>• <strong>MVPs Completos (4-6 semanas)</strong>: $3,500 – $4,800 USD con diseño Figma exclusivo, cloud backend y modelos de IA.<br>• <strong>Retainer Técnico</strong>: $2,200 USD/mes.<br><br>Cuéntame qué tienes en mente y compilaré la ficha técnica con el presupuesto exacto.";
-          addSimpleMessage(reply, 'bot');
-          return;
-        }
-
-        if(/qu[eé] modelos?|qu[eé] ia|cu[aá]les modelos?/i.test(clean)){
-          const reply = isEn
-            ? "We integrate the optimal model stack for each use case: FLUX.1 & SDXL for visual generation; Claude 3.5 Sonnet & GPT-4o for complex reasoning; and self-hosted Llama 3 on dedicated GPUs for 100% private deployments."
-            : "Seleccionamos la arquitectura óptima según tu caso: FLUX.1 y SDXL para generación visual fotográfica; Claude 3.5 Sonnet y GPT-4o para razonamiento de alto nivel; y Llama 3 auto-hospedado en servidores GPU propios para máxima confidencialidad.";
-          addSimpleMessage(reply, 'bot');
-          return;
-        }
-
-        // 2. Match against Domain Catalog
-        let matched = null;
-        for(let spec of SPEC_CATALOG){
-          if(spec.pattern.test(clean)){
-            matched = spec;
-            break;
-          }
-        }
-
-        if(matched){
-          const consultText = isEn ? matched.consultationEn : matched.consultationEs;
-          addBotMessageWithBlueprint(consultText, matched);
-          return;
-        }
-
-        // 3. Fallback: Custom Architecture Compilation
-        const customSpec = {
-          id: 'custom',
-          domainEs: `Arquitectura a Medida: ${clean.substring(0, 45)}...`,
-          domainEn: `Bespoke Architecture: ${clean.substring(0, 45)}...`,
-          stackEs: 'Next.js 15 / React Native, Microservicios Serverless Cloud',
-          stackEn: 'Next.js 15 / React Native, Serverless Cloud Microservices',
-          infraEs: 'APIs Escalables a Medida, Base de Datos en Tiempo Real',
-          infraEn: 'Bespoke Scalable APIs, Real-Time Database',
-          secEs: 'Auth Segura, Cifrado AES-256, 100% Propiedad Intelectual',
-          secEn: 'Secure Auth, AES-256 Encryption, 100% IP Ownership',
-          priceMin: 3400, priceMax: 4800, timelineEs: '~4 a 6 semanas (MVP)', timelineEn: '~4 to 6 weeks (MVP)',
-          consultationEs: `Hemos analizado tu solicitud específica: <em>"${clean}"</em>.<br><br>
-          En MYOOZ LABS modelamos arquitecturas desde cero para proyectos únicos que no encajan en plantillas prefabricadas. Hemos estructurado el expediente técnico con el stack recomendado e inversión estimada:`,
-          consultationEn: `We analyzed your specific vision: <em>"${clean}"</em>.<br><br>
-          At MYOOZ LABS, we architect ground-up bespoke systems for ideas that go beyond cookie-cutter templates. Here is your compiled technical dossier:`
-        };
-
-        const consultText = isEn ? customSpec.consultationEs : customSpec.consultationEs;
-        addBotMessageWithBlueprint(consultText, customSpec);
-      });
-    }
-
-    // ========================================================================
-    // 5. Initial Greeting & Starter Chips
-    // ========================================================================
-    function sendInitialGreeting(){
-      chatStream.innerHTML = '';
-      const isEn = (currentLang === 'en');
-      const greeting = isEn
-        ? "Hello 👋 I am the MYOOZ LABS Technical Copilot. Describe what platform or system you want to build (e.g. <em>'an app to generate professional images with AI'</em>, <em>'a B2B clinic platform'</em>, <em>'a marketplace'</em>). I will compile an official Technical Blueprint dossier in real time."
-        : "Hola 👋 Soy el copiloto técnico de MYOOZ LABS. Cuéntame qué producto o sistema te gustaría construir (por ejemplo: <em>'una app para generar imágenes profesionales con IA'</em>, <em>'un saas para clínicas'</em>, <em>'un marketplace'</em>). Compilaré un expediente técnico oficial en tiempo real.";
-
-      const starterChips = [
-        {
-          label: isEn ? '🎨 AI Image Generator' : '🎨 Generador de Imágenes con IA',
-          onClick: () => processUserMessage(isEn ? 'I want to build an app to generate professional images with AI' : 'Quiero hacer una app para generar imágenes profesionales con IA')
-        },
-        {
-          label: isEn ? '🤖 Autonomous AI Copilot' : '🤖 Copiloto Autónomo con LLMs',
-          onClick: () => processUserMessage(isEn ? 'I want to build an AI copilot with RAG over private documents' : 'Quiero un copiloto de IA con RAG sobre documentos privados')
-        },
-        {
-          label: isEn ? '📱 Mobile App (iOS & Android)' : '📱 App Móvil (iOS & Android)',
-          onClick: () => processUserMessage(isEn ? 'I want to develop a mobile app for iOS and Android' : 'Quiero desarrollar una app móvil para iOS y Android')
-        },
-        {
-          label: isEn ? '💻 B2B SaaS Platform' : '💻 Plataforma SaaS B2B',
-          onClick: () => processUserMessage(isEn ? 'I want to build a multi-tenant B2B SaaS platform' : 'Quiero construir una plataforma SaaS B2B')
-        },
-        {
-          label: isEn ? '⚡ 1-2 Week Sprint' : '⚡ Sprint Rápido (1-2 sem)',
-          onClick: () => processUserMessage(isEn ? 'I need a fast validation sprint in 1 to 2 weeks' : 'Necesito un sprint rápido de 1 a 2 semanas')
-        }
-      ];
-
-      addSimpleMessage(greeting, 'bot', starterChips);
-    }
-
-    // Predictive auto-suggest
-    const PREDICTIONS = [
-      { trigger: ['imagen', 'foto', 'difusion', 'flux'], tagEs: '🎨 App de Imágenes con IA', tagEn: '🎨 AI Image App', text: 'Quiero hacer una app para generar imágenes profesionales con IA' },
-      { trigger: ['audio', 'musica', 'voz'], tagEs: '🎧 Plataforma de Audio / Voz IA', tagEn: '🎧 Audio / AI Voice App', text: 'Quiero crear una plataforma de audio y música con IA' },
-      { trigger: ['saas', 'crm', 'b2b'], tagEs: '💻 Plataforma SaaS B2B', tagEn: '💻 B2B SaaS Platform', text: 'Quiero construir una plataforma SaaS B2B' },
-      { trigger: ['app', 'movil', 'celular'], tagEs: '📱 App Móvil iOS & Android', tagEn: '📱 Mobile App iOS & Android', text: 'Quiero desarrollar una app móvil para iOS y Android' },
-      { trigger: ['sprint', 'rapido', 'urgente'], tagEs: '⚡ Sprint Rápido (1-2 sem)', tagEn: '⚡ Express Sprint (1-2 wks)', text: 'Necesito un sprint rápido de 1 a 2 semanas' }
-    ];
-
-    function updatePredictiveBar(val){
-      if(!val || val.trim().length < 2){
-        hidePredictiveBar();
-        return;
-      }
-      const v = val.toLowerCase();
-      const matches = PREDICTIONS.filter(pk => pk.trigger.some(t => v.includes(t)));
-
-      if(matches.length === 0){
-        hidePredictiveBar();
-        return;
-      }
-
-      predTagsContainer.innerHTML = '';
-      matches.forEach(m => {
-        const span = document.createElement('span');
-        span.className = 'est-pred-tag';
-        span.textContent = currentLang === 'en' ? m.tagEn : m.tagEs;
-        span.addEventListener('click', () => {
-          inputField.value = '';
-          hidePredictiveBar();
-          processUserMessage(m.text);
-        });
-        predTagsContainer.appendChild(span);
-      });
-      predBar.classList.add('active');
-    }
-
-    function hidePredictiveBar(){
-      predBar.classList.remove('active');
-      predTagsContainer.innerHTML = '';
-    }
-
-    if(inputField){
-      inputField.addEventListener('input', (e) => {
-        updatePredictiveBar(e.target.value);
-      });
-    }
-
-    if(inputForm){
-      inputForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        processUserMessage(inputField.value);
-      });
-    }
-
-    if(resetBtn){
-      resetBtn.addEventListener('click', () => {
-        sendInitialGreeting();
-      });
-    }
-
-    // Language listener
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        setTimeout(() => {
-          sendInitialGreeting();
-        }, 60);
-      });
-    });
-
-    sendInitialGreeting();
-  })();
 
   // ==========================================================================
   // ---------- Voice Brief Intake (Continuous Speech-to-Text) ----------
