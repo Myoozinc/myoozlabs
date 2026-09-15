@@ -21,7 +21,7 @@
 <meta name="twitter:title" content="MYOOZ Labs — Software de alto impacto probado en misión crítica">
 <meta name="twitter:description" content="Laboratorio de ingeniería y diseño digital. Desarrollamos software de misión crítica probado en emergencias sísmicas reales, copilotos con IA y plataformas web/móvil de alto rendimiento.">
 <meta name="twitter:image" content="https://myoozlabs.vercel.app/og-image.png">
-<meta name="theme-color" content="#0a0710">
+<meta name="theme-color" content="#ffffff" id="metaThemeColor">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -37,6 +37,150 @@
     --paper:#f4f1fb;
     --muted:#8b83a3;
     --line: rgba(233,226,247,0.12);
+    --text-h: #ffffff;
+    --theme-btn-bg: rgba(255,255,255,0.06);
+    --theme-btn-color: var(--lavender);
+    --theme-btn-border: var(--line);
+    --scrim-grad: radial-gradient(ellipse at center, transparent 42%, var(--ink) 94%);
+  }
+
+  /* ==========================================================================
+     LIGHT MODE THEME (White background, original purple & black palette)
+     ========================================================================== */
+  body.theme-light{
+    --ink:#ffffff;
+    --ink-2:#f7f5fb;
+    --violet-deep:#4c1d95;
+    --violet:#6d28d9;
+    --violet-bright:#7c3aed;
+    --violet-glow:#8b5cf6;
+    --lavender:#1c132e;
+    --paper:#ffffff;
+    --muted:#574e6c;
+    --line: rgba(109,40,217,0.12);
+    --text-h: #0f071e;
+    --theme-btn-bg: rgba(109,40,217,0.07);
+    --theme-btn-color: #5b21b6;
+    --theme-btn-border: rgba(109,40,217,0.22);
+    --scrim-grad: radial-gradient(ellipse at center, transparent 36%, rgba(255,255,255,0.92) 88%);
+  }
+
+  body.theme-light h1,
+  body.theme-light h2,
+  body.theme-light h3,
+  body.theme-light h4,
+  body.theme-light .mission-statement em,
+  body.theme-light .logo-mark,
+  body.theme-light nav.links,
+  body.theme-light .proj .p-name,
+  body.theme-light .info-block a{
+    color: var(--text-h) !important;
+  }
+  body.theme-light nav.links a:hover{
+    color: var(--violet) !important;
+  }
+  body.theme-light .intro h1 .stroke{
+    -webkit-text-stroke: 1.6px var(--violet) !important;
+  }
+  body.theme-light .hero-cue .vline::after{
+    background: var(--violet) !important;
+  }
+  body.theme-light .grain{
+    opacity: 0.015 !important;
+  }
+  body.theme-light header{
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(109, 40, 217, 0.12) !important;
+  }
+  body.theme-light .pillar{
+    background: #ffffff !important;
+    box-shadow: 0 8px 25px -8px rgba(76, 29, 149, 0.06);
+  }
+  body.theme-light .pillar:hover{
+    background: #faf8ff !important;
+    border-color: var(--violet) !important;
+  }
+  body.theme-light .h-card{
+    background: #ffffff !important;
+    box-shadow: 0 10px 30px -8px rgba(76, 29, 149, 0.07);
+  }
+  body.theme-light .h-card:hover{
+    border-color: var(--violet) !important;
+    box-shadow: 0 20px 40px -12px rgba(109, 40, 217, 0.18);
+  }
+  body.theme-light .h-tags span{
+    background: rgba(109, 40, 217, 0.06) !important;
+    color: #5b21b6 !important;
+    border-color: rgba(109, 40, 217, 0.18) !important;
+  }
+  body.theme-light .proj:hover{
+    background: rgba(109, 40, 217, 0.03) !important;
+  }
+  body.theme-light .proj .p-tags span{
+    background: rgba(109, 40, 217, 0.06) !important;
+    color: #5b21b6 !important;
+    border-color: rgba(109, 40, 217, 0.18) !important;
+  }
+  body.theme-light .step{
+    background: #ffffff !important;
+  }
+  body.theme-light .field input,
+  body.theme-light .field textarea{
+    color: var(--text-h) !important;
+  }
+  body.theme-light .field input::placeholder,
+  body.theme-light .field textarea::placeholder{
+    color: rgba(87, 78, 108, 0.6) !important;
+  }
+  body.theme-light .field::after{
+    background: var(--violet) !important;
+  }
+  body.theme-light .voice-btn{
+    background: rgba(109, 40, 217, 0.07) !important;
+    color: #5b21b6 !important;
+    border-color: rgba(109, 40, 217, 0.22) !important;
+  }
+  body.theme-light .social-row a{
+    background: rgba(109, 40, 217, 0.06) !important;
+    color: #5b21b6 !important;
+    border-color: rgba(109, 40, 217, 0.18) !important;
+  }
+  body.theme-light .social-row a:hover{
+    border-color: var(--violet) !important;
+    color: var(--violet-deep) !important;
+  }
+  body.theme-light .btn.ghost{
+    color: #4c1d95 !important;
+    border-color: rgba(109, 40, 217, 0.3) !important;
+  }
+  body.theme-light .btn.ghost:hover{
+    background: rgba(109, 40, 217, 0.08) !important;
+    border-color: var(--violet) !important;
+  }
+
+  /* Theme Switchers */
+  .theme-toggle-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--theme-btn-bg); border:1px solid var(--theme-btn-border);
+    color:var(--theme-btn-color); font-family:'Manrope',sans-serif;
+    font-size:12px; font-weight:600; padding:6px 14px; border-radius:100px;
+    cursor:pointer; transition:all .25s ease;
+  }
+  .theme-toggle-btn:hover{
+    border-color:var(--violet); color:var(--violet); transform:translateY(-1px);
+  }
+  .hero-theme-toggle{
+    position:absolute; top:24px; right:clamp(24px,5vw,64px); z-index:30;
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--theme-btn-bg); border:1px solid var(--theme-btn-border);
+    color:var(--theme-btn-color); font-family:'Manrope',sans-serif;
+    font-size:12px; font-weight:600; padding:8px 16px; border-radius:100px;
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    cursor:pointer; transition:all .25s ease;
+    box-shadow:0 4px 16px -2px rgba(0,0,0,0.06);
+  }
+  .hero-theme-toggle:hover{
+    border-color:var(--violet); transform:translateY(-2px); box-shadow:0 6px 20px -2px rgba(109,40,217,0.2);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -103,7 +247,7 @@
   }
   .hero-scrim{
     position:absolute; inset:0; z-index:1; pointer-events:none;
-    background:radial-gradient(ellipse at center, transparent 42%, var(--ink) 94%);
+    background:var(--scrim-grad); transition:background .35s ease;
   }
   .hero-cue{
     position:absolute; bottom:clamp(24px, 5vh, 44px); left:0; right:0; margin:0 auto; width:fit-content; z-index:2;
@@ -540,7 +684,7 @@
   }
 </style>
 </head>
-<body>
+<body class="theme-light">
 <canvas id="logoCanvas"></canvas>
 <div class="grain"></div>
 
@@ -558,10 +702,16 @@
     <a href="#humanitarian" data-i18n="nav_humanitarian">Impacto Social</a>
     <a href="#contact" data-i18n="nav_contact">Contacto</a>
   </nav>
-  <div class="lang-switch" id="langSwitch" role="group" aria-label="Idioma">
-    <button class="lang-btn active" data-lang="es" type="button">ES</button>
-    <span class="lang-div">/</span>
-    <button class="lang-btn" data-lang="en" type="button">EN</button>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="theme-toggle-btn" id="themeToggle" type="button" aria-label="Cambiar tema">
+      <span class="theme-icon" id="themeIcon">☾</span>
+      <span class="theme-label" id="themeLabel" data-i18n="theme_btn">Oscuro</span>
+    </button>
+    <div class="lang-switch" id="langSwitch" role="group" aria-label="Idioma">
+      <button class="lang-btn active" data-lang="es" type="button">ES</button>
+      <span class="lang-div">/</span>
+      <button class="lang-btn" data-lang="en" type="button">EN</button>
+    </div>
   </div>
 </header>
 
@@ -579,6 +729,10 @@
 </div>
 
 <section class="hero">
+  <button class="hero-theme-toggle" id="heroThemeToggle" type="button" aria-label="Cambiar modo claro / oscuro">
+    <span id="heroThemeIcon">☾</span>
+    <span id="heroThemeText" data-i18n="hero_theme_btn">Modo oscuro</span>
+  </button>
   <div class="hero-scrim"></div>
   <div class="hero-cue"><span data-i18n="hero_scroll">Desplázate</span><div class="vline"></div></div>
 </section>
@@ -920,6 +1074,10 @@
 
     // Multi-tier universal device profiler: automatically detects and tailors layout,
     // particle physics, halo framing and entrance animation for Mobile, Tablet, and Desktop.
+    function isLight(){
+      return document.body.classList.contains('theme-light');
+    }
+
     function getDeviceProfile(){
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -957,11 +1115,11 @@
           ptSizeEdge: 8.2,
           ptSizeLogo: 7.2,
           ptSizeAmbient: 3.8,  // Ultra-fine ambient specks
-          // High-contrast mobile colors: luminous lavender & diamond core
-          colorLogo:    { r: 0.78,  g: 0.44,  b: 1.0,   a: 0.94, core: 0.92 },
-          colorEdge:    { r: 1.0,   g: 0.98,  b: 1.0,   a: 1.0,  core: 1.0 },
-          colorStar:    { r: 0.94,  g: 0.90,  b: 1.0,   core: 1.0 },
-          colorAmbient: { r: 0.88,  g: 0.82,  b: 0.98,  a: 0.20, core: 0.0 },
+          // Mobile colors (adaptive Light / Dark mode)
+          colorLogo:    isLight() ? { r: 0.48, g: 0.20, b: 0.88, a: 0.94, core: 1.0 } : { r: 0.78,  g: 0.44,  b: 1.0,   a: 0.94, core: 0.92 },
+          colorEdge:    isLight() ? { r: 0.12, g: 0.04, b: 0.28, a: 1.0,  core: 1.0 } : { r: 1.0,   g: 0.98,  b: 1.0,   a: 1.0,  core: 1.0 },
+          colorStar:    isLight() ? { r: 0.42, g: 0.14, b: 0.84, core: 1.0 } : { r: 0.94,  g: 0.90,  b: 1.0,   core: 1.0 },
+          colorAmbient: isLight() ? { r: 0.50, g: 0.28, b: 0.82, a: 0.22, core: 0.0 } : { r: 0.88,  g: 0.82,  b: 0.98,  a: 0.20, core: 0.0 },
           shaderGlowInner: 0.10,
           shaderCoreRadius: 0.22,
           shaderAlphaMode: 1.0,
@@ -994,10 +1152,10 @@
           ptSizeEdge: 10.5,
           ptSizeLogo: 9.0,
           ptSizeAmbient: 4.8,
-          colorLogo:    { r: 0.753, g: 0.518, b: 0.988, a: 0.85, core: 1.0 },
-          colorEdge:    { r: 1.0,   g: 1.0,   b: 1.0,   a: 0.95, core: 1.0 },
-          colorStar:    { r: 0.90,  g: 0.84,  b: 1.0,   core: 1.0 },
-          colorAmbient: { r: 0.85,  g: 0.78,  b: 0.96,  a: 0.18, core: 0.0 },
+          colorLogo:    isLight() ? { r: 0.48, g: 0.20, b: 0.88, a: 0.90, core: 1.0 } : { r: 0.753, g: 0.518, b: 0.988, a: 0.85, core: 1.0 },
+          colorEdge:    isLight() ? { r: 0.12, g: 0.04, b: 0.28, a: 0.98, core: 1.0 } : { r: 1.0,   g: 1.0,   b: 1.0,   a: 0.95, core: 1.0 },
+          colorStar:    isLight() ? { r: 0.40, g: 0.12, b: 0.80, core: 1.0 } : { r: 0.90,  g: 0.84,  b: 1.0,   core: 1.0 },
+          colorAmbient: isLight() ? { r: 0.48, g: 0.26, b: 0.80, a: 0.20, core: 0.0 } : { r: 0.85,  g: 0.78,  b: 0.96,  a: 0.18, core: 0.0 },
           shaderGlowInner: 0.08,
           shaderCoreRadius: 0.18,
           shaderAlphaMode: 0.0,
@@ -1033,10 +1191,10 @@
           ptSizeLogo: 9.5,
           ptSizeAmbient: 4.8,  // Finer, non-saturating ambient particles
           // Original desktop colors (exact commit 6a652a8 / Image 2)
-          colorLogo:    { r: 0.753, g: 0.518, b: 0.988, a: 0.82, core: 1.0 },
-          colorEdge:    { r: 1.0,   g: 1.0,   b: 1.0,   a: 0.95, core: 1.0 },
-          colorStar:    { r: 0.88,  g: 0.80,  b: 1.0,   core: 1.0 },
-          colorAmbient: { r: 0.85,  g: 0.78,  b: 0.96,  a: 0.18, core: 0.0 }, // Soft translucent cosmic dust
+          colorLogo:    isLight() ? { r: 0.46, g: 0.18, b: 0.86, a: 0.88, core: 1.0 } : { r: 0.753, g: 0.518, b: 0.988, a: 0.82, core: 1.0 },
+          colorEdge:    isLight() ? { r: 0.10, g: 0.03, b: 0.26, a: 0.98, core: 1.0 } : { r: 1.0,   g: 1.0,   b: 1.0,   a: 0.95, core: 1.0 },
+          colorStar:    isLight() ? { r: 0.38, g: 0.10, b: 0.76, core: 1.0 } : { r: 0.88,  g: 0.80,  b: 1.0,   core: 1.0 },
+          colorAmbient: isLight() ? { r: 0.44, g: 0.22, b: 0.78, a: 0.18, core: 0.0 } : { r: 0.85,  g: 0.78,  b: 0.96,  a: 0.18, core: 0.0 }, // Soft translucent cosmic dust
           shaderGlowInner: 0.06,
           shaderCoreRadius: 0.18,
           shaderAlphaMode: 0.0, // Exact original desktop alpha curve: (glow * 0.72 + core * 0.28) * vColor.a
@@ -1079,6 +1237,7 @@
     let uAlphaModeLoc = null;
     let uGlowInnerLoc = null;
     let uCoreRadiusLoc = null;
+    let uIsLightModeLoc = null;
     let vBuffer = null;
 
     function initWebGL(){
@@ -1127,25 +1286,30 @@
         uniform float uAlphaMode;
         uniform float uGlowInner;
         uniform float uCoreRadius;
+        uniform float uIsLightMode;
 
         void main(){
           vec2 coord = gl_PointCoord - vec2(0.5);
           float dist = length(coord);
 
-          // Radial falloff: uGlowInner = 0.06 on desktop (original), 0.12 on mobile
           float glow = smoothstep(0.5, uGlowInner, dist);
-          // Brilliant diamond white core: uCoreRadius = 0.18 on desktop (original), 0.20 on mobile
           float core = smoothstep(uCoreRadius, 0.0, dist) * vCore;
 
-          vec3 rgb = mix(vColor.rgb, vec3(1.0, 1.0, 1.0), core * 0.95);
-
-          // uAlphaMode 0.0: EXACT original desktop formula: (glow * 0.72 + core * 0.28) * vColor.a
-          // uAlphaMode 1.0: boosted mobile contrast formula: clamp(glow * 0.88 + core * 0.38, 0.0, 1.0) * vColor.a
-          float alphaOrig = (glow * 0.72 + core * 0.28) * vColor.a;
-          float alphaBoost = clamp(glow * 0.88 + core * 0.38, 0.0, 1.0) * vColor.a;
-          float alpha = mix(alphaOrig, alphaBoost, uAlphaMode);
-
-          gl_FragColor = vec4(rgb * alpha, alpha);
+          if(uIsLightMode > 0.5){
+            // LIGHT MODE (White Background)
+            // Luminous royal purple edges + deep obsidian black-violet cores
+            vec3 obsidianCore = vec3(0.06, 0.02, 0.14);
+            vec3 rgb = mix(vColor.rgb, obsidianCore, core * 0.65);
+            float alpha = glow * vColor.a;
+            gl_FragColor = vec4(rgb, alpha);
+          } else {
+            // DARK MODE (Black/Ink Background)
+            vec3 rgb = mix(vColor.rgb, vec3(1.0, 1.0, 1.0), core * 0.95);
+            float alphaOrig = (glow * 0.72 + core * 0.28) * vColor.a;
+            float alphaBoost = clamp(glow * 0.88 + core * 0.38, 0.0, 1.0) * vColor.a;
+            float alpha = mix(alphaOrig, alphaBoost, uAlphaMode);
+            gl_FragColor = vec4(rgb * alpha, alpha);
+          }
         }
       `;
 
@@ -1178,6 +1342,7 @@
       uAlphaModeLoc = gl.getUniformLocation(glProgram, 'uAlphaMode');
       uGlowInnerLoc = gl.getUniformLocation(glProgram, 'uGlowInner');
       uCoreRadiusLoc = gl.getUniformLocation(glProgram, 'uCoreRadius');
+      uIsLightModeLoc = gl.getUniformLocation(glProgram, 'uIsLightMode');
 
       const aPosLoc = gl.getAttribLocation(glProgram, 'aPosition');
       const aSizeLoc = gl.getAttribLocation(glProgram, 'aPointSize');
@@ -1464,7 +1629,12 @@
       const useGL = hasWebGL && gl && vBuffer;
 
       if(!useGL && ctx){
-        ctx.clearRect(0,0,W,H);
+        if(isLight()){
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0,0,W,H);
+        } else {
+          ctx.clearRect(0,0,W,H);
+        }
       }
 
       // Pre-fetch physics variables outside loop for high performance
@@ -1634,9 +1804,16 @@
         }
       }
 
+      const lightMode = isLight();
       if(useGL){
-        // WebGL single hardware GPU draw call
-        gl.clearColor(0.039, 0.027, 0.063, 1.0); // #0a0710
+        // WebGL hardware GPU draw call: adapt clear color & blend for Light / Dark
+        if(lightMode){
+          gl.clearColor(1.0, 1.0, 1.0, 1.0); // Pure White #ffffff
+          gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        } else {
+          gl.clearColor(0.039, 0.027, 0.063, 1.0); // Deep Ink #0a0710
+          gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        }
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.useProgram(glProgram);
@@ -1644,6 +1821,7 @@
         gl.uniform1f(uAlphaModeLoc, prof.shaderAlphaMode);
         gl.uniform1f(uGlowInnerLoc, prof.shaderGlowInner);
         gl.uniform1f(uCoreRadiusLoc, prof.shaderCoreRadius);
+        gl.uniform1f(uIsLightModeLoc, lightMode ? 1.0 : 0.0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, glVBO);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, vBuffer);
@@ -1732,6 +1910,7 @@
     });
 
     window.addEventListener('resize', resize);
+    window.rebuildLogoParticles = function(){ buildParticles(); };
     resize();
     draw();
 
@@ -1926,6 +2105,57 @@
   })();
 
   // ==========================================================================
+  // ---------- Theme Switcher (Light / Dark Mode) ----------
+  (function initTheme(){
+    const themeToggle = document.getElementById('themeToggle');
+    const heroThemeToggle = document.getElementById('heroThemeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const heroThemeIcon = document.getElementById('heroThemeIcon');
+    const heroThemeText = document.getElementById('heroThemeText');
+    const metaThemeColor = document.getElementById('metaThemeColor');
+
+    function updateUI(isLight){
+      const isEs = currentLang === 'es';
+      const icon = isLight ? '☾' : '☀';
+      const label = isLight ? (isEs ? 'Oscuro' : 'Dark') : (isEs ? 'Claro' : 'Light');
+      const heroLabel = isLight ? (isEs ? 'Modo oscuro' : 'Dark mode') : (isEs ? 'Modo claro' : 'Light mode');
+
+      if(themeIcon) themeIcon.textContent = icon;
+      if(themeLabel) themeLabel.textContent = label;
+      if(heroThemeIcon) heroThemeIcon.textContent = icon;
+      if(heroThemeText) heroThemeText.textContent = heroLabel;
+      if(metaThemeColor) metaThemeColor.content = isLight ? '#ffffff' : '#0a0710';
+    }
+
+    function setTheme(mode){
+      const isLight = mode === 'light';
+      if(isLight){
+        document.body.classList.add('theme-light');
+      } else {
+        document.body.classList.remove('theme-light');
+      }
+      localStorage.setItem('myooz_theme', mode);
+      updateUI(isLight);
+      if(typeof window.rebuildLogoParticles === 'function'){
+        window.rebuildLogoParticles();
+      }
+    }
+
+    // Default to Light Mode ("version fondo blanco de la app")
+    const saved = localStorage.getItem('myooz_theme') || 'light';
+    setTheme(saved);
+
+    function toggle(){
+      const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    if(themeToggle) themeToggle.addEventListener('click', toggle);
+    if(heroThemeToggle) heroThemeToggle.addEventListener('click', toggle);
+    window.__updateThemeUI = updateUI;
+  })();
+
   // ---------- Bilingual Engine (ES / EN) ----------
   // ==========================================================================
   const TRANSLATIONS = {
@@ -1974,7 +2204,9 @@
       c_btn_another: "Enviar otro mensaje",
       c_direct_mail: "Correo directo",
       c_mail_note: "Escríbenos directamente o usa el formulario. Respuesta directa en menos de 24 horas.",
-      c_social_label: "Redes"
+      c_social_label: "Redes",
+      theme_btn: "Oscuro",
+      hero_theme_btn: "Modo oscuro"
     },
     en: {
       nav_mission: "Mission",
@@ -2021,7 +2253,9 @@
       c_btn_another: "Send another message",
       c_direct_mail: "Direct email",
       c_mail_note: "Email us directly or use the form. Direct response within 24 hours.",
-      c_social_label: "Social"
+      c_social_label: "Social",
+      theme_btn: "Dark",
+      hero_theme_btn: "Dark mode"
     }
   };
 
