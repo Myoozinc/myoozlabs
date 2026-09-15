@@ -170,7 +170,7 @@
     border-color:var(--violet); color:var(--violet); transform:translateY(-1px);
   }
   .hero-theme-toggle{
-    position:absolute; top:24px; right:clamp(24px,5vw,64px); z-index:30;
+    position:absolute; top:24px; right:clamp(24px,5vw,64px); z-index:1000;
     display:inline-flex; align-items:center; gap:6px;
     background:var(--theme-btn-bg); border:1px solid var(--theme-btn-border);
     color:var(--theme-btn-color); font-family:'Manrope',sans-serif;
@@ -178,6 +178,8 @@
     backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     cursor:pointer; transition:all .25s ease;
     box-shadow:0 4px 16px -2px rgba(0,0,0,0.06);
+    pointer-events:auto;
+    touch-action:manipulation;
   }
   .hero-theme-toggle:hover{
     border-color:var(--violet); transform:translateY(-2px); box-shadow:0 6px 20px -2px rgba(109,40,217,0.2);
@@ -2104,57 +2106,6 @@
     }
   })();
 
-  // ==========================================================================
-  // ---------- Theme Switcher (Light / Dark Mode) ----------
-  (function initTheme(){
-    const themeToggle = document.getElementById('themeToggle');
-    const heroThemeToggle = document.getElementById('heroThemeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const themeLabel = document.getElementById('themeLabel');
-    const heroThemeIcon = document.getElementById('heroThemeIcon');
-    const heroThemeText = document.getElementById('heroThemeText');
-    const metaThemeColor = document.getElementById('metaThemeColor');
-
-    function updateUI(isLight){
-      const isEs = currentLang === 'es';
-      const icon = isLight ? '☾' : '☀';
-      const label = isLight ? (isEs ? 'Oscuro' : 'Dark') : (isEs ? 'Claro' : 'Light');
-      const heroLabel = isLight ? (isEs ? 'Modo oscuro' : 'Dark mode') : (isEs ? 'Modo claro' : 'Light mode');
-
-      if(themeIcon) themeIcon.textContent = icon;
-      if(themeLabel) themeLabel.textContent = label;
-      if(heroThemeIcon) heroThemeIcon.textContent = icon;
-      if(heroThemeText) heroThemeText.textContent = heroLabel;
-      if(metaThemeColor) metaThemeColor.content = isLight ? '#ffffff' : '#0a0710';
-    }
-
-    function setTheme(mode){
-      const isLight = mode === 'light';
-      if(isLight){
-        document.body.classList.add('theme-light');
-      } else {
-        document.body.classList.remove('theme-light');
-      }
-      localStorage.setItem('myooz_theme', mode);
-      updateUI(isLight);
-      if(typeof window.rebuildLogoParticles === 'function'){
-        window.rebuildLogoParticles();
-      }
-    }
-
-    // Default to Light Mode ("version fondo blanco de la app")
-    const saved = localStorage.getItem('myooz_theme') || 'light';
-    setTheme(saved);
-
-    function toggle(){
-      const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
-      setTheme(current === 'light' ? 'dark' : 'light');
-    }
-
-    if(themeToggle) themeToggle.addEventListener('click', toggle);
-    if(heroThemeToggle) heroThemeToggle.addEventListener('click', toggle);
-    window.__updateThemeUI = updateUI;
-  })();
 
   // ---------- Bilingual Engine (ES / EN) ----------
   // ==========================================================================
@@ -2417,6 +2368,79 @@
         }
       }
     });
+  })();
+
+
+  // ==========================================================================
+  // ---------- Theme Switcher (Light / Dark Mode) ----------
+  // ==========================================================================
+  (function initTheme(){
+    const themeToggle = document.getElementById('themeToggle');
+    const heroThemeToggle = document.getElementById('heroThemeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const heroThemeIcon = document.getElementById('heroThemeIcon');
+    const heroThemeText = document.getElementById('heroThemeText');
+    const metaThemeColor = document.getElementById('metaThemeColor');
+
+    function updateUI(isLight){
+      const isEs = (typeof currentLang !== 'undefined' ? currentLang : 'es') === 'es';
+      const icon = isLight ? '☾' : '☀';
+      const label = isLight ? (isEs ? 'Oscuro' : 'Dark') : (isEs ? 'Claro' : 'Light');
+      const heroLabel = isLight ? (isEs ? 'Modo oscuro' : 'Dark mode') : (isEs ? 'Modo claro' : 'Light mode');
+
+      if(themeIcon) themeIcon.textContent = icon;
+      if(themeLabel) themeLabel.textContent = label;
+      if(heroThemeIcon) heroThemeIcon.textContent = icon;
+      if(heroThemeText) heroThemeText.textContent = heroLabel;
+      if(metaThemeColor) metaThemeColor.content = isLight ? '#ffffff' : '#0a0710';
+    }
+
+    function setTheme(mode){
+      const isLight = mode === 'light';
+      if(isLight){
+        document.body.classList.add('theme-light');
+      } else {
+        document.body.classList.remove('theme-light');
+      }
+      try {
+        localStorage.setItem('myooz_theme', mode);
+      } catch(e){}
+
+      updateUI(isLight);
+
+      if(typeof window.rebuildLogoParticles === 'function'){
+        window.rebuildLogoParticles();
+      }
+    }
+
+    // Default to Light Mode as requested by user ("version fondo blanco de la app")
+    let saved = 'light';
+    try {
+      saved = localStorage.getItem('myooz_theme') || 'light';
+    } catch(e){}
+    setTheme(saved);
+
+    function toggle(e){
+      if(e){
+        if(e.preventDefault) e.preventDefault();
+        if(e.stopPropagation) e.stopPropagation();
+      }
+      const current = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    if(themeToggle){
+      themeToggle.addEventListener('click', toggle);
+    }
+    if(heroThemeToggle){
+      heroThemeToggle.addEventListener('click', toggle);
+      heroThemeToggle.addEventListener('touchend', (e) => {
+        toggle(e);
+      });
+    }
+
+    window.__updateThemeUI = updateUI;
   })();
 
 </script>
