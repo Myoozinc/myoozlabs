@@ -160,29 +160,78 @@
 
   /* Theme Switchers */
   .theme-toggle-btn{
-    display:inline-flex; align-items:center; gap:6px;
-    background:var(--theme-btn-bg); border:1px solid var(--theme-btn-border);
-    color:var(--theme-btn-color); font-family:'Manrope',sans-serif;
-    font-size:12px; font-weight:600; padding:6px 14px; border-radius:100px;
+    display:inline-flex; align-items:center; gap:5px;
+    background:rgba(18,12,30,0.55); border:1px solid var(--line);
+    color:var(--muted); font-family:'Manrope',sans-serif;
+    font-size:11px; font-weight:500; padding:5px 12px; border-radius:100px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     cursor:pointer; transition:all .25s ease;
+    opacity:0.6;
   }
   .theme-toggle-btn:hover{
-    border-color:var(--violet); color:var(--violet); transform:translateY(-1px);
+    border-color:var(--violet-glow); color:#fff; opacity:1;
   }
+  .theme-toggle-btn .theme-icon{
+    font-size:11px; line-height:1;
+  }
+
   .hero-theme-toggle{
     position:absolute; top:24px; right:clamp(24px,5vw,64px); z-index:1000;
-    display:inline-flex; align-items:center; gap:6px;
-    background:var(--theme-btn-bg); border:1px solid var(--theme-btn-border);
-    color:var(--theme-btn-color); font-family:'Manrope',sans-serif;
-    font-size:12px; font-weight:600; padding:8px 16px; border-radius:100px;
-    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    display:inline-flex; align-items:center; gap:5px;
+    background:rgba(18,12,30,0.55); border:1px solid var(--line);
+    color:var(--muted); font-family:'Manrope',sans-serif;
+    font-size:11px; font-weight:500; padding:5px 12px; border-radius:100px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     cursor:pointer; transition:all .25s ease;
-    box-shadow:0 4px 16px -2px rgba(0,0,0,0.06);
+    opacity:0.6;
     pointer-events:auto;
     touch-action:manipulation;
   }
   .hero-theme-toggle:hover{
-    border-color:var(--violet); transform:translateY(-2px); box-shadow:0 6px 20px -2px rgba(109,40,217,0.2);
+    border-color:var(--violet-glow); color:#fff; opacity:1;
+  }
+  .hero-theme-toggle span:first-child{
+    font-size:11px; line-height:1;
+  }
+
+  body.theme-light .theme-toggle-btn,
+  body.theme-light .hero-theme-toggle,
+  body.theme-light #paramToggle{
+    background:rgba(245, 243, 255, 0.7);
+    border-color:rgba(109, 40, 217, 0.16);
+    color:var(--muted);
+    opacity:0.65;
+  }
+  body.theme-light .theme-toggle-btn:hover,
+  body.theme-light .hero-theme-toggle:hover,
+  body.theme-light #paramToggle:hover{
+    border-color:var(--violet);
+    color:var(--violet);
+    opacity:1;
+  }
+  body.theme-light #paramPanel{
+    background:rgba(255, 255, 255, 0.94);
+    border-color:rgba(109, 40, 217, 0.16);
+    box-shadow:0 20px 40px -15px rgba(109, 40, 217, 0.15);
+  }
+  body.theme-light .pp-head{
+    color:#120c1e;
+    border-bottom-color:rgba(109, 40, 217, 0.1);
+  }
+  body.theme-light .pp-head button:hover{
+    color:var(--violet);
+  }
+  body.theme-light .pp-foot{
+    border-top-color:rgba(109, 40, 217, 0.1);
+  }
+  body.theme-light .pp-foot button{
+    border-color:rgba(109, 40, 217, 0.2);
+    color:var(--muted);
+  }
+  body.theme-light .pp-foot button:hover{
+    border-color:var(--violet);
+    color:var(--violet);
+    background:rgba(109, 40, 217, 0.06);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -771,7 +820,7 @@
 <section class="hero">
   <button class="hero-theme-toggle" id="heroThemeToggle" type="button" aria-label="Cambiar modo claro / oscuro">
     <span id="heroThemeIcon">☾</span>
-    <span id="heroThemeText" data-i18n="hero_theme_btn">Modo oscuro</span>
+    <span id="heroThemeText" data-i18n="hero_theme_btn">Oscuro</span>
   </button>
   <div class="hero-scrim"></div>
   <div class="hero-cue"><span data-i18n="hero_scroll">Desplázate</span><div class="vline"></div></div>
@@ -2276,7 +2325,7 @@
       c_mail_note: "Escríbenos directamente o utiliza el formulario. Respondemos todas las consultas en un plazo de 1 a 2 días hábiles con un análisis inicial de viabilidad.",
       c_social_label: "Redes",
       theme_btn: "Oscuro",
-      hero_theme_btn: "Modo oscuro"
+      hero_theme_btn: "Oscuro"
     },
     en: {
       nav_mission: "Mission",
@@ -2365,7 +2414,7 @@
       c_mail_note: "Email us directly or use the form. We review all inquiries within 1–2 business days with an initial feasibility assessment.",
       c_social_label: "Social",
       theme_btn: "Dark",
-      hero_theme_btn: "Dark mode"
+      hero_theme_btn: "Dark"
     }
   };
 
@@ -2389,6 +2438,9 @@
       }
     });
     try{ localStorage.setItem('myooz_lang', lang); }catch(e){}
+    if(typeof window.__updateThemeUI === 'function'){
+      window.__updateThemeUI(document.body.classList.contains('theme-light'));
+    }
   }
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -2546,12 +2598,11 @@
       const isEs = (typeof currentLang !== 'undefined' ? currentLang : 'es') === 'es';
       const icon = isLight ? '☾' : '☀';
       const label = isLight ? (isEs ? 'Oscuro' : 'Dark') : (isEs ? 'Claro' : 'Light');
-      const heroLabel = isLight ? (isEs ? 'Modo oscuro' : 'Dark mode') : (isEs ? 'Modo claro' : 'Light mode');
 
       if(themeIcon) themeIcon.textContent = icon;
       if(themeLabel) themeLabel.textContent = label;
       if(heroThemeIcon) heroThemeIcon.textContent = icon;
-      if(heroThemeText) heroThemeText.textContent = heroLabel;
+      if(heroThemeText) heroThemeText.textContent = label;
       if(metaThemeColor) metaThemeColor.content = isLight ? '#ffffff' : '#0a0710';
     }
 
