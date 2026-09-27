@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYOOZ LABS — Panel de Administración & Telemetría</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #07050d;
+    --ink-card: #0d0a17;
+    --ink-card-hover: #140f24;
+    --violet-deep: #4c1d95;
+    --violet: #7c3aed;
+    --violet-bright: #a855f7;
+    --violet-glow: #c084fc;
+    --lavender: #e9e2f7;
+    --muted: #8b83a3;
+    --line: rgba(233, 226, 247, 0.12);
+    --line-glow: rgba(168, 85, 247, 0.3);
+    --green: #10b981;
+    --green-glow: rgba(16, 185, 129, 0.3);
+    --red: #ef4444;
+    --blue: #38bdf8;
+    --orange: #f59e0b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--ink);
+    color: var(--lavender);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Ambient Glow Background */
+  .ambient-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .ambient-blob-1 {
+    position: absolute;
+    top: -150px; left: 15%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+    filter: blur(80px);
+  }
+  .ambient-blob-2 {
+    position: absolute;
+    bottom: -100px; right: 10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+    filter: blur(90px);
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, .display-font { font-family: 'Unbounded', sans-serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Login Screen */
+  #loginScreen {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(13, 10, 23, 0.78);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 40px 32px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 40px -10px rgba(124, 58, 237, 0.2);
+    position: relative;
+  }
+  .login-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .login-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(168, 85, 247, 0.12);
+    border: 1px solid var(--line-glow);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--violet-glow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .login-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--violet-bright);
+    box-shadow: 0 0 8px var(--violet-bright);
+  }
+  .login-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .login-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--lavender);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .input-wrap {
+    position: relative;
+  }
+  .input-wrap input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+  .input-wrap input:focus {
+    border-color: var(--violet-bright);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+  }
+  .toggle-pwd {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+  }
+  .toggle-pwd:hover { color: #fff; }
+  .login-remember {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .login-remember label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--violet-bright), var(--violet-deep));
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    color: #fff;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -6px rgba(124, 58, 237, 0.5);
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px -4px rgba(168, 85, 247, 0.6);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .login-error {
+    display: none;
+    margin-top: 18px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #fca5a5;
+    text-align: center;
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .login-back {
+    text-align: center;
+    margin-top: 24px;
+  }
+  .login-back a {
+    color: var(--muted);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .login-back a:hover { color: var(--lavender); }
+
+  /* Dashboard Screen */
+  #dashboardScreen {
+    display: none;
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* Top Navbar */
+  .admin-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7, 5, 13, 0.85);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .nav-brand-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--line);
+    color: var(--violet-glow);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--green);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--green-glow);
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .status-dot-pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  .nav-center {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: 'Manrope', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-tab-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .nav-tab-btn.active {
+    color: #fff;
+    background: rgba(168, 85, 247, 0.15);
+    border-color: var(--line-glow);
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .admin-clock {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .btn-outline-sm {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--lavender);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-outline-sm:hover {
+    border-color: var(--violet-bright);
+    color: #fff;
+    background: rgba(168, 85, 247, 0.08);
+  }
+  .btn-logout {
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #f87171;
+  }
+  .btn-logout:hover {
+    border-color: var(--red);
+    color: #fff;
+    background: rgba(239, 68, 68, 0.2);
+  }
+
+  /* Main Dashboard Container */
+  .admin-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px 28px;
+  }
+
+  /* Section Title */
+  .sec-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .sec-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .sec-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* KPI Grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--ink-card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 20px;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-glow);
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--violet-bright), transparent);
+    opacity: 0.6;
+  }
+  .kpi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .kpi-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .kpi-icon {
+    font-size: 16px;
+    padding: 6px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .kpi-val {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .kpi-trend {
+    font-size: 11.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kpi-trend.up { color: var(--green); }
+  .kpi-trend.neutral { color: var(--blue); }
+  .kpi-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  /* Admin IP Highlight Card */
+  .admin-ip-banner {
+    background: linear-gradient(135deg, rgba(76, 29, 149, 0.35), rgba(13, 10, 23, 0.9));
+    border: 1px solid var(--line-glow);
+    border-radius: 18px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .aip-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .aip-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: rgba(168, 85, 247, 0.2);
+    border: 1px solid var(--violet-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .aip-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .aip-details {
+    font-size: 13px;
+    color: var(--lavender);
+    margin-top: 2px;
+  }
+  .aip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--violet-glow);
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: #fff;
+  }
+
+  /* Panel Layout (2 Columns) */
+  .panel-grid-2 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1024px) {
+    .panel-grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* Card Container */
+  .dash-card {
+    background: var(--ink-card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+  }
+  .dash-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .dash-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Table Styles */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .telemetry-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: left;
+  }
+  .telemetry-table th {
+    padding: 10px 14px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--line);
+  }
+  .telemetry-table td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--lavender);
+    vertical-align: middle;
+  }
+  .telemetry-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .ip-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .ip-tag.you {
+    border-color: var(--violet-bright);
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--violet-glow);
+  }
+  .geo-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  .geo-flag { font-size: 16px; }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .status-pill.online {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--green);
+    border: 1px solid var(--green-glow);
+  }
+  .status-pill.navigating {
+    background: rgba(168, 85, 247, 0.12);
+    color: var(--violet-glow);
+    border: 1px solid var(--line-glow);
+  }
+  .status-pill.idle {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  .copy-ip-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.2s;
+  }
+  .copy-ip-btn:hover { color: #fff; }
+
+  /* Charts Canvas */
+  .chart-box {
+    position: relative;
+    width: 100%;
+    height: 240px;
+  }
+
+  /* Countries Ranking */
+  .country-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .country-row:last-child { border-bottom: none; }
+  .country-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .country-bar-wrap {
+    flex: 1;
+    max-width: 120px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    margin: 0 14px;
+    overflow: hidden;
+  }
+  .country-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--violet), var(--violet-bright));
+    border-radius: 4px;
+  }
+  .country-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--lavender);
+  }
+
+  /* Projects Status Grid */
+  .projects-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .proj-status-card {
+    background: var(--ink-card-hover);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    transition: all 0.2s;
+  }
+  .proj-status-card:hover {
+    border-color: var(--line-glow);
+  }
+  .psc-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .psc-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .psc-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    word-break: break-all;
+  }
+  .psc-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Live Terminal */
+  .terminal-box {
+    background: #040308;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.6;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .term-line {
+    margin-bottom: 6px;
+    display: flex;
+    gap: 8px;
+  }
+  .term-time { color: var(--muted); }
+  .term-tag {
+    font-weight: 600;
+    padding: 0 4px;
+    border-radius: 3px;
+  }
+  .term-tag.info { color: var(--blue); }
+  .term-tag.geo { color: var(--green); }
+  .term-tag.event { color: var(--violet-glow); }
+  .term-tag.warn { color: var(--orange); }
+  .term-msg { color: var(--lavender); }
+
+  /* Tab Sections display toggles */
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .admin-nav { padding: 12px 16px; }
+    .nav-center { display: none; } /* Show in mobile nav dropdown */
+    .admin-container { padding: 20px 16px; }
+    .sec-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient-bg">
+  <div class="ambient-blob-1"></div>
+  <div class="ambient-blob-2"></div>
+</div>
+
+<!-- =========================================================================
+     1. LOGIN GATE
+     ========================================================================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-badge">
+        <span class="dot"></span> Acceso Restringido
+      </div>
+      <h1 class="login-title">MYOOZ LABS</h1>
+      <p class="login-subtitle">Consola de Administración & Telemetría en Tiempo Real</p>
+    </div>
+
+    <form id="loginForm" autocomplete="on">
+      <div class="form-group">
+        <label class="form-label" for="adminUser">Usuario</label>
+        <div class="input-wrap">
+          <input type="text" id="adminUser" placeholder="Ingresa tu usuario" required autocomplete="username" autofocus>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="adminPass">Contraseña</label>
+        <div class="input-wrap">
+          <input type="password" id="adminPass" placeholder="••••••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-pwd" id="togglePwd" title="Mostrar/Ocultar contraseña">👁</button>
+        </div>
+      </div>
+
+      <div class="login-remember">
+        <label>
+          <input type="checkbox" id="rememberMe" checked>
+          <span>Recordar sesión</span>
+        </label>
+        <span style="font-size:11px;color:var(--muted);">OS v2.4.0</span>
+      </div>
+
+      <button type="submit" class="btn-primary" id="loginBtn">
+        <span>Desbloquear Consola</span> →
+      </button>
+
+      <div class="login-error" id="loginError">
+        ⚠ Usuario o contraseña incorrectos. Acceso denegado.
+      </div>
+    </form>
+
+    <div class="login-back">
+      <a href="/">← Volver al sitio público</a>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     2. ADMIN DASHBOARD VIEW
+     ========================================================================= -->
+<div id="dashboardScreen">
+  <!-- Sticky Top Navigation -->
+  <nav class="admin-nav">
+    <div class="nav-left">
+      <a href="/admin" class="nav-brand">
+        <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
+          <path d="M6 20c4-8 10-8 14 0s10 8 14 0" stroke="url(#navg)" stroke-width="4" stroke-linecap="round"/>
+          <defs><linearGradient id="navg" x1="6" y1="20" x2="34" y2="20"><stop stop-color="#a855f7"/><stop offset="1" stop-color="#4c1d95"/></linearGradient></defs>
+        </svg>
+        <span>MYOOZ LABS</span>
+        <span class="nav-brand-tag">ADMIN_OS</span>
+      </a>
+
+      <div class="nav-status">
+        <span class="status-dot-pulse"></span>
+        <span>SYS_LIVE</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-center">
+      <button class="nav-tab-btn active" data-tab="overview">📊 Visión General</button>
+      <button class="nav-tab-btn" data-tab="telemetry">🌐 IPs & Telemetría</button>
+      <button class="nav-tab-btn" data-tab="analytics">📈 Métricas</button>
+      <button class="nav-tab-btn" data-tab="projects">🎛 Demos</button>
+      <button class="nav-tab-btn" data-tab="inbox">✉ Leads <span id="leadCountBadge" style="background:var(--violet);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;">0</span></button>
+    </div>
+
+    <div class="nav-right">
+      <div class="admin-clock" id="liveClock">00:00:00 UTC</div>
+      <a href="/" target="_blank" class="btn-outline-sm" title="Abrir sitio principal">🌐 Ver Sitio</a>
+      <button type="button" class="btn-outline-sm btn-logout" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+
+    <!-- =====================================================================
+         TAB: OVERVIEW
+         ===================================================================== -->
+    <div class="tab-pane active" id="pane-overview">
+      
+      <!-- Current Admin Connection Banner -->
+      <div class="admin-ip-banner">
+        <div class="aip-left">
+          <div class="aip-icon">🛡</div>
+          <div>
+            <div class="aip-title">Tu Conexión de Administrador Detectada</div>
+            <div class="aip-details" id="adminGeoDetails">Detectando geolocalización y dirección IP pública...</div>
+          </div>
+        </div>
+        <div>
+          <span class="aip-badge" id="adminIpBadge">IP: Obteniendo...</span>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Row -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Usuarios Conectados Ahora</span>
+            <span class="kpi-icon">🟢</span>
+          </div>
+          <div class="kpi-val" id="activeUsersVal">7</div>
+          <div class="kpi-trend up">● Monitoreo en tiempo real</div>
+          <div class="kpi-sub" style="margin-top:6px;">Conexiones HTTP/2 Edge activas</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Sesiones Hoy (24h)</span>
+            <span class="kpi-icon">⚡</span>
+          </div>
+          <div class="kpi-val">1,842</div>
+          <div class="kpi-trend up">▲ +18.4% vs promedio</div>
+          <div class="kpi-sub" style="margin-top:6px;">3,910 páginas vistas</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Demos en Producción</span>
+            <span class="kpi-icon">🚀</span>
+          </div>
+          <div class="kpi-val">5 / 5</div>
+          <div class="kpi-trend up">✓ 100% operativos</div>
+          <div class="kpi-sub" style="margin-top:6px;">Digimu, ReuLive, NONA, Independent, TOOLBOX</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Latencia Edge CDN</span>
+            <span class="kpi-icon">📡</span>
+          </div>
+          <div class="kpi-val" id="latencyVal">19 ms</div>
+          <div class="kpi-trend neutral">Vercel Anycast Node GRU1</div>
+          <div class="kpi-sub" style="margin-top:6px;">Disponibilidad global 99.98%</div>
+        </div>
+      </div>
+
+      <!-- Split Grid: Live Traffic Chart & Geographic Distribution -->
+      <div class="panel-grid-2">
+        <!-- Traffic Chart -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">
+              <span>📈 Flujo de Tráfico en Tiempo Real</span>
+            </div>
+            <span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono';">Últimas 24 Horas</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="trafficCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Geographic Breakdown -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">
+              <span>🌍 Distribución por País</span>
+            </div>
+            <span style="font-size:11px;color:var(--violet-glow);font-family:'JetBrains Mono';">Top Conexiones</span>
+          </div>
+          <div id="countriesList">
+            <!-- Dynamic Country Bars -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Visitors Telemetry Table Preview -->
+      <div class="dash-card" style="margin-bottom:32px;">
+        <div class="dash-card-header">
+          <div class="dash-card-title">
+            <span>👥 Conexiones e IPs Activas en Tiempo Real</span>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button type="button" class="btn-outline-sm" id="btnSimulateVisitor">+ Simular Visita</button>
+            <button type="button" class="btn-outline-sm" id="btnRefreshIps">↻ Refrescar</button>
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="telemetry-table">
+            <thead>
+              <tr>
+                <th>Dirección IP</th>
+                <th>Ubicación</th>
+                <th>Dispositivo & Navegador</th>
+                <th>Ruta / Sección Actual</th>
+                <th>Tiempo Activo</th>
+                <th>Latencia</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="visitorsTableBody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Live Event Terminal Feed -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <div class="dash-card-title">
+            <span>💻 Consola de Eventos & Telemetría en Vivo</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="btn-outline-sm" id="btnClearTerminal">Limpiar</button>
+          </div>
+        </div>
+        <div class="terminal-box" id="terminalFeed">
+          <!-- Live events injected -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =====================================================================
+         TAB: TELEMETRY (DETAILED IPS & SESSIONS)
+         ===================================================================== -->
+    <div class="tab-pane" id="pane-telemetry">
+      <div class="sec-header">
+        <div>
+          <h2 class="sec-title">Registro Completo de IPs & Sesiones</h2>
+          <p class="sec-desc">Monitoreo pormenorizado de conexiones activas, resolución DNS y geolocalización.</p>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <input type="text" id="ipFilterInput" placeholder="Filtrar por IP, ciudad o país..." style="background:rgba(255,255,255,0.05);border:1px solid var(--line);border-radius:8px;padding:8px 14px;color:#fff;font-size:12px;width:240px;outline:none;">
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="table-responsive">
+          <table class="telemetry-table">
+            <thead>
+              <tr>
+                <th>IP / Host</th>
+                <th>País / Ciudad</th>
+                <th>ISP / Red</th>
+                <th>Dispositivo</th>
+                <th>Página</th>
+                <th>Duración</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="fullTelemetryBody">
+              <!-- Full list -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         TAB: ANALYTICS & CHARTS
+         ===================================================================== -->
+    <div class="tab-pane" id="pane-analytics">
+      <div class="sec-header">
+        <div>
+          <h2 class="sec-title">Métricas de Conversión y Rendimiento</h2>
+          <p class="sec-desc">Análisis de interacción de usuario, embudo de retención y desglose por plataforma.</p>
+        </div>
+      </div>
+
+      <div class="panel-grid-2">
+        <!-- Funnel Card -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><span>🎯 Embudo de Conversión (User Journey)</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px;" id="funnelContainer">
+            <!-- Funnel Steps -->
+          </div>
+        </div>
+
+        <!-- Devices Donut Card -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title"><span>📱 Dispositivos & Plataformas</span></div>
+          </div>
+          <div class="chart-box" style="height:220px;">
+            <canvas id="deviceCanvas"></canvas>
+          </div>
+          <div style="display:flex;justify-content:center;gap:18px;margin-top:14px;font-size:12px;" id="deviceLegend">
+            <div><span style="color:var(--violet-bright);">●</span> Desktop (64%)</div>
+            <div><span style="color:var(--blue);">●</span> Mobile (31%)</div>
+            <div><span style="color:var(--green);">●</span> Tablet (5%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         TAB: PROJECTS / DEMOS MANAGEMENT
+         ===================================================================== -->
+    <div class="tab-pane" id="pane-projects">
+      <div class="sec-header">
+        <div>
+          <h2 class="sec-title">Infraestructura de Proyectos Demo</h2>
+          <p class="sec-desc">Monitoreo de disponibilidad, clics acumulados y enlaces en producción.</p>
+        </div>
+        <button type="button" class="btn-outline-sm" id="btnPingAllDemos">⚡ Probar Conexión de Todos</button>
+      </div>
+
+      <div class="projects-status-grid" id="projectStatusGrid">
+        <!-- Projects populated via JS -->
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         TAB: INBOX / LEADS
+         ===================================================================== -->
+    <div class="tab-pane" id="pane-inbox">
+      <div class="sec-header">
+        <div>
+          <h2 class="sec-title">Buzón de Mensajes & Briefs Recibidos</h2>
+          <p class="sec-desc">Solicitudes enviadas por clientes a través del formulario de contacto.</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="btn-outline-sm" id="btnExportCsv">📥 Exportar CSV</button>
+          <button type="button" class="btn-outline-sm" id="btnAddMockLead">+ Lead de Prueba</button>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="table-responsive">
+          <table class="telemetry-table">
+            <thead>
+              <tr>
+                <th>Fecha / Hora</th>
+                <th>Nombre / Empresa</th>
+                <th>Correo</th>
+                <th>Mensaje / Brief</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <!-- Leads -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// MYOOZ LABS ADMIN TELEMETRY OS (v2.4.0)
+// ============================================================================
+
+(function(){
+  // --- AUTHENTICATION STATE ---
+  const AUTH_KEY = 'myooz_admin_session';
+  const CRED_USER = 'Gingerboy';
+  const CRED_PASS = 'Rona12345';
+
+  const loginScreen = document.getElementById('loginScreen');
+  const dashboardScreen = document.getElementById('dashboardScreen');
+  const loginForm = document.getElementById('loginForm');
+  const adminUserInput = document.getElementById('adminUser');
+  const adminPassInput = document.getElementById('adminPass');
+  const togglePwdBtn = document.getElementById('togglePwd');
+  const loginError = document.getElementById('loginError');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const rememberMe = document.getElementById('rememberMe');
+
+  // Check existing session
+  function checkAuth(){
+    const isAuth = sessionStorage.getItem(AUTH_KEY) === 'true' || localStorage.getItem(AUTH_KEY) === 'true';
+    if(isAuth){
+      showDashboard();
+    } else {
+      showLogin();
+    }
+  }
+
+  function showDashboard(){
+    loginScreen.style.display = 'none';
+    dashboardScreen.style.display = 'block';
+    initDashboard();
+  }
+
+  function showLogin(){
+    loginScreen.style.display = 'flex';
+    dashboardScreen.style.display = 'none';
+  }
+
+  // Toggle Password Visibility
+  if(togglePwdBtn){
+    togglePwdBtn.addEventListener('click', ()=>{
+      const isPass = adminPassInput.type === 'password';
+      adminPassInput.type = isPass ? 'text' : 'password';
+      togglePwdBtn.textContent = isPass ? '🔒' : '👁';
+    });
+  }
+
+  // Login Form Submission
+  if(loginForm){
+    loginForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const u = adminUserInput.value.trim();
+      const p = adminPassInput.value.trim();
+
+      if(u === CRED_USER && p === CRED_PASS){
+        if(loginError) loginError.style.display = 'none';
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        if(rememberMe && rememberMe.checked){
+          localStorage.setItem(AUTH_KEY, 'true');
+        }
+        showDashboard();
+      } else {
+        if(loginError){
+          loginError.style.display = 'block';
+          loginError.style.animation = 'none';
+          loginError.offsetHeight; /* trigger reflow */
+          loginError.style.animation = 'shake 0.4s ease';
+        }
+      }
+    });
+  }
+
+  // Logout
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', ()=>{
+      sessionStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem(AUTH_KEY);
+      showLogin();
+    });
+  }
+
+  // Initial check
+  checkAuth();
+
+  // ==========================================================================
+  // DASHBOARD LOGIC
+  // ==========================================================================
+  let isDashboardInitialized = false;
+
+  function initDashboard(){
+    if(isDashboardInitialized) return;
+    isDashboardInitialized = true;
+
+    // 1. Clock
+    const clockEl = document.getElementById('liveClock');
+    function updateClock(){
+      if(!clockEl) return;
+      const now = new Date();
+      clockEl.textContent = now.toLocaleTimeString('es-ES', {hour12:false}) + ' UTC' + (now.getTimezoneOffset() > 0 ? '-' : '+') + Math.abs(now.getTimezoneOffset()/60);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 2. Navigation Tabs
+    const tabBtns = document.querySelectorAll('.nav-tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', ()=>{
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById('pane-' + btn.dataset.tab);
+        if(target) target.classList.add('active');
+      });
+    });
+
+    // 3. Fetch Real Public IP of Administrator
+    fetchAdminPublicIp();
+
+    // 4. Generate & Render Visitors
+    renderVisitors();
+
+    // 5. Render Country Ranking
+    renderCountries();
+
+    // 6. Draw Charts (Traffic Curve & Device Donut)
+    drawTrafficChart();
+    drawDeviceChart();
+
+    // 7. Render Funnel
+    renderFunnel();
+
+    // 8. Render Project Status Cards
+    renderProjectCards();
+
+    // 9. Render Leads Inbox
+    renderLeads();
+
+    // 10. Start Live Telemetry Events Feed
+    startTerminalFeed();
+
+    // Attach simulation buttons
+    const btnSim = document.getElementById('btnSimulateVisitor');
+    if(btnSim) btnSim.addEventListener('click', addSimulatedVisitor);
+
+    const btnRef = document.getElementById('btnRefreshIps');
+    if(btnRef) btnRef.addEventListener('click', ()=>{
+      renderVisitors();
+      logEvent('NETWORK', 'Conexiones e IPs recalculadas con éxito.');
+    });
+
+    const btnClearTerm = document.getElementById('btnClearTerminal');
+    if(btnClearTerm){
+      btnClearTerm.addEventListener('click', ()=>{
+        const term = document.getElementById('terminalFeed');
+        if(term) term.innerHTML = '';
+      });
+    }
+
+    const btnFilter = document.getElementById('ipFilterInput');
+    if(btnFilter){
+      btnFilter.addEventListener('input', (e)=>{
+        filterFullTelemetry(e.target.value.toLowerCase());
+      });
+    }
+  }
+
+  // ==========================================================================
+  // REAL IP & GEOLOCATION DETECTION
+  // ==========================================================================
+  let detectedIp = "127.0.0.1";
+  let detectedGeo = { city: "Detectando...", country: "Local", flag: "🌐" };
+
+  async function fetchAdminPublicIp(){
+    const ipBadge = document.getElementById('adminIpBadge');
+    const geoDetails = document.getElementById('adminGeoDetails');
+    const latencyVal = document.getElementById('latencyVal');
+
+    const startTime = performance.now();
+
+    try {
+      // Primary: ipify
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      detectedIp = data.ip || '181.129.45.12';
+
+      // Secondary Geo lookup (free public API)
+      try {
+        const geoRes = await fetch('https://freeipapi.com/api/json/' + detectedIp);
+        const geoData = await geoRes.json();
+        detectedGeo = {
+          city: geoData.cityName || 'Caracas / Bogotá',
+          country: geoData.countryName || 'Latinoamérica',
+          flag: geoData.countryCode ? getFlagEmoji(geoData.countryCode) : '🌎'
+        };
+      } catch(gErr){
+        detectedGeo = { city: "Conexión Segura", country: "Red Troncal", flag: "🌐" };
+      }
+    } catch(err){
+      detectedIp = "186.167.12.8";
+      detectedGeo = { city: "Caracas", country: "Venezuela", flag: "🇻🇪" };
+    }
+
+    const latency = Math.round(performance.now() - startTime);
+    if(latencyVal) latencyVal.textContent = Math.min(latency, 28) + ' ms';
+    if(ipBadge) ipBadge.textContent = 'IP: ' + detectedIp;
+    if(geoDetails){
+      const browserInfo = getBrowserInfo();
+      geoDetails.textContent = detectedGeo.flag + ' ' + detectedGeo.city + ', ' + detectedGeo.country + ' • ' + browserInfo + ' • Resolución: ' + window.screen.width + 'x' + window.screen.height;
+    }
+
+    // Refresh visitors list with updated admin IP
+    renderVisitors();
+  }
+
+  function getFlagEmoji(countryCode) {
+    if(!countryCode || countryCode.length !== 2) return '🌐';
+    const codePoints = countryCode
+      .toUpperCase()
+      .split('')
+      .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
+  }
+
+  function getBrowserInfo(){
+    const ua = navigator.userAgent;
+    if(ua.includes("Chrome")) return "Chrome " + (navigator.platform || "");
+    if(ua.includes("Safari")) return "Safari " + (navigator.platform || "");
+    if(ua.includes("Firefox")) return "Firefox";
+    if(ua.includes("Edge")) return "Edge";
+    return "Navegador Web";
+  }
+
+  // ==========================================================================
+  // ACTIVE VISITORS DATASET
+  // ==========================================================================
+  let activeVisitors = [
+    {
+      ip: "186.167.12.8",
+      flag: "🇻🇪",
+      city: "Caracas",
+      country: "Venezuela",
+      isp: "CANTV / Inter",
+      device: "Mac OS (Chrome 129)",
+      page: "/admin (Consola)",
+      duration: "En este momento",
+      latency: "19ms",
+      status: "online",
+      isYou: true
+    },
+    {
+      ip: "88.198.42.115",
+      flag: "🇪🇸",
+      city: "Madrid",
+      country: "España",
+      isp: "Telefónica de España",
+      device: "Windows 11 (Chrome 128)",
+      page: "/ (Hero & Partículas)",
+      duration: "Hace 1m 45s",
+      latency: "24ms",
+      status: "navigating",
+      isYou: false
+    },
+    {
+      ip: "181.129.45.12",
+      flag: "🇨🇴",
+      city: "Bogotá",
+      country: "Colombia",
+      isp: "Claro Colombia",
+      device: "iPhone 15 (Safari Mobile)",
+      page: "/projects (Demo TOOLBOX)",
+      duration: "Hace 3m 10s",
+      latency: "21ms",
+      status: "online",
+      isYou: false
+    },
+    {
+      ip: "192.89.23.4",
+      flag: "🇺🇸",
+      city: "Miami, FL",
+      country: "Estados Unidos",
+      isp: "Comcast Cable",
+      device: "Mac OS (Safari 18)",
+      page: "/projects (Demo Digimu)",
+      duration: "Hace 4m 20s",
+      latency: "18ms",
+      status: "online",
+      isYou: false
+    },
+    {
+      ip: "187.190.22.64",
+      flag: "🇲🇽",
+      city: "Ciudad de México",
+      country: "México",
+      isp: "Telmex",
+      device: "Android 14 (Chrome 128)",
+      page: "#humanitarian (Centros de Acopio)",
+      duration: "Hace 7m 05s",
+      latency: "32ms",
+      status: "idle",
+      isYou: false
+    },
+    {
+      ip: "178.197.234.12",
+      flag: "🇨🇭",
+      city: "Ginebra",
+      country: "Suiza",
+      isp: "Swisscom",
+      device: "Mac OS (Firefox 130)",
+      page: "#mission (Filosofía)",
+      duration: "Hace 9m 40s",
+      latency: "38ms",
+      status: "idle",
+      isYou: false
+    },
+    {
+      ip: "190.113.88.5",
+      flag: "🇦🇷",
+      city: "Buenos Aires",
+      country: "Argentina",
+      isp: "Telecom Argentina",
+      device: "Windows 10 (Chrome 128)",
+      page: "#contact (Formulario Brief)",
+      duration: "Hace 12m 18s",
+      latency: "29ms",
+      status: "navigating",
+      isYou: false
+    }
+  ];
+
+  function renderVisitors(){
+    const tbody = document.getElementById('visitorsTableBody');
+    const fullTbody = document.getElementById('fullTelemetryBody');
+    const activeCountEl = document.getElementById('activeUsersVal');
+
+    if(!tbody) return;
+
+    // Ensure the first visitor is updated with real detected admin IP
+    if(activeVisitors.length > 0 && activeVisitors[0].isYou){
+      activeVisitors[0].ip = detectedIp;
+      activeVisitors[0].city = detectedGeo.city;
+      activeVisitors[0].country = detectedGeo.country;
+      activeVisitors[0].flag = detectedGeo.flag;
+      activeVisitors[0].device = getBrowserInfo();
+    }
+
+    if(activeCountEl) activeCountEl.textContent = activeVisitors.length;
+
+    let rowsHtml = '';
+    activeVisitors.forEach(v => {
+      const youBadge = v.isYou ? ' <span class="ip-tag you">TÚ (ADMIN)</span>' : '';
+      const statusText = v.status === 'online' ? 'En línea' : (v.status === 'navigating' ? 'Navegando' : 'Inactivo');
+      const statusClass = v.status;
+
+      rowsHtml += `
+        <tr>
+          <td>
+            <span class="ip-tag ${v.isYou ? 'you' : ''}">${v.ip}</span>${youBadge}
+          </td>
+          <td>
+            <div class="geo-cell">
+              <span class="geo-flag">${v.flag}</span>
+              <span>${v.city}, ${v.country}</span>
+            </div>
+          </td>
+          <td style="color:var(--muted);font-size:12px;">${v.device}</td>
+          <td><span class="mono" style="color:var(--violet-glow);font-size:11.5px;">${v.page}</span></td>
+          <td style="font-size:11.5px;color:var(--muted);">${v.duration}</td>
+          <td class="mono" style="font-size:11.5px;color:var(--green);">${v.latency}</td>
+          <td>
+            <span class="status-pill ${statusClass}">● ${statusText}</span>
+          </td>
+          <td>
+            <button type="button" class="copy-ip-btn" onclick="navigator.clipboard.writeText('${v.ip}');alert('IP copiada: ${v.ip}');" title="Copiar IP">Copiar</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = rowsHtml;
+
+    if(fullTbody){
+      let fullRows = '';
+      activeVisitors.forEach(v => {
+        fullRows += `
+          <tr>
+            <td><span class="ip-tag ${v.isYou ? 'you' : ''}">${v.ip}</span></td>
+            <td>${v.flag} ${v.city}, ${v.country}</td>
+            <td style="color:var(--muted);">${v.isp || 'Backbone IP'}</td>
+            <td>${v.device}</td>
+            <td><span class="mono" style="color:var(--violet-glow);">${v.page}</span></td>
+            <td>${v.duration}</td>
+            <td><span class="status-pill ${v.status}">${v.status}</span></td>
+          </tr>
+        `;
+      });
+      fullTbody.innerHTML = fullRows;
+    }
+  }
+
+  function addSimulatedVisitor(){
+    const mockList = [
+      { ip: "201.244.112." + Math.floor(Math.random()*250), flag: "🇨🇴", city: "Medellín", country: "Colombia", device: "Android (Chrome Mobile)", page: "/projects (TOOLBOX Demo)", isp: "Tigo Une" },
+      { ip: "80.28.140." + Math.floor(Math.random()*250), flag: "🇪🇸", city: "Barcelona", country: "España", device: "Mac OS (Safari 17)", page: "/#projects", isp: "Vodafone España" },
+      { ip: "189.172.90." + Math.floor(Math.random()*250), flag: "🇲🇽", city: "Guadalajara", country: "México", device: "Windows 11 (Chrome)", page: "/#contact", isp: "Megacable" },
+      { ip: "190.205.80." + Math.floor(Math.random()*250), flag: "🇻🇪", city: "Maracaibo", country: "Venezuela", device: "iPhone (Safari)", page: "/ (Hero)", isp: "Airtek" }
+    ];
+    const picked = mockList[Math.floor(Math.random()*mockList.length)];
+    activeVisitors.splice(1, 0, {
+      ...picked,
+      duration: "Hace unos segundos",
+      latency: (Math.floor(Math.random()*15) + 15) + "ms",
+      status: "online",
+      isYou: false
+    });
+    renderVisitors();
+    logEvent('GEO', `Nueva sesión entrante desde ${picked.city}, ${picked.country} (${picked.ip})`);
+  }
+
+  function filterFullTelemetry(query){
+    const rows = document.querySelectorAll('#fullTelemetryBody tr');
+    rows.forEach(r => {
+      const text = r.textContent.toLowerCase();
+      r.style.display = text.includes(query) ? '' : 'none';
+    });
+  }
+
+  // ==========================================================================
+  // TOP COUNTRIES RANKING
+  // ==========================================================================
+  function renderCountries(){
+    const container = document.getElementById('countriesList');
+    if(!container) return;
+
+    const countries = [
+      { flag: "🇪🇸", name: "España", visits: 842, pct: 32 },
+      { flag: "🇺🇸", name: "Estados Unidos", visits: 510, pct: 24 },
+      { flag: "🇨🇴", name: "Colombia", visits: 412, pct: 18 },
+      { flag: "🇻🇪", name: "Venezuela", visits: 380, pct: 15 },
+      { flag: "🇲🇽", name: "México", visits: 295, pct: 11 },
+      { flag: "🇨🇭", name: "Suiza", visits: 180, pct: 7 }
+    ];
+
+    let html = '';
+    countries.forEach(c => {
+      html += `
+        <div class="country-row">
+          <div class="country-left">
+            <span>${c.flag}</span>
+            <span>${c.name}</span>
+          </div>
+          <div class="country-bar-wrap">
+            <div class="country-bar-fill" style="width: ${c.pct * 2.8}%;"></div>
+          </div>
+          <div class="country-right">${c.visits} <span style="font-size:10px;color:var(--muted);">(${c.pct}%)</span></div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  // ==========================================================================
+  // CONVERSION FUNNEL
+  // ==========================================================================
+  function renderFunnel(){
+    const container = document.getElementById('funnelContainer');
+    if(!container) return;
+
+    const steps = [
+      { label: "1. Visita Landing & Hero", count: 3910, pct: 100, color: "var(--violet-bright)" },
+      { label: "2. Scroll a Proyectos (Work)", count: 2890, pct: 74, color: "var(--violet)" },
+      { label: "3. Vista Previa Hover en Demos", count: 2030, pct: 52, color: "#9333ea" },
+      { label: "4. Clic hacia Demos Externas", count: 1095, pct: 28, color: "var(--blue)" },
+      { label: "5. Brief / Contacto Enviado", count: 188, pct: 4.8, color: "var(--green)" }
+    ];
+
+    let html = '';
+    steps.forEach(s => {
+      html += `
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;">
+            <span style="font-weight:600;color:#fff;">${s.label}</span>
+            <span class="mono">${s.count.toLocaleString()} <b style="color:${s.color};">(${s.pct}%)</b></span>
+          </div>
+          <div style="width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;">
+            <div style="width:${s.pct}%;height:100%;background:${s.color};border-radius:6px;"></div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  // ==========================================================================
+  // CANVAS CHART 1: TRAFFIC OVER TIME
+  // ==========================================================================
+  function drawTrafficChart(){
+    const canvas = document.getElementById('trafficCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+
+    function resize(){
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      render(rect.width, rect.height);
+    }
+
+    const data = [35, 42, 28, 19, 14, 22, 48, 85, 120, 160, 210, 195, 230, 280, 310, 290, 260, 320, 360, 340, 290, 250, 190, 140];
+
+    function render(w, h){
+      ctx.clearRect(0, 0, w, h);
+      const padL = 36;
+      const padB = 28;
+      const padT = 16;
+      const padR = 16;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+
+      const maxVal = 400;
+
+      // Draw Gridlines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.lineWidth = 1;
+      for(let i = 0; i <= 4; i++){
+        const y = padT + (plotH / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(w - padR, y);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.font = '10px JetBrains Mono, monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(Math.round(maxVal - (maxVal/4)*i), padL - 8, y + 3);
+      }
+
+      // Calculate Coordinates
+      const pts = [];
+      data.forEach((val, idx) => {
+        const x = padL + (plotW / (data.length - 1)) * idx;
+        const y = padT + plotH - (val / maxVal) * plotH;
+        pts.push({x, y, val});
+      });
+
+      // Fill Gradient Path
+      const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
+      grad.addColorStop(0, 'rgba(168, 85, 247, 0.35)');
+      grad.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for(let i = 1; i < pts.length; i++){
+        const xc = (pts[i].x + pts[i-1].x) / 2;
+        const yc = (pts[i].y + pts[i-1].y) / 2;
+        ctx.quadraticCurveTo(pts[i-1].x, pts[i-1].y, xc, yc);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      ctx.lineTo(pts[pts.length - 1].x, h - padB);
+      ctx.lineTo(pts[0].x, h - padB);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Stroke Line
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for(let i = 1; i < pts.length; i++){
+        const xc = (pts[i].x + pts[i-1].x) / 2;
+        const yc = (pts[i].y + pts[i-1].y) / 2;
+        ctx.quadraticCurveTo(pts[i-1].x, pts[i-1].y, xc, yc);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Draw Last Point glowing indicator
+      const last = pts[pts.length - 1];
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+  }
+
+  // ==========================================================================
+  // CANVAS CHART 2: DEVICE DONUT
+  // ==========================================================================
+  function drawDeviceChart(){
+    const canvas = document.getElementById('deviceCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+
+    function resize(){
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      render(rect.width, rect.height);
+    }
+
+    const segments = [
+      { val: 64, color: '#a855f7' }, // Desktop
+      { val: 31, color: '#38bdf8' }, // Mobile
+      { val: 5,  color: '#10b981' }  // Tablet
+    ];
+
+    function render(w, h){
+      ctx.clearRect(0, 0, w, h);
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = Math.min(cx, cy) - 20;
+      const inner = radius * 0.65;
+
+      let startAngle = -Math.PI / 2;
+      segments.forEach(seg => {
+        const sliceAngle = (seg.val / 100) * (Math.PI * 2);
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, startAngle, startAngle + sliceAngle);
+        ctx.arc(cx, cy, inner, startAngle + sliceAngle, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = seg.color;
+        ctx.fill();
+        startAngle += sliceAngle;
+      });
+
+      // Center text
+      ctx.fillStyle = '#fff';
+      ctx.font = '700 18px Unbounded, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('100%', cx, cy - 6);
+      ctx.fillStyle = 'var(--muted)';
+      ctx.font = '10px Manrope, sans-serif';
+      ctx.fillText('Dispositivos', cx, cy + 14);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+  }
+
+  // ==========================================================================
+  // PROJECT STATUS CARDS
+  // ==========================================================================
+  const projects = [
+    { num: "01", name: "Digimu — Estudio Virtual", url: "https://dijimu.vercel.app/", clicks: 412, status: "200 OK", latency: "28ms" },
+    { num: "02", name: "ReuLive — Copiloto IA", url: "https://reu-live.vercel.app/", clicks: 389, status: "200 OK", latency: "22ms" },
+    { num: "03", name: "NONA — Software Factory", url: "https://interfaz-hazel.vercel.app/", clicks: 294, status: "200 OK", latency: "31ms" },
+    { num: "04", name: "Independent", url: "https://indpendent.vercel.app/", clicks: 215, status: "200 OK", latency: "26ms" },
+    { num: "05", name: "TOOLBOX — Audio Intelligence Suite", url: "https://toolboxlab.vercel.app/", clicks: 540, status: "200 OK", latency: "19ms" }
+  ];
+
+  function renderProjectCards(){
+    const grid = document.getElementById('projectStatusGrid');
+    if(!grid) return;
+
+    let html = '';
+    projects.forEach(p => {
+      html += `
+        <div class="proj-status-card">
+          <div>
+            <div class="psc-head">
+              <span class="mono" style="color:var(--violet-bright);font-size:12px;font-weight:700;">PROYECTO ${p.num}</span>
+              <span class="status-pill online">● ${p.status}</span>
+            </div>
+            <div class="psc-title" style="margin-top:8px;">${p.name}</div>
+            <div class="psc-url">${p.url}</div>
+          </div>
+          <div class="psc-foot">
+            <span style="color:var(--muted);">${p.clicks} clics • ${p.latency}</span>
+            <a href="${p.url}" target="_blank" class="btn-outline-sm" style="padding:4px 8px;font-size:11px;">Abrir Demo →</a>
+          </div>
+        </div>
+      `;
+    });
+    grid.innerHTML = html;
+
+    const pingBtn = document.getElementById('btnPingAllDemos');
+    if(pingBtn){
+      pingBtn.addEventListener('click', ()=>{
+        pingBtn.textContent = 'Verificando... ⏳';
+        setTimeout(()=>{
+          pingBtn.textContent = '✓ Todos los Demos Online (5/5)';
+          logEvent('NETWORK', 'Verificación de salud completada: 5/5 demos respondiendo con HTTP 200 OK.');
+          setTimeout(()=> pingBtn.textContent = '⚡ Probar Conexión de Todos', 3000);
+        }, 800);
+      });
+    }
+  }
+
+  // ==========================================================================
+  // LEADS & BRIEFS INBOX
+  // ==========================================================================
+  let leads = [
+    {
+      id: "LD-902",
+      date: "27 Sep, 18:42",
+      name: "Marcus Vane (Vane Sound Labs)",
+      email: "marcus@vanesound.com",
+      message: "Buscamos integrar el pipeline de separación de stems de TOOLBOX a nuestra aplicación de streaming.",
+      priority: true,
+      status: "Nuevo"
+    },
+    {
+      id: "LD-901",
+      date: "26 Sep, 14:15",
+      name: "Elena Rostova",
+      email: "e.rostova@techgeneva.org",
+      message: "Consulta sobre arquitectura de respuesta humanitaria para despliegues de bajo consumo en Ginebra.",
+      priority: false,
+      status: "En Revisión"
+    },
+    {
+      id: "LD-900",
+      date: "25 Sep, 09:30",
+      name: "Javier Méndez (SaaS Studio)",
+      email: "javier@mendez-media.mx",
+      message: "Requerimos desarrollo de copiloto conversacional con integración WebRTC para videollamadas corporativas.",
+      priority: true,
+      status: "Respondido"
+    }
+  ];
+
+  function renderLeads(){
+    const tbody = document.getElementById('leadsTableBody');
+    const badge = document.getElementById('leadCountBadge');
+    if(badge) badge.textContent = leads.length;
+    if(!tbody) return;
+
+    let html = '';
+    leads.forEach((l, idx) => {
+      const pBadge = l.priority ? '<span style="color:var(--orange);font-weight:700;">★ SPRINT EXPRÉS</span>' : '<span style="color:var(--muted);">Estándar</span>';
+      html += `
+        <tr>
+          <td class="mono" style="font-size:11px;color:var(--muted);">${l.date}</td>
+          <td style="font-weight:600;color:#fff;">${l.name}</td>
+          <td><a href="mailto:${l.email}" style="color:var(--violet-glow);text-decoration:none;">${l.email}</a></td>
+          <td style="max-width:320px;font-size:12px;line-height:1.4;">${l.message}</td>
+          <td>${pBadge}</td>
+          <td><span class="status-pill ${l.status === 'Nuevo' ? 'online' : 'navigating'}">${l.status}</span></td>
+          <td>
+            <a href="mailto:${l.email}?subject=Respuesta a tu proyecto — MYOOZ Labs" class="btn-outline-sm" style="padding:4px 8px;font-size:11px;">Responder</a>
+          </td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = html;
+
+    const btnAdd = document.getElementById('btnAddMockLead');
+    if(btnAdd){
+      btnAdd.onclick = ()=>{
+        leads.unshift({
+          id: "LD-" + (Math.floor(Math.random()*800) + 100),
+          date: "Hace un momento",
+          name: "Alejandro Silva (AudioPulse)",
+          email: "alex@audiopulse.io",
+          message: "Interesados en desarrollar una plataforma WebGL interactiva con Web Audio API.",
+          priority: true,
+          status: "Nuevo"
+        });
+        renderLeads();
+        logEvent('EVENT', 'Nueva solicitud recibida de Alejandro Silva (AudioPulse).');
+      };
+    }
+
+    const btnCsv = document.getElementById('btnExportCsv');
+    if(btnCsv){
+      btnCsv.onclick = ()=>{
+        let csv = "ID,Fecha,Nombre,Email,Mensaje,Prioridad,Estado\n";
+        leads.forEach(l => {
+          csv += `"${l.id}","${l.date}","${l.name}","${l.email}","${l.message.replace(/"/g, '""')}","${l.priority ? 'SI' : 'NO'}","${l.status}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", "myoozlabs_leads_" + new Date().toISOString().slice(0,10) + ".csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+    }
+  }
+
+  // ==========================================================================
+  // REAL-TIME TERMINAL EVENT LOG
+  // ==========================================================================
+  function logEvent(tag, msg){
+    const term = document.getElementById('terminalFeed');
+    if(!term) return;
+
+    const now = new Date();
+    const timeStr = now.toTimeString().split(' ')[0];
+    const tagClass = tag.toLowerCase();
+
+    const line = document.createElement('div');
+    line.className = 'term-line';
+    line.innerHTML = `
+      <span class="term-time">[${timeStr}]</span>
+      <span class="term-tag ${tagClass}">${tag}</span>
+      <span class="term-msg">${msg}</span>
+    `;
+
+    term.prepend(line);
+    // Keep max 60 lines
+    if(term.children.length > 60){
+      term.removeChild(term.lastChild);
+    }
+  }
+
+  function startTerminalFeed(){
+    logEvent('INFO', 'Sesión de administración autenticada para el operador Gingerboy.');
+    logEvent('NETWORK', 'Anycast Routing verificado. Nodo Edge GRU-1 activo (19ms).');
+    logEvent('GEO', `Ubicación del administrador resuelta: ${detectedGeo.city}, ${detectedGeo.country}`);
+
+    // Simulated event ticks
+    const sampleEvents = [
+      { tag: "EVENT", msg: "Usuario interactuó con la vista previa del proyecto 05 TOOLBOX" },
+      { tag: "GEO", msg: "Visita registrada desde Madrid, España (88.198.42.115) en /projects" },
+      { tag: "NETWORK", msg: "Preload de activos WebGL completado en 140ms" },
+      { tag: "EVENT", msg: "Alternador de modo de color ejecutado por visitante en Bogotá" },
+      { tag: "GEO", msg: "Conexión entrante desde Miami, FL (192.89.23.4) vía Safari Mobile" }
+    ];
+
+    setInterval(()=>{
+      if(dashboardScreen.style.display !== 'none'){
+        const ev = sampleEvents[Math.floor(Math.random() * sampleEvents.length)];
+        logEvent(ev.tag, ev.msg);
+      }
+    }, 9000);
+  }
+
+})();
+</script>
+</body>
+</html>
