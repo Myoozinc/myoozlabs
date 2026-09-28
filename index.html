@@ -2223,6 +2223,31 @@
         let data = {};
         try { data = await res.json(); } catch(jsonErr){}
 
+        // Record real lead telemetry
+        const leadRecord = {
+          id: 'LD-' + Date.now().toString().slice(-4),
+          date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) + ', ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+          name: name,
+          email: email,
+          message: message,
+          priority: true,
+          status: 'Nuevo'
+        };
+        if(typeof window.__trackRealEvent === 'function'){
+          window.__trackRealEvent('LEAD_SUBMITTED', {
+            leadId: leadRecord.id,
+            name: leadRecord.name,
+            email: leadRecord.email,
+            message: leadRecord.message,
+            priority: true
+          });
+        }
+        try {
+          const storedLeads = JSON.parse(localStorage.getItem('myooz_real_leads') || '[]');
+          storedLeads.unshift(leadRecord);
+          localStorage.setItem('myooz_real_leads', JSON.stringify(storedLeads));
+        } catch(le){}
+
         if(res.ok || data.success === 'true' || data.success === true || (data.message && data.message.includes('Activation'))){
           form.style.display = 'none';
           if(confirmedEmail) confirmedEmail.textContent = email;
@@ -2556,6 +2581,7 @@
   function setLanguage(lang){
     if(!TRANSLATIONS[lang]) return;
     currentLang = lang;
+      if(typeof window.__trackRealEvent === 'function'){ window.__trackRealEvent('LANG_TOGGLE', { lang: lang }); }
     document.documentElement.lang = lang;
     const dict = TRANSLATIONS[lang];
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -2764,6 +2790,7 @@
       } catch(e){}
 
       updateUI(isLight);
+      if(typeof window.__trackRealEvent === 'function'){ window.__trackRealEvent('THEME_TOGGLE', { theme: mode }); }
 
       if(typeof window.rebuildLogoParticles === 'function'){
         window.rebuildLogoParticles();
@@ -2800,5 +2827,197 @@
   })();
 
 </script>
+
+  <!-- =====================================================================
+       MYOOZ LABS REAL TELEMETRY CLIENT (NO MOCKS - 100% REAL VISITOR DATA)
+       ===================================================================== -->
+  <script>
+  (function(){
+    if(window.location.pathname.startsWith('/admin')) return;
+
+    const SESS_KEY = 'myooz_live_session_id';
+    let sessionId = sessionStorage.getItem(SESS_KEY);
+    if(!sessionId){
+      sessionId = 'sess_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 7);
+      try { sessionStorage.setItem(SESS_KEY, sessionId); } catch(e){}
+    }
+
+    function getClientDevice(){
+      const ua = navigator.userAgent || '';
+      let deviceType = 'Desktop';
+      if(/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)){
+        deviceType = 'Tablet';
+      } else if(/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i.test(ua)){
+        deviceType = 'Mobile';
+      }
+
+      let browser = 'Chrome';
+      if(ua.includes('Edg/')) browser = 'Edge';
+      else if(ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+      else if(ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+      else if(ua.includes('Firefox')) browser = 'Firefox';
+      else if(ua.includes('Opera') || ua.includes('OPR/')) browser = 'Opera';
+
+      let os = 'Desktop OS';
+      if(ua.includes('Mac OS')) os = 'macOS';
+      else if(ua.includes('Windows')) os = 'Windows';
+      else if(ua.includes('iPhone')) os = 'iOS';
+      else if(ua.includes('iPad')) os = 'iPadOS';
+      else if(ua.includes('Android')) os = 'Android';
+      else if(ua.includes('Linux')) os = 'Linux';
+
+      return {
+        deviceType,
+        browser,
+        os,
+        screen: window.screen.width + 'x' + window.screen.height
+      };
+    }
+
+    const device = getClientDevice();
+    let clientGeo = {
+      ip: 'Detectando...',
+      city: 'Detectando...',
+      country: 'Detectando...',
+      flag: '🌐',
+      isp: 'En línea'
+    };
+
+    function getFlagEmoji(code){
+      if(!code || code.length !== 2) return '🌐';
+      return String.fromCodePoint(...code.toUpperCase().split('').map(c => 127397 + c.charCodeAt()));
+    }
+
+    async function resolveGeo(){
+      try {
+        const res = await fetch('/api/track');
+        if(res.ok){
+          const d = await res.json();
+          if(d.ip && d.ip !== '127.0.0.1'){
+            clientGeo.ip = d.ip;
+            clientGeo.city = d.city || 'Desconocido';
+            clientGeo.country = d.country || 'Desconocido';
+            clientGeo.flag = getFlagEmoji(d.country);
+            clientGeo.isp = d.region ? (d.region + ' Network') : 'Edge ISP';
+            return;
+          }
+        }
+      } catch(e){}
+
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        clientGeo.ip = ipData.ip || 'Direct Visitor';
+
+        try {
+          const geoRes = await fetch('https://freeipapi.com/api/json/' + clientGeo.ip);
+          const geo = await geoRes.json();
+          clientGeo.city = geo.cityName || 'Desconocido';
+          clientGeo.country = geo.countryName || 'Desconocido';
+          clientGeo.flag = getFlagEmoji(geo.countryCode);
+        } catch(gErr){}
+      } catch(e){
+        clientGeo.ip = 'Direct Visitor';
+      }
+    }
+
+    const EVENT_BUS = 'https://ntfy.sh/myoozlabs_live_telemetry_v2_e829fa';
+    async function trackRealEvent(type, meta){
+      const event = {
+        sessionId: sessionId,
+        type: type,
+        timestamp: Date.now(),
+        path: window.location.pathname || '/',
+        section: window.location.hash || '#hero',
+        referrer: document.referrer || 'Directo',
+        device: device.deviceType,
+        browser: device.browser,
+        os: device.os,
+        screen: device.screen,
+        ip: clientGeo.ip,
+        city: clientGeo.city,
+        country: clientGeo.country,
+        flag: clientGeo.flag,
+        isp: clientGeo.isp,
+        ...(meta || {})
+      };
+
+      try {
+        const localEvents = JSON.parse(localStorage.getItem('myooz_real_events') || '[]');
+        localEvents.push(event);
+        if(localEvents.length > 200) localEvents.shift();
+        localStorage.setItem('myooz_real_events', JSON.stringify(localEvents));
+      } catch(e){}
+
+      let sent = false;
+      try {
+        const res = await fetch('/api/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(event)
+        });
+        if(res.ok) sent = true;
+      } catch(e){}
+
+      if(!sent){
+        try {
+          await fetch(EVENT_BUS, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(event)
+          });
+        } catch(e){}
+      }
+    }
+
+    window.__trackRealEvent = trackRealEvent;
+
+    resolveGeo().then(() => {
+      trackRealEvent('PAGE_VIEW', { title: document.title, url: window.location.href });
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const projLinks = document.querySelectorAll('a.proj');
+      projLinks.forEach(p => {
+        const titleEl = p.querySelector('.p-name');
+        const title = titleEl ? titleEl.textContent.trim() : (p.getAttribute('href') || 'Demo');
+        let hoverTimeout;
+        p.addEventListener('mouseenter', () => {
+          hoverTimeout = setTimeout(() => {
+            trackRealEvent('DEMO_HOVER', { project: title, url: p.href });
+          }, 350);
+        });
+        p.addEventListener('mouseleave', () => clearTimeout(hoverTimeout));
+
+        p.addEventListener('click', () => {
+          trackRealEvent('PROJECT_CLICK', { project: title, url: p.href });
+        });
+      });
+
+      document.querySelectorAll('a[href^="http"]').forEach(a => {
+        if(!a.classList.contains('proj')){
+          a.addEventListener('click', () => {
+            trackRealEvent('LINK_CLICK', { url: a.href, text: a.textContent.trim() });
+          });
+        }
+      });
+
+      const trackedSections = document.querySelectorAll('section[id], footer[id]');
+      if('IntersectionObserver' in window){
+        const visited = new Set();
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if(entry.isIntersecting && !visited.has(entry.target.id)){
+              visited.add(entry.target.id);
+              trackRealEvent('SECTION_VIEW', { section: '#' + entry.target.id });
+            }
+          });
+        }, { threshold: 0.35 });
+        trackedSections.forEach(sec => observer.observe(sec));
+      }
+    });
+  })();
+  </script>
+
 </body>
 </html>
